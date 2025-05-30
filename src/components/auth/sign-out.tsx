@@ -5,12 +5,11 @@ import { useSignOut } from '@/hooks/endpoints/authentication'
 import { deleteSession } from '@/actions/session'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
+import { useSessionData } from '@/providers/session-client-provider'
 
-type SignOutButtonProps = {
-  token: string
-}
+export default function SignOutButton() {
+  const { token } = useSessionData()
 
-export default function SignOutButton({ token }: SignOutButtonProps) {
   const signOutMutation = useSignOut(authHeader(token))
 
   const router = useRouter()
@@ -21,7 +20,7 @@ export default function SignOutButton({ token }: SignOutButtonProps) {
       onSuccess: () => {
         deleteSession()
         toast.success('You have been signed out')
-        router.push('/')
+        router.push('/sign-in')
       },
     })
   }
@@ -32,7 +31,7 @@ export default function SignOutButton({ token }: SignOutButtonProps) {
       onClick={onSignOut}
       type="submit"
       disabled={isDisabled}
-      className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      className="block w-full px-3 py-1 text-left text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
     >
       Sign out
     </button>

@@ -1,4 +1,5 @@
 import { BaseModel } from './base'
+import { Workspace } from './workspace'
 
 export type UserModel = BaseModel & {
   name: string
@@ -6,4 +7,6 @@ export type UserModel = BaseModel & {
   email_verified_at?: string
 }
 
-export type User = UserModel & {}
+export type User = UserModel & {
+  workspaces: Workspace[]
+}

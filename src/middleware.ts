@@ -2,11 +2,12 @@ import { NextResponse, NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { decrypt } from '@/lib/encryption'
 
-const protectedRoutes = ['/sign-out', '/dashboard']
+const protectedRoutes = ['/']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
-  const isProtectedRoute = protectedRoutes.includes(path)
+  const isProtectedRoute =
+    protectedRoutes.includes(path) || path.startsWith('/email/verify')
 
   const cookie = (await cookies()).get('session')?.value
   const session = await decrypt(cookie)

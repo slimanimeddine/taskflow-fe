@@ -1,5 +1,5 @@
 import Logo from '@/components/logo'
-import ResetPasswordForm from '@/components/reset-password-form'
+import ResetPasswordForm from '@/components/auth/reset-password-form'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 

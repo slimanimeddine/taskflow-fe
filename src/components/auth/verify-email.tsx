@@ -6,17 +6,16 @@ import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import { isAxiosError } from 'axios'
-import LoadingUI from './loading-ui'
+import LoadingUI from '../loading-ui'
+import { useSessionData } from '@/providers/session-client-provider'
 
 type VerifyEmailProps = {
-  token: string
   slug: string[]
   expires: string
   signature: string
 }
 
 export default function VerifyEmail({
-  token,
   slug,
   expires,
   signature,
@@ -26,6 +25,8 @@ export default function VerifyEmail({
   const hash = slug[1]
 
   const queryClient = useQueryClient()
+
+  const { token } = useSessionData()
 
   const { isLoading, isError, isSuccess, error } = useVerifyEmail(
     id,

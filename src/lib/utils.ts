@@ -124,9 +124,6 @@ export function getDirtyValues<T extends Record<string, any>>(
   return dirtyValues
 }
 
-export function fullUrl() {
-  if (typeof window !== 'undefined') {
-    const fullUrl = window.location.href
-    return fullUrl
-  }
+export function getFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase()
 }

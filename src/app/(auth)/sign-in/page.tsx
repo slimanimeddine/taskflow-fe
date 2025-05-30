@@ -1,4 +1,4 @@
-import SignInForm from '@/components/sign-in-form'
+import SignInForm from '@/components/auth/sign-in-form'
 import seo from '@/lib/seo'
 import { Metadata } from 'next'
 

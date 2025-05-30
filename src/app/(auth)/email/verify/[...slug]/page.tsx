@@ -1,4 +1,4 @@
-import VerifyEmail from '@/components/verify-email'
+import VerifyEmail from '@/components/auth/verify-email'
 import { verifyAuth } from '@/lib/dal'
 import seo from '@/lib/seo'
 import { Metadata } from 'next'
@@ -14,12 +14,11 @@ export default async function Page({
   params: Promise<{ slug: string[] }>
   searchParams: Promise<{ [key: string]: string }>
 }) {
-  const { token } = await verifyAuth()
+  await verifyAuth()
   const { slug } = await params
   const { expires, signature } = await searchParams
   return (
     <VerifyEmail
-      token={token}
       slug={slug}
       expires={expires}
       signature={signature}

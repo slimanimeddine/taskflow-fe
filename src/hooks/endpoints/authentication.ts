@@ -782,13 +782,14 @@ export type SendPasswordResetLinkMutationResult = NonNullable<
 >
 export type SendPasswordResetLinkMutationBody =
   BodyType<SendPasswordResetLinkBody>
-export type SendPasswordResetLinkMutationError = ErrorType<string>
+export type SendPasswordResetLinkMutationError =
+  ErrorType<SendPasswordResetLink400>
 
 /**
  * @summary Send Password Reset Link
  */
 export const useSendPasswordResetLink = <
-  TError = ErrorType<string>,
+  TError = ErrorType<SendPasswordResetLink400>,
   TContext = unknown,
 >(
   options?: {
@@ -874,13 +875,13 @@ export type ResetPasswordMutationResult = NonNullable<
   Awaited<ReturnType<typeof resetPassword>>
 >
 export type ResetPasswordMutationBody = BodyType<ResetPasswordBody>
-export type ResetPasswordMutationError = ErrorType<string>
+export type ResetPasswordMutationError = ErrorType<ResetPassword400>
 
 /**
  * @summary Reset Password
  */
 export const useResetPassword = <
-  TError = ErrorType<string>,
+  TError = ErrorType<ResetPassword400>,
   TContext = unknown,
 >(
   options?: {

@@ -13,6 +13,7 @@ import { useState } from 'react'
 import { Workspace } from '@/types/models'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
+import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 type WorkspaceSwitcherProps = {
   workspaces: Workspace[]
@@ -21,12 +22,16 @@ type WorkspaceSwitcherProps = {
 export default function WorkspaceSwitcher({
   workspaces,
 }: WorkspaceSwitcherProps) {
-  const [selected, setSelected] = useState(workspaces[0])
+  const workspaceId = useWorkspaceId()
+  const [selected, setSelected] = useState(
+    workspaces.find((w) => w.id === workspaceId) || workspaces[0]
+  )
   const router = useRouter()
   function onSelect(workspace: Workspace) {
     setSelected(workspace)
     router.push(`/workspaces/${workspace.id}`)
   }
+
   return (
     <Listbox
       value={selected}
@@ -35,11 +40,22 @@ export default function WorkspaceSwitcher({
       <div className="relative mt-2">
         <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-gray-800 py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-700 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
           <span className="col-start-1 row-start-1 flex items-center gap-3 pr-6">
-            <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-500">
-              <span className="text-xs leading-none font-medium text-white">
-                {getFirstLetter(selected.name)}
+            {selected.image_path ? (
+              <Image
+                alt=""
+                src={fileUrl(selected.image_path)!}
+                className="size-5 shrink-0 rounded-full"
+                width={20}
+                height={20}
+              />
+            ) : (
+              <span className="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gray-500">
+                <span className="text-xs leading-none font-medium text-white">
+                  {getFirstLetter(selected.name)}
+                </span>
               </span>
-            </span>
+            )}
+
             <span className="block truncate text-gray-400">
               {selected.name}
             </span>

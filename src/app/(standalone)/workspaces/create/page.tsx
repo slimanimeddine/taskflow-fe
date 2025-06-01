@@ -1,4 +1,4 @@
-import CreateWorkspaceForm from '@/components/workspaces/create-workspace/create-workspace-form'
+import CreateWorkspaceForm from '@/components/workspaces/create-workspace/form'
 import { verifyAuth } from '@/lib/dal'
 
 export default async function Page() {

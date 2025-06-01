@@ -2,7 +2,7 @@
 
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import { PlusCircleIcon } from '@heroicons/react/20/solid'
-import CreateWorkspaceForm from './create-workspace-form'
+import CreateWorkspaceForm from './form'
 import { useCreateWorkspaceModalStore } from '@/stores/create-workspace-modal-store'
 
 export default function CreateWorkspaceModal() {

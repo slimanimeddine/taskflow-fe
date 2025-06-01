@@ -15,17 +15,34 @@ import type {
 } from '@tanstack/react-query'
 
 export type CreateWorkspace200 = ApiResource<Workspace>
-
+export type CreateWorkspace401 = UnauthenticatedApiResponse
 export type CreateWorkspaceBody = z.infer<typeof createWorkspaceBody>
 
 export type ListAuthenticatedUserWorkspaces200 = ApiResource<Workspace[]>
+export type ListAuthenticatedUserWorkspaces401 = UnauthenticatedApiResponse
+
+export type EditWorkspace200 = ApiResource<Workspace>
+export type EditWorkspace403 = UnauthorizedApiResponse
+export type EditWorkspace404 = NotFoundApiResponse
+export type EditWorkspace401 = UnauthenticatedApiResponse
+export type EditWorkspaceBody = z.infer<typeof editWorkspaceBody>
+
+export type ShowWorkspace200 = ApiResource<Workspace>
+export type ShowWorkspace403 = UnauthorizedApiResponse
+export type ShowWorkspace404 = NotFoundApiResponse
+export type ShowWorkspace401 = UnauthenticatedApiResponse
 
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
-import { ApiResource } from '@/types/api-responses'
+import {
+  ApiResource,
+  NotFoundApiResponse,
+  UnauthenticatedApiResponse,
+  UnauthorizedApiResponse,
+} from '@/types/api-responses'
 import { Workspace } from '@/types/models'
 import { z } from 'zod'
-import { createWorkspaceBody } from '@/schemas/workspaces'
+import { createWorkspaceBody, editWorkspaceBody } from '@/schemas/workspaces'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -49,7 +66,7 @@ export const getListAuthenticatedUserWorkspacesQueryKey = () => {
 
 export const getListAuthenticatedUserWorkspacesQueryOptions = <
   TData = Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>,
-  TError = ErrorType<string>,
+  TError = ErrorType<ListAuthenticatedUserWorkspaces401>,
 >(options?: {
   query?: Partial<
     UseQueryOptions<
@@ -79,11 +96,12 @@ export const getListAuthenticatedUserWorkspacesQueryOptions = <
 export type ListAuthenticatedUserWorkspacesQueryResult = NonNullable<
   Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>
 >
-export type ListAuthenticatedUserWorkspacesQueryError = ErrorType<string>
+export type ListAuthenticatedUserWorkspacesQueryError =
+  ErrorType<ListAuthenticatedUserWorkspaces401>
 
 export function useListAuthenticatedUserWorkspaces<
   TData = Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>,
-  TError = ErrorType<string>,
+  TError = ErrorType<ListAuthenticatedUserWorkspaces401>,
 >(
   options: {
     query: Partial<
@@ -109,7 +127,7 @@ export function useListAuthenticatedUserWorkspaces<
 }
 export function useListAuthenticatedUserWorkspaces<
   TData = Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>,
-  TError = ErrorType<string>,
+  TError = ErrorType<ListAuthenticatedUserWorkspaces401>,
 >(
   options?: {
     query?: Partial<
@@ -135,7 +153,7 @@ export function useListAuthenticatedUserWorkspaces<
 }
 export function useListAuthenticatedUserWorkspaces<
   TData = Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>,
-  TError = ErrorType<string>,
+  TError = ErrorType<ListAuthenticatedUserWorkspaces401>,
 >(
   options?: {
     query?: Partial<
@@ -157,7 +175,7 @@ export function useListAuthenticatedUserWorkspaces<
 
 export function useListAuthenticatedUserWorkspaces<
   TData = Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>,
-  TError = ErrorType<string>,
+  TError = ErrorType<ListAuthenticatedUserWorkspaces401>,
 >(
   options?: {
     query?: Partial<
@@ -190,7 +208,7 @@ export function useListAuthenticatedUserWorkspaces<
  */
 export const prefetchListAuthenticatedUserWorkspaces = async <
   TData = Awaited<ReturnType<typeof listAuthenticatedUserWorkspaces>>,
-  TError = ErrorType<string>,
+  TError = ErrorType<ListAuthenticatedUserWorkspaces401>,
 >(
   queryClient: QueryClient,
   options?: {
@@ -242,7 +260,7 @@ export const createWorkspace = (
 }
 
 export const getCreateWorkspaceMutationOptions = <
-  TError = ErrorType<string>,
+  TError = ErrorType<CreateWorkspace401>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
@@ -283,13 +301,13 @@ export type CreateWorkspaceMutationResult = NonNullable<
   Awaited<ReturnType<typeof createWorkspace>>
 >
 export type CreateWorkspaceMutationBody = BodyType<CreateWorkspaceBody>
-export type CreateWorkspaceMutationError = ErrorType<string>
+export type CreateWorkspaceMutationError = ErrorType<CreateWorkspace401>
 
 /**
  * @summary Create workspace
  */
 export const useCreateWorkspace = <
-  TError = ErrorType<string>,
+  TError = ErrorType<CreateWorkspace401>,
   TContext = unknown,
 >(
   options?: {
@@ -311,4 +329,283 @@ export const useCreateWorkspace = <
   const mutationOptions = getCreateWorkspaceMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * Edit the specified workspace.
+ * @summary Edit workspace
+ */
+export const editWorkspace = (
+  workspaceId: string,
+  editWorkspaceBody?: BodyType<EditWorkspaceBody>,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  const formData = new FormData()
+  if (editWorkspaceBody?.name !== undefined) {
+    formData.append('name', editWorkspaceBody.name)
+  }
+  if (
+    editWorkspaceBody?.image !== undefined &&
+    editWorkspaceBody.image !== null
+  ) {
+    formData.append('image', editWorkspaceBody.image)
+  }
+
+  return customInstance<EditWorkspace200>(
+    {
+      url: `/api/v1/workspaces/${workspaceId}`,
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+    },
+    options
+  )
+}
+
+export const getEditWorkspaceMutationOptions = <
+  TError = ErrorType<EditWorkspace401 | EditWorkspace403 | EditWorkspace404>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof editWorkspace>>,
+    TError,
+    { workspaceId: string; data: BodyType<EditWorkspaceBody> },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof editWorkspace>>,
+  TError,
+  { workspaceId: string; data: BodyType<EditWorkspaceBody> },
+  TContext
+> => {
+  const mutationKey = ['editWorkspace']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof editWorkspace>>,
+    { workspaceId: string; data: BodyType<EditWorkspaceBody> }
+  > = (props) => {
+    const { workspaceId, data } = props ?? {}
+
+    return editWorkspace(workspaceId, data, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type EditWorkspaceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof editWorkspace>>
+>
+export type EditWorkspaceMutationBody = BodyType<EditWorkspaceBody>
+export type EditWorkspaceMutationError = ErrorType<
+  EditWorkspace401 | EditWorkspace403 | EditWorkspace404
+>
+
+/**
+ * @summary Edit workspace
+ */
+export const useEditWorkspace = <
+  TError = ErrorType<EditWorkspace401 | EditWorkspace403 | EditWorkspace404>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof editWorkspace>>,
+      TError,
+      { workspaceId: string; data: BodyType<EditWorkspaceBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof editWorkspace>>,
+  TError,
+  { workspaceId: string; data: BodyType<EditWorkspaceBody> },
+  TContext
+> => {
+  const mutationOptions = getEditWorkspaceMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * Show the specified workspace.
+ * @summary Show workspace
+ */
+export const showWorkspace = (
+  workspaceId: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ShowWorkspace200>(
+    { url: `/api/v1/workspaces/${workspaceId}`, method: 'GET', signal },
+    options
+  )
+}
+
+export const getShowWorkspaceQueryKey = (workspaceId: string) => {
+  return [`/api/v1/workspaces/${workspaceId}`] as const
+}
+
+export const getShowWorkspaceQueryOptions = <
+  TData = Awaited<ReturnType<typeof showWorkspace>>,
+  TError = ErrorType<ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404>,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof showWorkspace>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey =
+    queryOptions?.queryKey ?? getShowWorkspaceQueryKey(workspaceId)
+
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof showWorkspace>>> = ({
+    signal,
+  }) => showWorkspace(workspaceId, requestOptions, signal)
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!workspaceId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof showWorkspace>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ShowWorkspaceQueryResult = NonNullable<
+  Awaited<ReturnType<typeof showWorkspace>>
+>
+export type ShowWorkspaceQueryError = ErrorType<
+  ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404
+>
+
+export function useShowWorkspace<
+  TData = Awaited<ReturnType<typeof showWorkspace>>,
+  TError = ErrorType<ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404>,
+>(
+  workspaceId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof showWorkspace>>, TError, TData>
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof showWorkspace>>,
+          TError,
+          Awaited<ReturnType<typeof showWorkspace>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useShowWorkspace<
+  TData = Awaited<ReturnType<typeof showWorkspace>>,
+  TError = ErrorType<ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404>,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof showWorkspace>>, TError, TData>
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof showWorkspace>>,
+          TError,
+          Awaited<ReturnType<typeof showWorkspace>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useShowWorkspace<
+  TData = Awaited<ReturnType<typeof showWorkspace>>,
+  TError = ErrorType<ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404>,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof showWorkspace>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary Show workspace
+ */
+
+export function useShowWorkspace<
+  TData = Awaited<ReturnType<typeof showWorkspace>>,
+  TError = ErrorType<ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404>,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof showWorkspace>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getShowWorkspaceQueryOptions(workspaceId, options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary Show workspace
+ */
+export const prefetchShowWorkspace = async <
+  TData = Awaited<ReturnType<typeof showWorkspace>>,
+  TError = ErrorType<ShowWorkspace401 | ShowWorkspace403 | ShowWorkspace404>,
+>(
+  queryClient: QueryClient,
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof showWorkspace>>, TError, TData>
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+): Promise<QueryClient> => {
+  const queryOptions = getShowWorkspaceQueryOptions(workspaceId, options)
+
+  await queryClient.prefetchQuery(queryOptions)
+
+  return queryClient
 }

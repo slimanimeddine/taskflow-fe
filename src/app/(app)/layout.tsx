@@ -20,14 +20,14 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import WorkspaceSwitcherWrapper from '@/components/workspaces/workspace-switcher/wrapper'
-import CreateWorkspaceModal from '@/components/workspaces/create-workspace/create-workspace-modal'
+import CreateWorkspaceModal from '@/components/workspaces/create-workspace/modal'
 import UserDropdown from '@/components/user-dropdown'
+import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon },
   { name: 'My Tasks', href: '/my-tasks', icon: ClipboardDocumentListIcon },
   { name: 'Members', href: '/members', icon: UsersIcon },
-  { name: 'Settings', href: '/settings', icon: Cog6ToothIcon },
 ]
 
 const projects = [
@@ -56,6 +56,7 @@ export default function Layout({
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
 
+  const workspaceId = useWorkspaceId()
   return (
     <div>
       <Dialog
@@ -127,6 +128,28 @@ export default function Layout({
                           </Link>
                         </li>
                       ))}
+                      <li>
+                        <Link
+                          href={`/workspaces/${workspaceId}/settings`}
+                          aria-current={
+                            pathname === `/workspaces/${workspaceId}/settings`
+                              ? 'page'
+                              : undefined
+                          }
+                          className={classNames(
+                            pathname === `/workspaces/${workspaceId}/settings`
+                              ? 'bg-gray-800 text-white'
+                              : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                            'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                          )}
+                        >
+                          <Cog6ToothIcon
+                            aria-hidden="true"
+                            className="h-6 w-6 shrink-0"
+                          />
+                          Settings
+                        </Link>
+                      </li>
                     </ul>
                   </li>
                   <li>
@@ -225,6 +248,28 @@ export default function Layout({
                       </Link>
                     </li>
                   ))}
+                  <li>
+                    <Link
+                      href={`/workspaces/${workspaceId}/settings`}
+                      aria-current={
+                        pathname === `/workspaces/${workspaceId}/settings`
+                          ? 'page'
+                          : undefined
+                      }
+                      className={classNames(
+                        pathname === `/workspaces/${workspaceId}/settings`
+                          ? 'bg-gray-800 text-white'
+                          : 'text-gray-400 hover:bg-gray-800 hover:text-white',
+                        'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
+                      )}
+                    >
+                      <Cog6ToothIcon
+                        aria-hidden="true"
+                        className="h-6 w-6 shrink-0"
+                      />
+                      Settings
+                    </Link>
+                  </li>
                 </ul>
               </li>
               <li>

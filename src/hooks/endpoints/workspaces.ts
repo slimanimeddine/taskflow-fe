@@ -14,16 +14,16 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query'
 
-export type CreateWorkspace200 = ApiResource<WorkspaceModel>
+export type CreateWorkspace200 = ApiResource<Workspace>
 
 export type CreateWorkspaceBody = z.infer<typeof createWorkspaceBody>
 
-export type ListAuthenticatedUserWorkspaces200 = ApiResource<WorkspaceModel[]>
+export type ListAuthenticatedUserWorkspaces200 = ApiResource<Workspace[]>
 
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
 import { ApiResource } from '@/types/api-responses'
-import { WorkspaceModel } from '@/types/models/workspace'
+import { Workspace } from '@/types/models'
 import { z } from 'zod'
 import { createWorkspaceBody } from '@/schemas/workspaces'
 

@@ -2,6 +2,12 @@ import Logo from '@/components/logo'
 import ResetPasswordForm from '@/components/auth/reset-password-form'
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import seo from '@/lib/seo'
+import { Metadata } from 'next'
+
+export const metadata: Metadata = {
+  ...seo('Reset Password', 'Reset your password'),
+}
 
 type SearchParams = { [key: string]: string }
 

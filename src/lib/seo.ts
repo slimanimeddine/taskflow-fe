@@ -2,19 +2,24 @@ import { Metadata } from 'next'
 
 export default function seo(title: string, description: string): Metadata {
   return {
-    title: `AppName | ${title}`,
+    title: `TaskFlow | ${title}`,
     description,
     generator: 'Next.js',
-    applicationName: 'AppName',
+    applicationName: 'TaskFlow',
     referrer: 'origin-when-cross-origin',
-    keywords: ['keyword1', 'keyword2', 'keyword3'],
+    keywords: [
+      'task management',
+      'productivity',
+      'project management',
+      'team collaboration',
+    ],
     authors: [
       {
-        name: 'Slimani Imed Eddine Abderrahmane',
+        name: 'Imed Eddine Abderrahmane SLIMANI',
         url: 'https://github.com/slimanimeddine',
       },
     ],
-    creator: 'Slimani Imed Eddine Abderrahmane',
-    publisher: 'Slimani Imed Eddine Abderrahmane',
+    creator: 'Imed Eddine Abderrahmane SLIMANI',
+    publisher: 'Imed Eddine Abderrahmane SLIMANI',
   }
 }

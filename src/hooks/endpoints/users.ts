@@ -11,13 +11,13 @@ import type {
   UseQueryResult,
 } from '@tanstack/react-query'
 
-export type GetAuthenticatedUser200 = ApiResource<UserModel>
+export type GetAuthenticatedUser200 = ApiResource<User>
 export type GetAuthenticatedUser401 = UnauthenticatedApiResponse
 
 import { customInstance } from '@/lib/axios'
 import type { ErrorType } from '@/lib/axios'
 import { ApiResource, UnauthenticatedApiResponse } from '@/types/api-responses'
-import { UserModel } from '@/types/models/user'
+import { User } from '@/types/models'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 

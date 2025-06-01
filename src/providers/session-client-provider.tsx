@@ -1,11 +1,11 @@
 'use client'
 
 import { Session } from '@/types/misc'
-import React, { createContext, useContext } from 'react'
+import React, { createContext } from 'react'
 
-const SessionContext = createContext<Session | undefined>(undefined)
+export const SessionContext = createContext<Session | undefined>(undefined)
 
-export function SessionClientProvider({
+export default function SessionClientProvider({
   children,
   initialSessionData,
 }: {
@@ -17,14 +17,4 @@ export function SessionClientProvider({
       {children}
     </SessionContext.Provider>
   )
-}
-
-export function useSessionData() {
-  const context = useContext(SessionContext)
-  if (context === undefined) {
-    throw new Error(
-      'useSessionData must be used within a SessionClientProvider'
-    )
-  }
-  return context
 }

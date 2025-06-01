@@ -7,7 +7,7 @@ import toast from 'react-hot-toast'
 import { useEffect, useState } from 'react'
 import { isAxiosError } from 'axios'
 import LoadingUI from '../loading-ui'
-import { useSessionData } from '@/providers/session-client-provider'
+import { useSession } from '@/hooks/use-session'
 
 type VerifyEmailProps = {
   slug: string[]
@@ -26,7 +26,7 @@ export default function VerifyEmail({
 
   const queryClient = useQueryClient()
 
-  const { token } = useSessionData()
+  const { token } = useSession()
 
   const { isLoading, isError, isSuccess, error } = useVerifyEmail(
     id,

@@ -5,10 +5,10 @@ import { useSignOut } from '@/hooks/endpoints/authentication'
 import { deleteSession } from '@/actions/session'
 import toast from 'react-hot-toast'
 import { useRouter } from 'next/navigation'
-import { useSessionData } from '@/providers/session-client-provider'
+import { useSession } from '@/hooks/use-session'
 
 export default function SignOutButton() {
-  const { token } = useSessionData()
+  const { token } = useSession()
 
   const signOutMutation = useSignOut(authHeader(token))
 
@@ -17,8 +17,8 @@ export default function SignOutButton() {
   function onSignOut() {
     signOutMutation.mutate(undefined, {
       onError,
-      onSuccess: () => {
-        deleteSession()
+      onSuccess: async () => {
+        await deleteSession()
         toast.success('You have been signed out')
         router.push('/sign-in')
       },

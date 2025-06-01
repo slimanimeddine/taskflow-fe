@@ -1,5 +1,6 @@
+'use client'
 import { PhotoIcon } from '@heroicons/react/24/solid'
-import React, { SetStateAction, useState } from 'react'
+import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -10,28 +11,29 @@ import {
 } from '@/hooks/endpoints/workspaces'
 import { createWorkspaceBody } from '@/schemas/workspaces'
 import { authHeader, onError } from '@/lib/utils'
-import { useSessionData } from '@/providers/session-client-provider'
 import { useQueryClient } from '@tanstack/react-query'
+import { useSession } from '@/hooks/use-session'
+import { useCreateWorkspaceModalStore } from '@/stores/create-workspace-modal-store'
+import { usePathname, useRouter } from 'next/navigation'
 
-type CreateWorkspaceFormProps = {
-  setOpen: (value: SetStateAction<boolean>) => void
-}
-
-export default function CreateWorkspaceForm({
-  setOpen,
-}: CreateWorkspaceFormProps) {
+export default function CreateWorkspaceForm() {
   const { handleSubmit, register, formState, reset, control } =
     useForm<CreateWorkspaceBody>({
       resolver: zodResolver(createWorkspaceBody),
     })
 
+  const setOpen = useCreateWorkspaceModalStore((state) => state.setOpen)
+
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
-  const { token } = useSessionData()
+  const { token } = useSession()
 
   const createWorkspaceMutation = useCreateWorkspace(authHeader(token))
 
   const queryClient = useQueryClient()
+
+  const pathname = usePathname()
+  const router = useRouter()
 
   function onSubmit(data: CreateWorkspaceBody) {
     createWorkspaceMutation.mutate(
@@ -47,6 +49,9 @@ export default function CreateWorkspaceForm({
             queryKey: ['/api/v1/users/me/workspaces'],
           })
           setOpen(false)
+          if (pathname === '/workspaces/create') {
+            router.push('/')
+          }
           toast.success('Workspace created successfully!')
         },
       }

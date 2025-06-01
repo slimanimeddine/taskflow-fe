@@ -10,22 +10,27 @@ import {
 import { ChevronUpDownIcon } from '@heroicons/react/16/solid'
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
-import { WorkspaceModel } from '@/types/models/workspace'
+import { Workspace } from '@/types/models'
 import Image from 'next/image'
+import { useRouter } from 'next/navigation'
 
 type WorkspaceSwitcherProps = {
-  workspaces: WorkspaceModel[]
+  workspaces: Workspace[]
 }
 
 export default function WorkspaceSwitcher({
   workspaces,
 }: WorkspaceSwitcherProps) {
   const [selected, setSelected] = useState(workspaces[0])
-
+  const router = useRouter()
+  function onSelect(workspace: Workspace) {
+    setSelected(workspace)
+    router.push(`/workspaces/${workspace.id}`)
+  }
   return (
     <Listbox
       value={selected}
-      onChange={setSelected}
+      onChange={onSelect}
     >
       <div className="relative mt-2">
         <ListboxButton className="grid w-full cursor-default grid-cols-1 rounded-md bg-gray-800 py-1.5 pr-2 pl-3 text-left text-gray-900 outline-1 -outline-offset-1 outline-gray-700 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6">
@@ -56,10 +61,10 @@ export default function WorkspaceSwitcher({
               className="group relative cursor-default py-2 pr-9 pl-3 text-gray-400 select-none data-focus:bg-indigo-600 data-focus:text-white data-focus:outline-hidden"
             >
               <div className="flex items-center">
-                {workspace.imagePath ? (
+                {workspace.image_path ? (
                   <Image
                     alt=""
-                    src={fileUrl(workspace.imagePath)!}
+                    src={fileUrl(workspace.image_path)!}
                     className="size-5 shrink-0 rounded-full"
                     width={20}
                     height={20}

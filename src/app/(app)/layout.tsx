@@ -30,11 +30,11 @@ import {
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import { useSessionData } from '@/providers/session-client-provider'
 import LoadingUI from '@/components/loading-ui'
 import ErrorUI from '@/components/error-ui'
 import WorkspaceSwitcherWrapper from '@/components/workspaces/workspace-switcher/wrapper'
 import CreateWorkspaceModal from '@/components/workspaces/create-workspace/create-workspace-modal'
+import { useSession } from '@/hooks/use-session'
 
 const navigation = [
   { name: 'Home', href: '/', icon: HomeIcon },
@@ -67,7 +67,7 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const { token } = useSessionData()
+  const { token } = useSession()
   const pathname = usePathname()
   const getAuthenticatedUserQuery = useGetAuthenticatedUser(authHeader(token))
 

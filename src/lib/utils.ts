@@ -127,3 +127,12 @@ export function getDirtyValues<T extends Record<string, any>>(
 export function getFirstLetter(str: string) {
   return str.charAt(0).toUpperCase()
 }
+
+export function startsWithAny(mainString: string, prefixes: string[]): boolean {
+  for (const prefix of prefixes) {
+    if (mainString.startsWith(prefix)) {
+      return true
+    }
+  }
+  return false
+}

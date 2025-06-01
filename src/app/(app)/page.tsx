@@ -1,13 +1,28 @@
-import Home from '@/components/home'
+import Navigate from '@/components/navigate'
+import { listAuthenticatedUserWorkspaces } from '@/hooks/endpoints/workspaces'
 import { verifyAuth } from '@/lib/dal'
 import seo from '@/lib/seo'
 import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
 
 export const metadata: Metadata = {
   ...seo('Dashboard', 'Your Dashboard'),
 }
 
 export default async function Page() {
-  await verifyAuth()
-  return <Home />
+  const { token } = await verifyAuth()
+  const workspaces = await listAuthenticatedUserWorkspaces({
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  })
+  if (workspaces.data.length === 0) {
+    redirect('/workspaces/create')
+  }
+  return (
+    <Navigate
+      to={`/workspaces/${workspaces.data[0].id}`}
+      replace={false}
+    />
+  )
 }

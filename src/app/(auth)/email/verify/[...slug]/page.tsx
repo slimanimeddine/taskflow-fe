@@ -14,7 +14,7 @@ export default async function Page({
   params: Promise<{ slug: string[] }>
   searchParams: Promise<{ [key: string]: string }>
 }) {
-  await verifyAuth()
+  const {} = await verifyAuth()
   const { slug } = await params
   const { expires, signature } = await searchParams
   return (

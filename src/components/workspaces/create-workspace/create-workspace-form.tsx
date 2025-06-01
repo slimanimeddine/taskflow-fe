@@ -168,13 +168,15 @@ export default function CreateWorkspaceForm() {
       <div className="border-t border-dotted border-gray-300"></div>
 
       <div className="flex items-center justify-end gap-x-6">
-        <button
-          onClick={() => setOpen(false)}
-          type="button"
-          className="text-sm leading-6 font-semibold text-gray-900"
-        >
-          Cancel
-        </button>
+        {pathname !== '/workspaces/create' && (
+          <button
+            onClick={() => setOpen(false)}
+            type="button"
+            className="text-sm leading-6 font-semibold text-gray-900"
+          >
+            Cancel
+          </button>
+        )}
         <button
           type="submit"
           disabled={isDisabled}

@@ -1,13 +1,16 @@
 import { NextResponse, NextRequest } from 'next/server'
 import { cookies } from 'next/headers'
 import { decrypt } from '@/lib/encryption'
+import { startsWithAny } from './lib/utils'
 
-const protectedRoutes = ['/']
+const protectedStaticRoutes = ['/', '/workspaces/create']
+const protectedDynamicRoutes = ['/workspaces']
 
 export default async function middleware(req: NextRequest) {
   const path = req.nextUrl.pathname
   const isProtectedRoute =
-    protectedRoutes.includes(path) || path.startsWith('/email/verify')
+    protectedStaticRoutes.includes(path) ||
+    startsWithAny(path, protectedDynamicRoutes)
 
   const cookie = (await cookies()).get('session')?.value
   const session = await decrypt(cookie)

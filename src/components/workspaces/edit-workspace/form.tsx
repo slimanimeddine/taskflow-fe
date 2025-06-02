@@ -14,15 +14,14 @@ import { authHeader, fileUrl, getDirtyValues, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSession } from '@/hooks/use-session'
 import { useRouter } from 'next/navigation'
+import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 type EditWorkspaceFormProps = {
-  workspaceId: string
   name: string
   imagePath: string | null
 }
 
 export default function EditWorkspaceForm({
-  workspaceId,
   name,
   imagePath,
 }: EditWorkspaceFormProps) {
@@ -34,6 +33,7 @@ export default function EditWorkspaceForm({
       },
     })
 
+  const workspaceId = useWorkspaceId()
   const [imagePreview, setImagePreview] = useState<string | undefined | null>(
     fileUrl(imagePath)
   )
@@ -93,11 +93,11 @@ export default function EditWorkspaceForm({
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
+      className="space-y-6 bg-gray-50 p-6 rounded-lg shadow-sm"
     >
       <div>
         <h2 className="text-xl leading-7 font-semibold text-gray-900">
-          Edit workspace form
+          Edit workspace
         </h2>
         <div className="mt-4 border-t border-dotted border-gray-300"></div>
       </div>
@@ -115,7 +115,7 @@ export default function EditWorkspaceForm({
               id="name"
               type="text"
               placeholder="Enter workspace name"
-              className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
+              className="block bg-white w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
               {...register('name')}
             />
             {formState.errors.name && (

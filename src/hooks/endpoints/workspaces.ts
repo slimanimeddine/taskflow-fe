@@ -32,11 +32,22 @@ export type ShowWorkspace403 = UnauthorizedApiResponse
 export type ShowWorkspace404 = NotFoundApiResponse
 export type ShowWorkspace401 = UnauthenticatedApiResponse
 
+export type DeleteWorkspace200 = SuccessNoDataApiResponse
+export type DeleteWorkspace403 = UnauthorizedApiResponse
+export type DeleteWorkspace404 = NotFoundApiResponse
+export type DeleteWorkspace401 = UnauthenticatedApiResponse
+
+export type ResetWorkspaceInviteCode200 = ApiResource<Workspace>
+export type ResetWorkspaceInviteCode403 = UnauthorizedApiResponse
+export type ResetWorkspaceInviteCode404 = NotFoundApiResponse
+export type ResetWorkspaceInviteCode401 = UnauthenticatedApiResponse
+
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
 import {
   ApiResource,
   NotFoundApiResponse,
+  SuccessNoDataApiResponse,
   UnauthenticatedApiResponse,
   UnauthorizedApiResponse,
 } from '@/types/api-responses'
@@ -608,4 +619,197 @@ export const prefetchShowWorkspace = async <
   await queryClient.prefetchQuery(queryOptions)
 
   return queryClient
+}
+
+/**
+ * Delete the specified workspace.
+ * @summary Delete workspace
+ */
+export const deleteWorkspace = (
+  workspaceId: string,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  return customInstance<DeleteWorkspace200>(
+    { url: `/api/v1/workspaces/${workspaceId}`, method: 'DELETE' },
+    options
+  )
+}
+
+export const getDeleteWorkspaceMutationOptions = <
+  TError = ErrorType<
+    DeleteWorkspace401 | DeleteWorkspace403 | DeleteWorkspace404
+  >,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteWorkspace>>,
+    TError,
+    { workspaceId: string },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteWorkspace>>,
+  TError,
+  { workspaceId: string },
+  TContext
+> => {
+  const mutationKey = ['deleteWorkspace']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteWorkspace>>,
+    { workspaceId: string }
+  > = (props) => {
+    const { workspaceId } = props ?? {}
+
+    return deleteWorkspace(workspaceId, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type DeleteWorkspaceMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteWorkspace>>
+>
+
+export type DeleteWorkspaceMutationError = ErrorType<
+  DeleteWorkspace401 | DeleteWorkspace403 | DeleteWorkspace404
+>
+
+/**
+ * @summary Delete workspace
+ */
+export const useDeleteWorkspace = <
+  TError = ErrorType<
+    DeleteWorkspace401 | DeleteWorkspace403 | DeleteWorkspace404
+  >,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteWorkspace>>,
+      TError,
+      { workspaceId: string },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteWorkspace>>,
+  TError,
+  { workspaceId: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteWorkspaceMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * Reset the invite code for the specified workspace.
+ * @summary Reset workspace invite code
+ */
+export const resetWorkspaceInviteCode = (
+  workspaceId: string,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  return customInstance<ResetWorkspaceInviteCode200>(
+    {
+      url: `/api/v1/workspaces/${workspaceId}/reset-invite-code`,
+      method: 'PATCH',
+    },
+    options
+  )
+}
+
+export const getResetWorkspaceInviteCodeMutationOptions = <
+  TError = ErrorType<
+    | ResetWorkspaceInviteCode401
+    | ResetWorkspaceInviteCode403
+    | ResetWorkspaceInviteCode404
+  >,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof resetWorkspaceInviteCode>>,
+    TError,
+    { workspaceId: string },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof resetWorkspaceInviteCode>>,
+  TError,
+  { workspaceId: string },
+  TContext
+> => {
+  const mutationKey = ['resetWorkspaceInviteCode']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof resetWorkspaceInviteCode>>,
+    { workspaceId: string }
+  > = (props) => {
+    const { workspaceId } = props ?? {}
+
+    return resetWorkspaceInviteCode(workspaceId, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type ResetWorkspaceInviteCodeMutationResult = NonNullable<
+  Awaited<ReturnType<typeof resetWorkspaceInviteCode>>
+>
+
+export type ResetWorkspaceInviteCodeMutationError = ErrorType<
+  | ResetWorkspaceInviteCode401
+  | ResetWorkspaceInviteCode403
+  | ResetWorkspaceInviteCode404
+>
+
+/**
+ * @summary Reset workspace invite code
+ */
+export const useResetWorkspaceInviteCode = <
+  TError = ErrorType<
+    | ResetWorkspaceInviteCode401
+    | ResetWorkspaceInviteCode403
+    | ResetWorkspaceInviteCode404
+  >,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof resetWorkspaceInviteCode>>,
+      TError,
+      { workspaceId: string },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof resetWorkspaceInviteCode>>,
+  TError,
+  { workspaceId: string },
+  TContext
+> => {
+  const mutationOptions = getResetWorkspaceInviteCodeMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
 }

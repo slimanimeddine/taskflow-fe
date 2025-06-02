@@ -80,7 +80,7 @@ export default function CreateWorkspaceForm() {
     >
       <div>
         <h2 className="text-xl leading-7 font-semibold text-gray-900">
-          Create workspace form
+          Create workspace
         </h2>
         <div className="mt-4 border-t border-dotted border-gray-300"></div>
       </div>

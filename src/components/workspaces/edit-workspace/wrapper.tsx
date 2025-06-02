@@ -6,15 +6,11 @@ import { useShowWorkspace } from '@/hooks/endpoints/workspaces'
 import { useSession } from '@/hooks/use-session'
 import { authHeader, matchQueryStatus } from '@/lib/utils'
 import EditWorkspaceForm from './form'
+import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
-type EditWorkspaceWrapperProps = {
-  workspaceId: string
-}
-
-export default function EditWorkspaceWrapper({
-  workspaceId,
-}: EditWorkspaceWrapperProps) {
+export default function EditWorkspaceWrapper() {
   const { token } = useSession()
+  const workspaceId = useWorkspaceId()
 
   const showWorkspaceQuery = useShowWorkspace(workspaceId, authHeader(token))
 
@@ -25,7 +21,6 @@ export default function EditWorkspaceWrapper({
     Success: ({ data }) => {
       return (
         <EditWorkspaceForm
-          workspaceId={workspaceId}
           name={data.data.name}
           imagePath={data.data.image_path}
         />

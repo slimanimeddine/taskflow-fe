@@ -1,9 +1,17 @@
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQuery } from '@tanstack/react-query'
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
   QueryClient,
+  QueryFunction,
+  QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
+  UseQueryOptions,
+  UseQueryResult,
 } from '@tanstack/react-query'
 
 export type CreateMember200 = ApiResource<Member>
@@ -17,6 +25,10 @@ export type DeleteMember400 = ErrorApiResponse
 export type DeleteMember403 = UnauthorizedApiResponse
 export type DeleteMember401 = UnauthenticatedApiResponse
 export type DeleteMember404 = NotFoundApiResponse
+
+export type ShowAuthenticatedUserMember200 = ApiResource<Member>
+export type ShowAuthenticatedUserMember404 = NotFoundApiResponse
+export type ShowAuthenticatedUserMember401 = UnauthenticatedApiResponse
 
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
@@ -224,4 +236,226 @@ export const useDeleteMember = <
   const mutationOptions = getDeleteMemberMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * Retrieve the member details of the authenticated user in a specific workspace.
+ * @summary Show authenticated user member
+ */
+export const showAuthenticatedUserMember = (
+  workspaceId: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ShowAuthenticatedUserMember200>(
+    {
+      url: `/api/v1/workspaces/${workspaceId}/users/me/members`,
+      method: 'GET',
+      signal,
+    },
+    options
+  )
+}
+
+export const getShowAuthenticatedUserMemberQueryKey = (workspaceId: string) => {
+  return [`/api/v1/workspaces/${workspaceId}/users/me/members`] as const
+}
+
+export const getShowAuthenticatedUserMemberQueryOptions = <
+  TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+  TError = ErrorType<
+    ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey =
+    queryOptions?.queryKey ??
+    getShowAuthenticatedUserMemberQueryKey(workspaceId)
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof showAuthenticatedUserMember>>
+  > = ({ signal }) =>
+    showAuthenticatedUserMember(workspaceId, requestOptions, signal)
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!workspaceId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ShowAuthenticatedUserMemberQueryResult = NonNullable<
+  Awaited<ReturnType<typeof showAuthenticatedUserMember>>
+>
+export type ShowAuthenticatedUserMemberQueryError = ErrorType<
+  ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+>
+
+export function useShowAuthenticatedUserMember<
+  TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+  TError = ErrorType<
+    ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+  >,
+>(
+  workspaceId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+          TError,
+          Awaited<ReturnType<typeof showAuthenticatedUserMember>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useShowAuthenticatedUserMember<
+  TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+  TError = ErrorType<
+    ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+          TError,
+          Awaited<ReturnType<typeof showAuthenticatedUserMember>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useShowAuthenticatedUserMember<
+  TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+  TError = ErrorType<
+    ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary Show authenticated user member
+ */
+
+export function useShowAuthenticatedUserMember<
+  TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+  TError = ErrorType<
+    ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getShowAuthenticatedUserMemberQueryOptions(
+    workspaceId,
+    options
+  )
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary Show authenticated user member
+ */
+export const prefetchShowAuthenticatedUserMember = async <
+  TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+  TError = ErrorType<
+    ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
+  >,
+>(
+  queryClient: QueryClient,
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+): Promise<QueryClient> => {
+  const queryOptions = getShowAuthenticatedUserMemberQueryOptions(
+    workspaceId,
+    options
+  )
+
+  await queryClient.prefetchQuery(queryOptions)
+
+  return queryClient
 }

@@ -6,6 +6,21 @@ export interface Member {
   workspace_id: string
   created_at: string | null
   updated_at: string | null
+  // relations
+  workspace: Workspace
+  user: User
+}
+
+export interface Project {
+  // columns
+  id: string
+  image_path: string | null
+  name: string
+  workspace_id: string
+  created_at: string | null
+  updated_at: string | null
+  // relations
+  workspace: Workspace
 }
 
 export interface User {
@@ -20,6 +35,8 @@ export interface User {
   all_workspaces: Workspace[]
   admin_workspaces: Workspace[]
   member_workspaces: Workspace[]
+  tokens: PersonalAccessToken[]
+  notifications: DatabaseNotification[]
 }
 
 export interface Workspace {
@@ -33,4 +50,6 @@ export interface Workspace {
   updated_at: string | null
   // relations
   creator: User
+  users: User[]
+  projects: Project[]
 }

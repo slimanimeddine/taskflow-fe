@@ -1,46 +1,20 @@
 'use client'
 import Logo from '@/components/logo'
-import { classNames, getFirstLetter } from '@/lib/utils'
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   TransitionChild,
 } from '@headlessui/react'
-import { PlusCircleIcon } from '@heroicons/react/20/solid'
-import {
-  Bars3Icon,
-  ClipboardDocumentListIcon,
-  Cog6ToothIcon,
-  HomeIcon,
-  UsersIcon,
-  XMarkIcon,
-} from '@heroicons/react/24/outline'
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import WorkspaceSwitcherWrapper from '@/components/workspaces/workspace-switcher/wrapper'
 import CreateWorkspaceModal from '@/components/workspaces/create-workspace/modal'
 import UserDropdown from '@/components/user-dropdown'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
-
-const projects = [
-  {
-    id: 1,
-    name: 'Project Alpha',
-    href: '/projects/1',
-  },
-  {
-    id: 2,
-    name: 'Project Beta',
-    href: '/projects/2',
-  },
-  {
-    id: 3,
-    name: 'Project Gamma',
-    href: '/projects/3',
-  },
-]
+import ListProjects from '@/components/projects/list-projects'
+import LayoutNavigation from '@/components/layout-navigation'
+import CreateProjectModal from '@/components/projects/create-project/modal'
 
 export default function Layout({
   children,
@@ -48,23 +22,6 @@ export default function Layout({
   children: React.ReactNode
 }>) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const pathname = usePathname()
-  const workspaceId = useWorkspaceId()
-
-  const navigation = [
-    { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'My Tasks', href: '/my-tasks', icon: ClipboardDocumentListIcon },
-    {
-      name: 'Members',
-      href: `/workspaces/${workspaceId}/members`,
-      icon: UsersIcon,
-    },
-    {
-      name: 'Settings',
-      href: `/workspaces/${workspaceId}/settings`,
-      icon: Cog6ToothIcon,
-    },
-  ]
 
   return (
     <div>
@@ -111,33 +68,7 @@ export default function Layout({
                   className="flex flex-1 flex-col gap-y-7"
                 >
                   <li>
-                    <ul
-                      role="list"
-                      className="-mx-2 space-y-1"
-                    >
-                      {navigation.map((item) => (
-                        <li key={item.name}>
-                          <Link
-                            href={item.href}
-                            aria-current={
-                              pathname === item.href ? 'page' : undefined
-                            }
-                            className={classNames(
-                              pathname === item.href
-                                ? 'bg-gray-800 text-white'
-                                : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                              'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                            )}
-                          >
-                            <item.icon
-                              aria-hidden="true"
-                              className="h-6 w-6 shrink-0"
-                            />
-                            {item.name}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <LayoutNavigation />
                   </li>
                   <li>
                     <div className="flex items-center justify-between">
@@ -155,37 +86,10 @@ export default function Layout({
                       <span className="text-sm leading-6 font-semibold text-gray-400">
                         Projects
                       </span>
-                      <button>
-                        <PlusCircleIcon className="h-5 w-5 flex-none text-gray-400" />
-                      </button>
+                      <CreateProjectModal />
                     </div>
 
-                    <ul
-                      role="list"
-                      className="-mx-2 mt-2 space-y-1"
-                    >
-                      {projects.map((project) => (
-                        <li key={project.name}>
-                          <Link
-                            href={project.href}
-                            aria-current={
-                              pathname === project.href ? 'page' : undefined
-                            }
-                            className={classNames(
-                              pathname === project.href
-                                ? 'bg-gray-800 text-white'
-                                : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                              'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                            )}
-                          >
-                            <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                              {getFirstLetter(project.name)}
-                            </span>
-                            <span className="truncate">{project.name}</span>
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
+                    <ListProjects />
                   </li>
                 </ul>
               </nav>
@@ -209,33 +113,7 @@ export default function Layout({
               className="flex flex-1 flex-col gap-y-7"
             >
               <li>
-                <ul
-                  role="list"
-                  className="-mx-2 space-y-1"
-                >
-                  {navigation.map((item) => (
-                    <li key={item.name}>
-                      <Link
-                        href={item.href}
-                        aria-current={
-                          pathname === item.href ? 'page' : undefined
-                        }
-                        className={classNames(
-                          pathname === item.href
-                            ? 'bg-gray-800 text-white'
-                            : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                        )}
-                      >
-                        <item.icon
-                          aria-hidden="true"
-                          className="h-6 w-6 shrink-0"
-                        />
-                        {item.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <LayoutNavigation />
               </li>
               <li>
                 <div className="flex items-center justify-between">
@@ -253,37 +131,10 @@ export default function Layout({
                   <span className="text-sm leading-6 font-semibold text-gray-400">
                     Projects
                   </span>
-                  <button>
-                    <PlusCircleIcon className="h-5 w-5 flex-none text-gray-400" />
-                  </button>
+                  <CreateProjectModal />
                 </div>
 
-                <ul
-                  role="list"
-                  className="-mx-2 mt-2 space-y-1"
-                >
-                  {projects.map((project) => (
-                    <li key={project.name}>
-                      <Link
-                        href={project.href}
-                        aria-current={
-                          pathname === project.href ? 'page' : undefined
-                        }
-                        className={classNames(
-                          pathname === project.href
-                            ? 'bg-gray-800 text-white'
-                            : 'text-gray-400 hover:bg-gray-800 hover:text-white',
-                          'group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold'
-                        )}
-                      >
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border border-gray-700 bg-gray-800 text-[0.625rem] font-medium text-gray-400 group-hover:text-white">
-                          {getFirstLetter(project.name)}
-                        </span>
-                        <span className="truncate">{project.name}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
+                <ListProjects />
               </li>
             </ul>
           </nav>

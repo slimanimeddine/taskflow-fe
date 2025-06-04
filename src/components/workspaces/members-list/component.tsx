@@ -58,9 +58,9 @@ export default function MembersList() {
                   >
                     <MenuButton className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
                       <span className="sr-only">Open options</span>
-                      <button className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
                         Actions
-                      </button>
+                      </span>
                     </MenuButton>
                     <MenuItems
                       transition

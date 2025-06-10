@@ -1,11 +1,11 @@
-import MembersList from '@/components/workspaces/members-list'
+import ViewProject from '@/components/projects/view-project'
 import { verifyAuth, verifyMember } from '@/lib/dal'
 import { redirect } from 'next/navigation'
 
 export default async function Page({
   params,
 }: {
-  params: Promise<{ workspaceId: string }>
+  params: Promise<{ workspaceId: string; projectId: string }>
 }) {
   const { token } = await verifyAuth()
   const { workspaceId } = await params
@@ -13,5 +13,6 @@ export default async function Page({
   if (!isMember) {
     redirect('/')
   }
-  return <MembersList />
+
+  return <ViewProject />
 }

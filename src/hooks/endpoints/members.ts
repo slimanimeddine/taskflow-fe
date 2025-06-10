@@ -30,6 +30,11 @@ export type ShowAuthenticatedUserMember200 = ApiResource<Member>
 export type ShowAuthenticatedUserMember404 = NotFoundApiResponse
 export type ShowAuthenticatedUserMember401 = UnauthenticatedApiResponse
 
+export type PromoteMember200 = ApiResource<Member>
+export type PromoteMember403 = UnauthorizedApiResponse
+export type PromoteMember401 = UnauthenticatedApiResponse
+export type PromoteMember404 = NotFoundApiResponse
+
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
 import {
@@ -458,4 +463,96 @@ export const prefetchShowAuthenticatedUserMember = async <
   await queryClient.prefetchQuery(queryOptions)
 
   return queryClient
+}
+
+/**
+ * Promote a member to admin in a workspace.
+ * @summary Promote member
+ */
+export const promoteMember = (
+  workspaceId: string,
+  userId: string,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  return customInstance<PromoteMember200>(
+    {
+      url: `/api/v1/workspaces/${workspaceId}/users/${userId}/members`,
+      method: 'PATCH',
+    },
+    options
+  )
+}
+
+export const getPromoteMemberMutationOptions = <
+  TError = ErrorType<PromoteMember401 | PromoteMember403 | PromoteMember404>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof promoteMember>>,
+    TError,
+    { workspaceId: string; userId: string },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof promoteMember>>,
+  TError,
+  { workspaceId: string; userId: string },
+  TContext
+> => {
+  const mutationKey = ['promoteMember']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof promoteMember>>,
+    { workspaceId: string; userId: string }
+  > = (props) => {
+    const { workspaceId, userId } = props ?? {}
+
+    return promoteMember(workspaceId, userId, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type PromoteMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof promoteMember>>
+>
+
+export type PromoteMemberMutationError = ErrorType<
+  PromoteMember401 | PromoteMember403 | PromoteMember404
+>
+
+/**
+ * @summary Promote member
+ */
+export const usePromoteMember = <
+  TError = ErrorType<PromoteMember401 | PromoteMember403 | PromoteMember404>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof promoteMember>>,
+      TError,
+      { workspaceId: string; userId: string },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof promoteMember>>,
+  TError,
+  { workspaceId: string; userId: string },
+  TContext
+> => {
+  const mutationOptions = getPromoteMemberMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
 }

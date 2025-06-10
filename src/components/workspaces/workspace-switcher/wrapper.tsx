@@ -4,7 +4,7 @@ import { useListAuthenticatedUserWorkspaces } from '@/hooks/endpoints/workspaces
 import { authHeader, matchQueryStatus } from '@/lib/utils'
 import LoadingUI from '../../loading-ui'
 import ErrorUI from '../../error-ui'
-import WorkspaceSwitcher from './component'
+import WorkspaceSwitcher from '.'
 import { useSession } from '@/hooks/use-session'
 
 export default function WorkspaceSwitcherWrapper() {

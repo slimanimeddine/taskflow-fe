@@ -1,6 +1,6 @@
 import DeleteWorkspace from '@/components/workspaces/delete-workspace'
 import EditWorkspaceWrapper from '@/components/workspaces/edit-workspace/wrapper'
-import InviteMembers from '@/components/workspaces/invite-members/component'
+import InviteMembers from '@/components/workspaces/invite-members'
 import { showWorkspace } from '@/hooks/endpoints/workspaces'
 import { verifyAuth, verifyMember } from '@/lib/dal'
 import seo from '@/lib/seo'

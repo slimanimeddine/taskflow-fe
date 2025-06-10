@@ -30,17 +30,29 @@ export type ShowProject403 = UnauthorizedApiResponse
 export type ShowProject401 = UnauthenticatedApiResponse
 export type ShowProject404 = NotFoundApiResponse
 
+export type EditProject200 = ApiResource<Project>
+export type EditProject403 = UnauthorizedApiResponse
+export type EditProject404 = NotFoundApiResponse
+export type EditProject401 = UnauthenticatedApiResponse
+export type EditProjectBody = z.infer<typeof editProjectBody>
+
+export type DeleteProject200 = SuccessNoDataApiResponse
+export type DeleteProject403 = UnauthorizedApiResponse
+export type DeleteProject401 = UnauthenticatedApiResponse
+export type DeleteProject404 = NotFoundApiResponse
+
 import { customInstance } from '@/lib/axios'
 import type { BodyType, ErrorType } from '@/lib/axios'
 import {
   ApiResource,
   NotFoundApiResponse,
+  SuccessNoDataApiResponse,
   UnauthenticatedApiResponse,
   UnauthorizedApiResponse,
 } from '@/types/api-responses'
 import { Project } from '@/types/models'
 import { z } from 'zod'
-import { createProjectBody } from '@/schemas/projects'
+import { createProjectBody, editProjectBody } from '@/schemas/projects'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -552,4 +564,196 @@ export const prefetchShowProject = async <
   await queryClient.prefetchQuery(queryOptions)
 
   return queryClient
+}
+
+/**
+ * Edit the specified project.
+ * @summary Edit project
+ */
+export const editProject = (
+  projectId: string,
+  editProjectBody?: BodyType<EditProjectBody>,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  const formData = new FormData()
+  if (editProjectBody?.name !== undefined) {
+    formData.append('name', editProjectBody.name)
+  }
+  if (editProjectBody?.image !== undefined && editProjectBody.image !== null) {
+    formData.append('image', editProjectBody.image)
+  }
+
+  return customInstance<EditProject200>(
+    {
+      url: `/api/v1/projects/${projectId}`,
+      method: 'POST',
+      headers: { 'Content-Type': 'multipart/form-data' },
+      data: formData,
+      signal,
+    },
+    options
+  )
+}
+
+export const getEditProjectMutationOptions = <
+  TError = ErrorType<EditProject401 | EditProject403 | EditProject404>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof editProject>>,
+    TError,
+    { projectId: string; data: BodyType<EditProjectBody> },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof editProject>>,
+  TError,
+  { projectId: string; data: BodyType<EditProjectBody> },
+  TContext
+> => {
+  const mutationKey = ['editProject']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof editProject>>,
+    { projectId: string; data: BodyType<EditProjectBody> }
+  > = (props) => {
+    const { projectId, data } = props ?? {}
+
+    return editProject(projectId, data, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type EditProjectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof editProject>>
+>
+export type EditProjectMutationBody = BodyType<EditProjectBody>
+export type EditProjectMutationError = ErrorType<
+  EditProject401 | EditProject403 | EditProject404
+>
+
+/**
+ * @summary Edit project
+ */
+export const useEditProject = <
+  TError = ErrorType<EditProject401 | EditProject403 | EditProject404>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof editProject>>,
+      TError,
+      { projectId: string; data: BodyType<EditProjectBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof editProject>>,
+  TError,
+  { projectId: string; data: BodyType<EditProjectBody> },
+  TContext
+> => {
+  const mutationOptions = getEditProjectMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * Delete the specified project.
+ * @summary Delete project
+ */
+export const deleteProject = (
+  projectId: string,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  return customInstance<DeleteProject200>(
+    { url: `/api/v1/projects/${projectId}`, method: 'DELETE' },
+    options
+  )
+}
+
+export const getDeleteProjectMutationOptions = <
+  TError = ErrorType<DeleteProject401 | DeleteProject403 | DeleteProject404>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteProject>>,
+    TError,
+    { projectId: string },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteProject>>,
+  TError,
+  { projectId: string },
+  TContext
+> => {
+  const mutationKey = ['deleteProject']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteProject>>,
+    { projectId: string }
+  > = (props) => {
+    const { projectId } = props ?? {}
+
+    return deleteProject(projectId, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type DeleteProjectMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteProject>>
+>
+
+export type DeleteProjectMutationError = ErrorType<
+  DeleteProject401 | DeleteProject403 | DeleteProject404
+>
+
+/**
+ * @summary Delete project
+ */
+export const useDeleteProject = <
+  TError = ErrorType<DeleteProject401 | DeleteProject403 | DeleteProject404>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteProject>>,
+      TError,
+      { projectId: string },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteProject>>,
+  TError,
+  { projectId: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteProjectMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
 }

@@ -1,4 +1,5 @@
-import ViewProject from '@/components/projects/view-project'
+import DeleteProject from '@/components/projects/delete-project'
+import EditProjectWrapper from '@/components/projects/edit-project/wrapper'
 import { showProject } from '@/hooks/endpoints/projects'
 import { verifyAuth, verifyMember } from '@/lib/dal'
 import seo from '@/lib/seo'
@@ -27,11 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ workspaceId: string; projectId: string }>
-}) {
+export default async function Page({ params }: Props) {
   const { token } = await verifyAuth()
   const { workspaceId } = await params
   const isMember = await verifyMember(token, workspaceId)
@@ -39,5 +36,10 @@ export default async function Page({
     redirect('/')
   }
 
-  return <ViewProject />
+  return (
+    <div className="space-y-6">
+      <EditProjectWrapper />
+      <DeleteProject />
+    </div>
+  )
 }

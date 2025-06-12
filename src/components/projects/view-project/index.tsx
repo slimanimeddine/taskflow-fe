@@ -12,15 +12,16 @@ import {
 } from '@/lib/utils'
 import LoadingUI from '../../loading-ui'
 import ErrorUI from '../../error-ui'
-import { PencilIcon, PlusIcon } from '@heroicons/react/24/outline' // Added PlusIcon, Squares2X2Icon, CalendarDaysIcon, TableCellsIcon
+import { PencilIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import TasksTableView from './tasks/table-view'
+import TasksTableView from '../../tasks/table-view'
 import StatusFilter from './status-filter'
 import AssigneeFilter from './assignee-filter'
 import ProjectFilter from './project-filter'
 import ChangeTasksView from './change-tasks-view'
 import Link from 'next/link'
 import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import CreateTaskModal from '../../tasks/create-task/modal'
 
 const tasks = [
   {
@@ -56,9 +57,6 @@ export default function ViewProject() {
   const workspaceId = useWorkspaceId()
 
   const showProjectQuery = useShowProject(projectId, authHeader(token))
-
-  // You'd manage the active view state here, e.g., using useState
-  // const [currentView, setCurrentView] = useState('table'); // 'table', 'kanban', 'calendar'
 
   return matchQueryStatus(showProjectQuery, {
     Loading: <LoadingUI />,
@@ -153,30 +151,14 @@ export default function ViewProject() {
                   <AssigneeFilter />
                   <ProjectFilter />
                 </div>
-                {/* New Buttons */}
                 <div className="flex items-center gap-x-1 flex-wrap">
-                  {/* Change View Button Group */}
                   <ChangeTasksView />
-                  {/* Add New Task Button */}
-                  <button
-                    type="button"
-                    className="flex items-center gap-x-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                    // onClick={() => handleAddNewTask()} // Example onClick handler
-                  >
-                    <PlusIcon
-                      className="-ml-1.5 h-5 w-5"
-                      aria-hidden="true"
-                    />
-                    New Task
-                  </button>
+                  <CreateTaskModal />
                 </div>
               </div>
             </div>
 
             <TasksTableView />
-            {/* You'd conditionally render your KanbanView or CalendarView here based on currentView state */}
-            {/* {currentView === 'kanban' && <TasksKanbanView />} */}
-            {/* {currentView === 'calendar' && <TasksCalendarView />} */}
           </div>
         </div>
       )

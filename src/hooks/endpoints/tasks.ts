@@ -23,6 +23,7 @@ export type CreateTaskBody = z.infer<typeof createTaskBody>
 
 export type ListTasks200 = PaginatedApiResponse<Task>
 export type ListTasks403 = UnauthorizedApiResponse
+export type ListTasks404 = NotFoundApiResponse
 export type ListTasks401 = UnauthenticatedApiResponse
 export type ListTasksParams = {
   'filter[name]'?: string
@@ -82,7 +83,7 @@ export const getListTasksQueryKey = (params?: ListTasksParams) => {
 
 export const getListTasksQueryOptions = <
   TData = Awaited<ReturnType<typeof listTasks>>,
-  TError = ErrorType<ListTasks401 | ListTasks403>,
+  TError = ErrorType<ListTasks401 | ListTasks403 | ListTasks404>,
 >(
   params?: ListTasksParams,
   options?: {
@@ -110,11 +111,13 @@ export const getListTasksQueryOptions = <
 export type ListTasksQueryResult = NonNullable<
   Awaited<ReturnType<typeof listTasks>>
 >
-export type ListTasksQueryError = ErrorType<ListTasks401 | ListTasks403>
+export type ListTasksQueryError = ErrorType<
+  ListTasks401 | ListTasks403 | ListTasks404
+>
 
 export function useListTasks<
   TData = Awaited<ReturnType<typeof listTasks>>,
-  TError = ErrorType<ListTasks401 | ListTasks403>,
+  TError = ErrorType<ListTasks401 | ListTasks403 | ListTasks404>,
 >(
   params: undefined | ListTasksParams,
   options: {
@@ -137,7 +140,7 @@ export function useListTasks<
 }
 export function useListTasks<
   TData = Awaited<ReturnType<typeof listTasks>>,
-  TError = ErrorType<ListTasks401 | ListTasks403>,
+  TError = ErrorType<ListTasks401 | ListTasks403 | ListTasks404>,
 >(
   params?: ListTasksParams,
   options?: {
@@ -160,7 +163,7 @@ export function useListTasks<
 }
 export function useListTasks<
   TData = Awaited<ReturnType<typeof listTasks>>,
-  TError = ErrorType<ListTasks401 | ListTasks403>,
+  TError = ErrorType<ListTasks401 | ListTasks403 | ListTasks404>,
 >(
   params?: ListTasksParams,
   options?: {
@@ -179,7 +182,7 @@ export function useListTasks<
 
 export function useListTasks<
   TData = Awaited<ReturnType<typeof listTasks>>,
-  TError = ErrorType<ListTasks401 | ListTasks403>,
+  TError = ErrorType<ListTasks401 | ListTasks403 | ListTasks404>,
 >(
   params?: ListTasksParams,
   options?: {
@@ -209,7 +212,7 @@ export function useListTasks<
  */
 export const prefetchListTasks = async <
   TData = Awaited<ReturnType<typeof listTasks>>,
-  TError = ErrorType<ListTasks401 | ListTasks403>,
+  TError = ErrorType<ListTasks401 | ListTasks403 | ListTasks404>,
 >(
   queryClient: QueryClient,
   params?: ListTasksParams,

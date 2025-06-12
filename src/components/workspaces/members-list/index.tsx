@@ -25,7 +25,6 @@ export default function MembersList() {
         Empty: <></>,
         Success: ({ data }) => {
           const members = data.data
-          console.log(members)
 
           return (
             <ul

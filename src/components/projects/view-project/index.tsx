@@ -23,6 +23,7 @@ import Link from 'next/link'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import CreateTaskModal from '../../tasks/create-task/modal'
 import { useChangeTasksView } from '@/hooks/use-change-tasks-view'
+import DueDateFilter from './filtering/due-date-filter'
 
 const tasks = [
   {
@@ -153,6 +154,7 @@ export default function ViewProject() {
                   <StatusFilter />
                   <AssigneeFilter />
                   <ProjectFilter />
+                  <DueDateFilter />
                 </div>
                 <div className="flex items-center gap-x-1 flex-wrap">
                   <ChangeTasksView />

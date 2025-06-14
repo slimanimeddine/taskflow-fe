@@ -18,6 +18,7 @@ import { useTaskProjectFilter } from '@/hooks/filtering/use-task-project-filter'
 import { useTaskAssigneeFilter } from '@/hooks/filtering/use-task-assignee-filter'
 import { useTaskSort } from '@/hooks/sorting/use-task-sort'
 import FieldSort from './sorting/field-sort'
+import { useTaskDueDateFilter } from '@/hooks/filtering/use-task-due-date-filter'
 
 export default function TasksTableView() {
   const { token } = useSession()
@@ -26,6 +27,7 @@ export default function TasksTableView() {
   const { project } = useTaskProjectFilter()
   const { assignee } = useTaskAssigneeFilter()
   const { sort } = useTaskSort()
+  const { dueDate } = useTaskDueDateFilter()
 
   const listTasksQuery = useListTasks(
     {
@@ -33,6 +35,7 @@ export default function TasksTableView() {
       ...(status && { 'filter[status]': status }),
       ...(project && { 'filter[project]': project.id }),
       ...(assignee && { 'filter[assignee]': assignee.id }),
+      ...(dueDate && { 'filter[due_date]': dueDate.toDateString() }),
       ...(sort && { sort }),
     },
     authHeader(token)

@@ -47,6 +47,11 @@ export type ListTasksParams = {
   )[]
 }
 
+export type DeleteTask200 = SuccessNoDataApiResponse
+export type DeleteTask403 = UnauthorizedApiResponse
+export type DeleteTask401 = UnauthenticatedApiResponse
+export type DeleteTask404 = NotFoundApiResponse
+
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
 import {
@@ -54,6 +59,7 @@ import {
   ErrorApiResponse,
   NotFoundApiResponse,
   PaginatedApiResponse,
+  SuccessNoDataApiResponse,
   UnauthenticatedApiResponse,
   UnauthorizedApiResponse,
 } from '@/types/api-responses'
@@ -326,6 +332,94 @@ export const useCreateTask = <
   TContext
 > => {
   const mutationOptions = getCreateTaskMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * Delete the specified task.
+ * @summary Delete task
+ */
+export const deleteTask = (
+  taskId: string,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  return customInstance<DeleteTask200>(
+    { url: `/api/v1/tasks/${taskId}`, method: 'DELETE' },
+    options
+  )
+}
+
+export const getDeleteTaskMutationOptions = <
+  TError = ErrorType<DeleteTask401 | DeleteTask403 | DeleteTask404>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof deleteTask>>,
+    TError,
+    { taskId: string },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof deleteTask>>,
+  TError,
+  { taskId: string },
+  TContext
+> => {
+  const mutationKey = ['deleteTask']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof deleteTask>>,
+    { taskId: string }
+  > = (props) => {
+    const { taskId } = props ?? {}
+
+    return deleteTask(taskId, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type DeleteTaskMutationResult = NonNullable<
+  Awaited<ReturnType<typeof deleteTask>>
+>
+
+export type DeleteTaskMutationError = ErrorType<
+  DeleteTask401 | DeleteTask403 | DeleteTask404
+>
+
+/**
+ * @summary Delete task
+ */
+export const useDeleteTask = <
+  TError = ErrorType<DeleteTask401 | DeleteTask403 | DeleteTask404>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof deleteTask>>,
+      TError,
+      { taskId: string },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof deleteTask>>,
+  TError,
+  { taskId: string },
+  TContext
+> => {
+  const mutationOptions = getDeleteTaskMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
 }

@@ -1,8 +1,15 @@
 'use client'
 import { EllipsisVerticalIcon } from '@heroicons/react/24/outline'
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
+import { useRemoveTask } from '@/hooks/use-remove-task'
 
-export default function RowDropdown() {
+type RowDropdownProps = {
+  taskId: string
+}
+
+export default function RowDropdown({ taskId }: RowDropdownProps) {
+  const { removeTask, isDisabled } = useRemoveTask(taskId)
+
   return (
     <Menu
       as="div"
@@ -28,38 +35,36 @@ export default function RowDropdown() {
               href="#"
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
-              Account settings
+              Task Details
             </a>
           </MenuItem>
+
           <MenuItem>
             <a
               href="#"
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
-              Support
+              Project Details
             </a>
           </MenuItem>
+
           <MenuItem>
             <a
               href="#"
               className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
             >
-              License
+              Edit Task
             </a>
           </MenuItem>
-          <form
-            action="#"
-            method="POST"
-          >
-            <MenuItem>
-              <button
-                type="submit"
-                className="block w-full px-4 py-2 text-left text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
-              >
-                Sign out
-              </button>
-            </MenuItem>
-          </form>
+          <MenuItem>
+            <button
+              disabled={isDisabled}
+              onClick={removeTask}
+              className="block w-full text-left cursor-pointer px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+            >
+              Delete Task
+            </button>
+          </MenuItem>
         </div>
       </MenuItems>
     </Menu>

@@ -136,3 +136,20 @@ export function startsWithAny(mainString: string, prefixes: string[]): boolean {
   }
   return false
 }
+
+export function statusLabel(status: string | null) {
+  switch (status) {
+    case 'todo':
+      return 'To Do'
+    case 'backlog':
+      return 'Backlog'
+    case 'in_progress':
+      return 'In Progress'
+    case 'done':
+      return 'Done'
+    case 'in_review':
+      return 'In Review'
+    default:
+      return 'All'
+  }
+}

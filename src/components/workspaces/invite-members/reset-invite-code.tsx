@@ -2,7 +2,7 @@
 
 import { useResetWorkspaceInviteCode } from '@/hooks/endpoints/workspaces'
 import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import { authHeader, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import toast from 'react-hot-toast'

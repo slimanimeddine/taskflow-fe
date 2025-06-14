@@ -1,6 +1,6 @@
 'use client'
 import { useDeleteProject } from '@/hooks/endpoints/projects'
-import { useProjectId } from '@/hooks/use-project-id'
+import { useProjectId } from '@/hooks/params/use-project-id'
 import { useSession } from '@/hooks/use-session'
 import { authHeader, onError } from '@/lib/utils'
 import { XCircleIcon } from '@heroicons/react/20/solid'

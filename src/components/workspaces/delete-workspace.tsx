@@ -1,7 +1,7 @@
 'use client'
 import { useDeleteWorkspace } from '@/hooks/endpoints/workspaces'
 import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import { authHeader, onError } from '@/lib/utils'
 import { XCircleIcon } from '@heroicons/react/20/solid'
 import { useRouter } from 'next/navigation'

@@ -2,7 +2,7 @@
 
 import { useListWorkspaceProjects } from '@/hooks/endpoints/projects'
 import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import {
   authHeader,
   classNames,

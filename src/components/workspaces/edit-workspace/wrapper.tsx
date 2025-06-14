@@ -6,7 +6,7 @@ import { useShowWorkspace } from '@/hooks/endpoints/workspaces'
 import { useSession } from '@/hooks/use-session'
 import { authHeader, matchQueryStatus } from '@/lib/utils'
 import EditWorkspaceForm from './form'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 
 export default function EditWorkspaceWrapper() {
   const { token } = useSession()

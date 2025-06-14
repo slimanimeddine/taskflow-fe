@@ -8,7 +8,7 @@ import {
 } from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 
 export default function LayoutNavigation() {
   const pathname = usePathname()

@@ -1,25 +1,24 @@
 'use client'
 
-import { useState } from 'react' // Import useState
+import { useChangeTasksView } from '@/hooks/use-change-tasks-view'
 import {
   Squares2X2Icon,
   CalendarDaysIcon,
   TableCellsIcon,
 } from '@heroicons/react/24/outline'
 
-export default function ChangeTasksView() {
-  // 1. Add state to manage the active view.
-  // We'll initialize it to 'table' as the default view.
-  const [currentView, setCurrentView] = useState('table') // 'table', 'kanban', 'calendar'
+type View = 'table' | 'kanban' | 'calendar'
 
-  // Helper function to apply conditional classes
-  const getButtonClasses = (viewName: 'table' | 'kanban' | 'calendar') => {
+export default function ChangeTasksView() {
+  const { view, setView } = useChangeTasksView()
+
+  const getButtonClasses = (viewName: View) => {
     return `
       relative inline-flex items-center px-3 py-2 text-sm font-semibold 
       ${viewName === 'table' ? 'rounded-l-md' : ''}
       ${viewName === 'calendar' ? 'rounded-r-md' : ''}
       ${
-        currentView === viewName // Apply selected styles
+        view === viewName
           ? 'bg-indigo-600 text-white ring-indigo-600 hover:bg-indigo-500'
           : 'bg-white text-gray-900 ring-gray-300 hover:bg-gray-50'
       }
@@ -28,11 +27,10 @@ export default function ChangeTasksView() {
     `
   }
 
-  // Helper function to apply icon classes
-  const getIconClasses = (viewName: 'table' | 'kanban' | 'calendar') => {
+  const getIconClasses = (viewName: View) => {
     return `
       h-5 w-5 
-      ${currentView === viewName ? 'text-white' : 'text-gray-400'}
+      ${view === viewName ? 'text-white' : 'text-gray-400'}
     `
   }
 
@@ -41,7 +39,7 @@ export default function ChangeTasksView() {
       <button
         type="button"
         className={getButtonClasses('table')}
-        onClick={() => setCurrentView('table')}
+        onClick={() => setView('table')}
       >
         <TableCellsIcon
           className={getIconClasses('table')}
@@ -52,7 +50,7 @@ export default function ChangeTasksView() {
       <button
         type="button"
         className={getButtonClasses('kanban')}
-        onClick={() => setCurrentView('kanban')}
+        onClick={() => setView('kanban')}
       >
         <Squares2X2Icon
           className={getIconClasses('kanban')}
@@ -63,7 +61,7 @@ export default function ChangeTasksView() {
       <button
         type="button"
         className={getButtonClasses('calendar')}
-        onClick={() => setCurrentView('calendar')}
+        onClick={() => setView('calendar')}
       >
         <CalendarDaysIcon
           className={getIconClasses('calendar')}

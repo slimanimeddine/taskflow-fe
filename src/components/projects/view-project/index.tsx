@@ -1,7 +1,7 @@
 'use client'
 
 import { useShowProject } from '@/hooks/endpoints/projects'
-import { useProjectId } from '@/hooks/use-project-id'
+import { useProjectId } from '@/hooks/params/use-project-id'
 import { useSession } from '@/hooks/use-session'
 import {
   authHeader,
@@ -15,13 +15,14 @@ import ErrorUI from '../../error-ui'
 import { PencilIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
 import TasksTableView from '../../tasks/table-view'
-import StatusFilter from './status-filter'
-import AssigneeFilter from './assignee-filter'
-import ProjectFilter from './project-filter'
+import StatusFilter from './filtering/status-filter'
+import AssigneeFilter from './filtering/assignee-filter'
+import ProjectFilter from './filtering/project-filter'
 import ChangeTasksView from './change-tasks-view'
 import Link from 'next/link'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import CreateTaskModal from '../../tasks/create-task/modal'
+import { useChangeTasksView } from '@/hooks/use-change-tasks-view'
 
 const tasks = [
   {
@@ -57,6 +58,8 @@ export default function ViewProject() {
   const workspaceId = useWorkspaceId()
 
   const showProjectQuery = useShowProject(projectId, authHeader(token))
+
+  const { view } = useChangeTasksView()
 
   return matchQueryStatus(showProjectQuery, {
     Loading: <LoadingUI />,
@@ -145,7 +148,7 @@ export default function ViewProject() {
 
           <div className="space-y-2 mt-8">
             <div className="border-b border-gray-900/10 pb-4">
-              <div className="flex items-center justify-between flex-wrap">
+              <div className="flex items-end justify-between flex-wrap">
                 <div className="flex items-center gap-x-1 flex-wrap">
                   <StatusFilter />
                   <AssigneeFilter />
@@ -158,7 +161,9 @@ export default function ViewProject() {
               </div>
             </div>
 
-            <TasksTableView />
+            {view === 'table' && <TasksTableView />}
+            {view === 'kanban' && <>kanban</>}
+            {view === 'calendar' && <>calendar</>}
           </div>
         </div>
       )

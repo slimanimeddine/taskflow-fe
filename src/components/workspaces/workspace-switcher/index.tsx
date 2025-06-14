@@ -13,7 +13,7 @@ import { useState } from 'react'
 import { Workspace } from '@/types/models'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 
 type WorkspaceSwitcherProps = {
   workspaces: Workspace[]

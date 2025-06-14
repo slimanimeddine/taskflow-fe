@@ -11,8 +11,8 @@ import { authHeader, fileUrl, getDirtyValues, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSession } from '@/hooks/use-session'
 import { useRouter } from 'next/navigation'
-import { useProjectId } from '@/hooks/use-project-id'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useProjectId } from '@/hooks/params/use-project-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 
 type EditProjectFormProps = {
   name: string

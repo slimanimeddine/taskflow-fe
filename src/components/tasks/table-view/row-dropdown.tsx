@@ -9,7 +9,7 @@ export default function RowDropdown() {
       className="relative inline-block text-left"
     >
       <div>
-        <MenuButton className="flex items-center rounded-full bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+        <MenuButton className="flex items-center rounded-lg p-0.5 bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
           <span className="sr-only">Open options</span>
           <EllipsisVerticalIcon
             aria-hidden="true"

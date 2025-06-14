@@ -33,17 +33,18 @@ export type ListTasksParams = {
   'filter[workspace]'?: string
   'filter[project]'?: string
   'filter[assignee]'?: string
-  sort?:
+  sort?: (
     | 'name'
-    | 'due_date'
-    | 'status'
     | '-name'
+    | 'due_date'
     | '-due_date'
+    | 'status'
     | '-status'
     | 'project'
     | '-project'
     | 'assignee'
     | '-assignee'
+  )[]
 }
 
 import { customInstance } from '@/lib/axios'

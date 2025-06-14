@@ -11,7 +11,7 @@ import { authHeader, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSession } from '@/hooks/use-session'
 import { useCreateProjectModalStore } from '@/stores/create-project-modal-store'
-import { useWorkspaceId } from '@/hooks/use-workspace-id'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 
 export default function CreateProjectForm() {
   const { handleSubmit, register, formState, reset, control } =

@@ -4,7 +4,7 @@ import ErrorUI from '@/components/error-ui'
 import LoadingUI from '@/components/loading-ui'
 import { useSession } from '@/hooks/use-session'
 import { authHeader, matchQueryStatus } from '@/lib/utils'
-import { useProjectId } from '@/hooks/use-project-id'
+import { useProjectId } from '@/hooks/params/use-project-id'
 import { useShowProject } from '@/hooks/endpoints/projects'
 import EditProjectForm from './form'
 

@@ -8,11 +8,11 @@ import { useSession } from '@/hooks/use-session'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import { CreateTaskBody, useCreateTask } from '@/hooks/endpoints/tasks'
 import { createTaskBody } from '@/schemas/tasks'
-import { useCreateTaskModalStore } from '@/stores/create-task-modal-store'
 import { useListWorkspaceMembers } from '@/hooks/endpoints/users'
 import ErrorUI from '@/components/error-ui'
 import LoadingUI from '@/components/loading-ui'
 import { useListWorkspaceProjects } from '@/hooks/endpoints/projects'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 export default function CreateTaskForm() {
   const workspaceId = useWorkspaceId()
@@ -24,7 +24,7 @@ export default function CreateTaskForm() {
     },
   })
 
-  const setOpen = useCreateTaskModalStore((state) => state.setOpen)
+  const { closeModal } = useOpenModal()
 
   const { token } = useSession()
   const authConfig = authHeader(token)
@@ -56,7 +56,7 @@ export default function CreateTaskForm() {
             queryKey: ['/api/v1/tasks'],
           })
 
-          setOpen(false)
+          closeModal()
           toast.success('Task created successfully!')
         },
       }
@@ -262,7 +262,7 @@ export default function CreateTaskForm() {
 
       <div className="flex items-center justify-end gap-x-6">
         <button
-          onClick={() => setOpen(false)}
+          onClick={closeModal}
           type="button"
           className="text-sm leading-6 font-semibold text-gray-900"
         >

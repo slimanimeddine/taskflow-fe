@@ -13,8 +13,8 @@ import { createWorkspaceBody } from '@/schemas/workspaces'
 import { authHeader, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSession } from '@/hooks/use-session'
-import { useCreateWorkspaceModalStore } from '@/stores/create-workspace-modal-store'
 import { usePathname, useRouter } from 'next/navigation'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 export default function CreateWorkspaceForm() {
   const { handleSubmit, register, formState, reset, control } =
@@ -22,7 +22,7 @@ export default function CreateWorkspaceForm() {
       resolver: zodResolver(createWorkspaceBody),
     })
 
-  const setOpen = useCreateWorkspaceModalStore((state) => state.setOpen)
+  const { closeModal } = useOpenModal()
 
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
@@ -48,7 +48,7 @@ export default function CreateWorkspaceForm() {
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/users/me/workspaces'],
           })
-          setOpen(false)
+          closeModal()
           if (pathname === '/workspaces/create') {
             router.push('/')
           }
@@ -170,7 +170,7 @@ export default function CreateWorkspaceForm() {
       <div className="flex items-center justify-end gap-x-6">
         {pathname !== '/workspaces/create' && (
           <button
-            onClick={() => setOpen(false)}
+            onClick={closeModal}
             type="button"
             className="text-sm leading-6 font-semibold text-gray-900"
           >

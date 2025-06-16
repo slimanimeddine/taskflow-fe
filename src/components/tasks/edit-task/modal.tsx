@@ -1,23 +1,22 @@
 'use client'
 
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
-import { useEditTaskModalStore } from '@/stores/edit-task-modal-store'
 import EditTaskForm from './form'
 import { useSession } from '@/hooks/use-session'
 import { useShowTask } from '@/hooks/endpoints/tasks'
 import { authHeader, matchQueryStatus } from '@/lib/utils'
 import LoadingUI from '@/components/loading-ui'
 import ErrorUI from '@/components/error-ui'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 type EditTaskModalProps = {
   taskId: string
 }
 
 export default function EditTaskModal({ taskId }: EditTaskModalProps) {
-  const { taskId: currentOpenTaskId, setTaskId } = useEditTaskModalStore(
-    (state) => state
-  )
-  const open = currentOpenTaskId === taskId
+  const { modal, taskId: currentOpenTaskId, closeModal } = useOpenModal()
+
+  const open = modal === 'edit-task' && currentOpenTaskId === taskId
   const { token } = useSession()
   const showTaskQuery = useShowTask(taskId, authHeader(token))
   return matchQueryStatus(showTaskQuery, {
@@ -39,7 +38,7 @@ export default function EditTaskModal({ taskId }: EditTaskModalProps) {
       return (
         <Dialog
           open={open}
-          onClose={() => setTaskId(undefined)}
+          onClose={closeModal}
           className="relative z-100"
         >
           <DialogBackdrop

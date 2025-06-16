@@ -64,7 +64,6 @@ These are the main technologies I have used to build this app, for a complete li
 - [HeadlessUI](https://headlessui.com/)
 - [React Hook Form](https://react-hook-form.com/)
 - [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
-- [Zustand](https://zustand-demo.pmnd.rs/)
 - [Axios](https://axios-http.com/docs/intro)
 - [nuqs](https://nuqs.47ng.com/)
 - [Orval](https://orval.dev/)

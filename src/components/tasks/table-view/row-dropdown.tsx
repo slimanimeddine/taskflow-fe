@@ -5,7 +5,7 @@ import { useRemoveTask } from '@/hooks/use-remove-task'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import Link from 'next/link'
 import EditTaskModal from '../edit-task/modal'
-import { useEditTaskModalStore } from '@/stores/edit-task-modal-store'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 type RowDropdownProps = {
   taskId: string
@@ -15,7 +15,7 @@ type RowDropdownProps = {
 export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
   const { removeTask, isDisabled } = useRemoveTask(taskId)
   const workspaceId = useWorkspaceId()
-  const { setTaskId } = useEditTaskModalStore((state) => state)
+  const { openModal } = useOpenModal()
 
   return (
     <>
@@ -60,7 +60,7 @@ export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
             <MenuItem>
               <button
                 type="button"
-                onClick={() => setTaskId(taskId)}
+                onClick={() => openModal('edit-task', taskId)}
                 className="block w-full text-left cursor-pointer px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900 hover:bg-gray-100"
               >
                 Edit Task

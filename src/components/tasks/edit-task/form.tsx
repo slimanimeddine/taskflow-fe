@@ -12,7 +12,7 @@ import { useListWorkspaceMembers } from '@/hooks/endpoints/users'
 import ErrorUI from '@/components/error-ui'
 import LoadingUI from '@/components/loading-ui'
 import { useListWorkspaceProjects } from '@/hooks/endpoints/projects'
-import { useEditTaskModalStore } from '@/stores/edit-task-modal-store'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 type DefaultValues = {
   name: string
@@ -39,7 +39,7 @@ export default function EditTaskForm({
     defaultValues,
   })
 
-  const setTaskId = useEditTaskModalStore((state) => state.setTaskId)
+  const { closeModal } = useOpenModal()
 
   const { token } = useSession()
   const authConfig = authHeader(token)
@@ -71,7 +71,7 @@ export default function EditTaskForm({
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/tasks'],
           })
-          setTaskId(undefined)
+          closeModal()
           toast.success('Task edit successfully!')
         },
       }
@@ -277,7 +277,7 @@ export default function EditTaskForm({
 
       <div className="flex items-center justify-end gap-x-6">
         <button
-          onClick={() => setTaskId(undefined)}
+          onClick={closeModal}
           type="button"
           className="text-sm leading-6 font-semibold text-gray-900"
         >

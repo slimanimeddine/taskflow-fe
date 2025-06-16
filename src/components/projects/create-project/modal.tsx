@@ -2,20 +2,21 @@
 
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
 import { PlusCircleIcon } from '@heroicons/react/20/solid'
-import { useCreateProjectModalStore } from '@/stores/create-project-modal-store'
 import CreateProjectForm from './form'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 export default function CreateProjectModal() {
-  const { open, setOpen } = useCreateProjectModalStore((state) => state)
+  const { modal, openModal, closeModal } = useOpenModal()
+
   return (
     <>
-      <button onClick={() => setOpen(true)}>
+      <button onClick={() => openModal('create-project')}>
         <PlusCircleIcon className="h-5 w-5 flex-none text-gray-400" />
       </button>
 
       <Dialog
-        open={open}
-        onClose={setOpen}
+        open={modal === 'create-project'}
+        onClose={closeModal}
         className="relative z-50"
       >
         <DialogBackdrop

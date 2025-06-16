@@ -90,6 +90,8 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
     )
   }
 
+  const isDisabled = editTaskMutation.isPending
+
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result
 
@@ -227,6 +229,13 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
                       </Draggable>
                     ))}
                     {provided.placeholder}
+                    <button
+                      type="button"
+                      className="mt-auto block w-full rounded-md border border-dashed border-gray-300 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-800"
+                      disabled={isDisabled}
+                    >
+                      + Add New Task
+                    </button>
                   </div>
                 )}
               </Droppable>

@@ -1,18 +1,19 @@
 'use client'
 
 import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
-import { useCreateTaskModalStore } from '@/stores/create-task-modal-store'
 import { PlusIcon } from '@heroicons/react/24/outline'
 import CreateTaskForm from './form'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 export default function CreateTaskModal() {
-  const { open, setOpen } = useCreateTaskModalStore((state) => state)
+  const { modal, openModal, closeModal } = useOpenModal()
+
   return (
     <>
       <button
         type="button"
         className="flex items-center gap-x-1 rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-        onClick={() => setOpen(true)}
+        onClick={() => openModal('create-task')}
       >
         <PlusIcon
           className="-ml-1.5 h-5 w-5"
@@ -22,8 +23,8 @@ export default function CreateTaskModal() {
       </button>
 
       <Dialog
-        open={open}
-        onClose={setOpen}
+        open={modal === 'create-task'}
+        onClose={closeModal}
         className="relative z-50"
       >
         <DialogBackdrop

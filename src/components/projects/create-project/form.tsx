@@ -10,8 +10,8 @@ import { createProjectBody } from '@/schemas/projects'
 import { authHeader, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useSession } from '@/hooks/use-session'
-import { useCreateProjectModalStore } from '@/stores/create-project-modal-store'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
+import { useOpenModal } from '@/hooks/use-open-modal'
 
 export default function CreateProjectForm() {
   const { handleSubmit, register, formState, reset, control } =
@@ -19,7 +19,7 @@ export default function CreateProjectForm() {
       resolver: zodResolver(createProjectBody),
     })
 
-  const setOpen = useCreateProjectModalStore((state) => state.setOpen)
+  const { closeModal } = useOpenModal()
 
   const [imagePreview, setImagePreview] = useState<string | null>(null)
 
@@ -43,7 +43,7 @@ export default function CreateProjectForm() {
           queryClient.invalidateQueries({
             queryKey: [`/api/v1/workspaces/${workspaceId}/projects`],
           })
-          setOpen(false)
+          closeModal()
           toast.success('Project created successfully!')
         },
       }
@@ -161,7 +161,7 @@ export default function CreateProjectForm() {
 
       <div className="flex items-center justify-end gap-x-6">
         <button
-          onClick={() => setOpen(false)}
+          onClick={closeModal}
           type="button"
           className="text-sm leading-6 font-semibold text-gray-900"
         >

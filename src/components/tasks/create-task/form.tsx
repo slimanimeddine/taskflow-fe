@@ -55,6 +55,7 @@ export default function CreateTaskForm() {
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/tasks'],
           })
+
           setOpen(false)
           toast.success('Task created successfully!')
         },

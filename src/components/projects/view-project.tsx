@@ -10,20 +10,19 @@ import {
   getFirstLetter,
   matchQueryStatus,
 } from '@/lib/utils'
-import LoadingUI from '../../loading-ui'
-import ErrorUI from '../../error-ui'
+import LoadingUI from '../loading-ui'
+import ErrorUI from '../error-ui'
 import { PencilIcon } from '@heroicons/react/24/outline'
 import Image from 'next/image'
-import TasksTableView from '../../tasks/table-view'
-import StatusFilter from './filtering/status-filter'
-import AssigneeFilter from './filtering/assignee-filter'
-import ProjectFilter from './filtering/project-filter'
-import ChangeTasksView from './change-tasks-view'
+import StatusFilter from '../tasks/filtering/status-filter'
+import AssigneeFilter from '../tasks/filtering/assignee-filter'
+import ProjectFilter from '../tasks/filtering/project-filter'
+import ChangeTasksView from '../tasks/change-tasks-view'
 import Link from 'next/link'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import CreateTaskModal from '../../tasks/create-task/modal'
-import { useChangeTasksView } from '@/hooks/use-change-tasks-view'
-import DueDateFilter from './filtering/due-date-filter'
+import CreateTaskModal from '../tasks/create-task/modal'
+import DueDateFilter from '../tasks/filtering/due-date-filter'
+import ViewTasks from '../tasks/view-tasks'
 
 const tasks = [
   {
@@ -59,8 +58,6 @@ export default function ViewProject() {
   const workspaceId = useWorkspaceId()
 
   const showProjectQuery = useShowProject(projectId, authHeader(token))
-
-  const { view } = useChangeTasksView()
 
   return matchQueryStatus(showProjectQuery, {
     Loading: <LoadingUI />,
@@ -163,9 +160,7 @@ export default function ViewProject() {
               </div>
             </div>
 
-            {view === 'table' && <TasksTableView />}
-            {view === 'kanban' && <>kanban</>}
-            {view === 'calendar' && <>calendar</>}
+            <ViewTasks />
           </div>
         </div>
       )

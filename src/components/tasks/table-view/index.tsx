@@ -8,17 +8,19 @@ import {
 } from '@/lib/utils'
 import Pagination from './pagination'
 import RowDropdown from './row-dropdown'
-import { useListTasks } from '@/hooks/endpoints/tasks'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import LoadingUI from '@/components/loading-ui'
-import ErrorUI from '@/components/error-ui'
-import { useTaskStatusFilter } from '@/hooks/filtering/use-task-status-filter'
-import { useTaskProjectFilter } from '@/hooks/filtering/use-task-project-filter'
-import { useTaskAssigneeFilter } from '@/hooks/filtering/use-task-assignee-filter'
-import { useTaskSort } from '@/hooks/sorting/use-task-sort'
 import FieldSort from './sorting/field-sort'
+import { Task } from '@/types/models'
+import { PaginatedApiResponse } from '@/types/api-responses'
+import ErrorUI from '@/components/error-ui'
+import LoadingUI from '@/components/loading-ui'
+import { useListTasks } from '@/hooks/endpoints/tasks'
+import { useTaskAssigneeFilter } from '@/hooks/filtering/use-task-assignee-filter'
 import { useTaskDueDateFilter } from '@/hooks/filtering/use-task-due-date-filter'
+import { useTaskProjectFilter } from '@/hooks/filtering/use-task-project-filter'
+import { useTaskStatusFilter } from '@/hooks/filtering/use-task-status-filter'
+import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
+import { useTaskSort } from '@/hooks/sorting/use-task-sort'
+import { useSession } from '@/hooks/use-session'
 
 export default function TasksTableView() {
   const { token } = useSession()
@@ -29,7 +31,7 @@ export default function TasksTableView() {
   const { sort } = useTaskSort()
   const { dueDate } = useTaskDueDateFilter()
 
-  const listTasksQuery = useListTasks(
+  const listTasksQuery = useListTasks<PaginatedApiResponse<Task>>(
     {
       'filter[workspace]': workspaceId,
       ...(status && { 'filter[status]': status }),
@@ -37,6 +39,7 @@ export default function TasksTableView() {
       ...(assignee && { 'filter[assignee]': assignee.id }),
       ...(dueDate && { 'filter[due_date]': dueDate.toDateString() }),
       ...(sort && { sort }),
+      paginate: 1,
     },
     authHeader(token)
   )
@@ -48,8 +51,11 @@ export default function TasksTableView() {
       const tasks = data.data
       const links = data.links
       const meta = data.meta
+
+      console.log('table view: ', data)
+
       return (
-        <div className="flow-root">
+        <div className="flow-root min-h-screen">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
               <table className="min-w-full divide-y divide-gray-300">

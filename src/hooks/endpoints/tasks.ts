@@ -21,7 +21,7 @@ export type CreateTask403 = UnauthorizedApiResponse
 export type CreateTask404 = NotFoundApiResponse
 export type CreateTaskBody = z.infer<typeof createTaskBody>
 
-export type ListTasks200 = PaginatedApiResponse<Task>
+export type ListTasks200 = PaginatedApiResponse<Task> | ApiResource<Task[]>
 export type ListTasks403 = UnauthorizedApiResponse
 export type ListTasks404 = NotFoundApiResponse
 export type ListTasks401 = UnauthenticatedApiResponse
@@ -45,6 +45,7 @@ export type ListTasksParams = {
     | 'assignee'
     | '-assignee'
   )[]
+  paginate: 1 | 0
 }
 
 export type DeleteTask200 = SuccessNoDataApiResponse
@@ -84,12 +85,14 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
  * List all tasks in a workspace, with optional filters for project, assignee, and status.
  * @summary List tasks
  */
-export const listTasks = (
+export const listTasks = <
+  T extends PaginatedApiResponse<Task> | ApiResource<Task[]>,
+>(
   params?: ListTasksParams,
   options?: SecondParameter<typeof customInstance>,
   signal?: AbortSignal
 ) => {
-  return customInstance<ListTasks200>(
+  return customInstance<T>(
     { url: `/api/v1/tasks`, method: 'GET', params, signal },
     options
   )

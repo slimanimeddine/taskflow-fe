@@ -4,7 +4,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
 import { useRemoveTask } from '@/hooks/use-remove-task'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import Link from 'next/link'
-import EditTaskModal from '../edit-task/modal'
+import EditTaskModal from './edit-task/modal'
 import { useOpenModal } from '@/hooks/use-open-modal'
 
 type RowDropdownProps = {
@@ -25,7 +25,7 @@ export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
         className="relative inline-block text-left"
       >
         <div>
-          <MenuButton className="flex items-center rounded-lg p-0.5 bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
+          <MenuButton className="flex items-center rounded-lg p-0.5 cursor-pointer bg-gray-100 text-gray-400 hover:text-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
             <span className="sr-only">Open options</span>
             <EllipsisVerticalIcon
               aria-hidden="true"

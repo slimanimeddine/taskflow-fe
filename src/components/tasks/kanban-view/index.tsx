@@ -1,23 +1,15 @@
 'use client'
 
-import {
-  DragDropContext,
-  Droppable,
-  Draggable,
-  DropResult,
-} from '@hello-pangea/dnd'
-import {
-  CalendarIcon,
-  UserCircleIcon,
-  Bars3BottomLeftIcon,
-} from '@heroicons/react/20/solid'
+import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 import { Task } from '@/types/models'
-import { useEditTask } from '@/hooks/endpoints/tasks'
+import { BulkEditTasksBody, useBulkEditTasks } from '@/hooks/endpoints/tasks'
 import { useSession } from '@/hooks/use-session'
 import { authHeader, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
 import { useState, useEffect } from 'react'
+import AddTask from './add-task'
+import KanbanCard from './kanban-card'
+import toast from 'react-hot-toast'
 
 type KanbanViewProps = {
   tasks: Task[]
@@ -66,17 +58,14 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
   )
   const { token } = useSession()
 
-  const editTaskMutation = useEditTask(authHeader(token))
+  const bulkEditTasksMutation = useBulkEditTasks(authHeader(token))
 
   const queryClient = useQueryClient()
 
-  function changeStatus(taskId: string, status: ColumnStatus) {
-    editTaskMutation.mutate(
+  function bulkUpdate(data: BulkEditTasksBody) {
+    bulkEditTasksMutation.mutate(
       {
-        taskId,
-        data: {
-          status,
-        },
+        data,
       },
       {
         onError,
@@ -84,13 +73,11 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/tasks'],
           })
-          toast.success('Task status updated successfully!')
+          toast.success('Tasks updated successfully')
         },
       }
     )
   }
-
-  const isDisabled = editTaskMutation.isPending
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination, draggableId } = result
@@ -107,53 +94,118 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
     }
 
     const updatedTasks = Array.from(internalTasks)
+
     const draggedTaskIndex = updatedTasks.findIndex(
       (task) => task.id === draggableId
     )
 
     if (draggedTaskIndex === -1) {
-      console.error('Dragged task not found in internalTasks.')
       return
     }
 
     const draggedTask = updatedTasks[draggedTaskIndex]
-    const oldStatus = draggedTask.status
-    const newStatus = destination.droppableId as ColumnStatus
 
-    updatedTasks.splice(draggedTaskIndex, 1)
+    if (
+      source.droppableId === destination.droppableId &&
+      source.index !== destination.index
+    ) {
+      updatedTasks.splice(draggedTaskIndex, 1)
 
-    draggedTask.status = newStatus
+      updatedTasks.splice(destination.index, 0, draggedTask)
 
-    const currentGroupedTasks: Record<ColumnStatus, Task[]> =
-      COLUMN_STATUSES.reduce(
-        (acc, status) => {
-          acc[status] = updatedTasks
-            .filter((task) => task.status === status)
-            .sort((a, b) => a.position - b.position)
-          return acc
-        },
-        {} as Record<ColumnStatus, Task[]>
-      )
+      const currentGroupedTasks: Record<ColumnStatus, Task[]> =
+        COLUMN_STATUSES.reduce(
+          (acc, status) => {
+            acc[status] = updatedTasks
+              .filter((task) => task.status === status)
+              .sort((a, b) => a.position - b.position)
+            return acc
+          },
+          {} as Record<ColumnStatus, Task[]>
+        )
 
-    currentGroupedTasks[newStatus].splice(destination.index, 0, draggedTask)
+      Object.keys(currentGroupedTasks).forEach((statusKey) => {
+        const status = statusKey as ColumnStatus
+        currentGroupedTasks[status] = currentGroupedTasks[status].map(
+          (task, idx) => ({
+            ...task,
+            position: idx,
+          })
+        )
+      })
 
-    Object.keys(currentGroupedTasks).forEach((statusKey) => {
-      const status = statusKey as ColumnStatus
-      currentGroupedTasks[status] = currentGroupedTasks[status].map(
-        (task, idx) => ({
-          ...task,
-          position: idx,
+      const finalTasks = Object.values(currentGroupedTasks).flat()
+      setInternalTasks(finalTasks)
+
+      const tasksToUpdate = currentGroupedTasks[
+        source.droppableId as ColumnStatus
+      ].map((task) => ({
+        id: task.id,
+        position: task.position,
+      }))
+
+      bulkUpdate({
+        tasks: tasksToUpdate,
+      })
+    }
+
+    if (source.droppableId !== destination.droppableId) {
+      const oldStatus = draggedTask.status
+
+      const newStatus = destination.droppableId as ColumnStatus
+
+      updatedTasks.splice(draggedTaskIndex, 1)
+
+      draggedTask.status = newStatus
+
+      const currentGroupedTasks: Record<ColumnStatus, Task[]> =
+        COLUMN_STATUSES.reduce(
+          (acc, status) => {
+            acc[status] = updatedTasks
+              .filter((task) => task.status === status)
+              .sort((a, b) => a.position - b.position)
+            return acc
+          },
+          {} as Record<ColumnStatus, Task[]>
+        )
+
+      currentGroupedTasks[newStatus].splice(destination.index, 0, draggedTask)
+
+      Object.keys(currentGroupedTasks).forEach((statusKey) => {
+        const status = statusKey as ColumnStatus
+
+        currentGroupedTasks[status] = currentGroupedTasks[status].map(
+          (task, idx) => ({
+            ...task,
+            position: idx,
+          })
+        )
+      })
+
+      const finalTasks = Object.values(currentGroupedTasks).flat()
+      setInternalTasks(finalTasks)
+
+      const oldStatusTasks = currentGroupedTasks[oldStatus as ColumnStatus].map(
+        (task) => ({
+          id: task.id,
+          position: task.position,
+          status: task.status,
         })
       )
-    })
 
-    setInternalTasks(Object.values(currentGroupedTasks).flat())
+      const newStatusTasks = currentGroupedTasks[newStatus].map((task) => ({
+        id: task.id,
+        position: task.position,
+        status: task.status,
+      }))
 
-    if (oldStatus !== newStatus) {
-      changeStatus(draggableId, newStatus)
+      const tasksToUpdate = [...oldStatusTasks, ...newStatusTasks]
+
+      bulkUpdate({
+        tasks: tasksToUpdate,
+      })
     }
   }
-
   return (
     <div className="min-h-screen bg-white p-4 antialiased rounded-lg">
       <div className="mx-auto max-w-7xl">
@@ -178,64 +230,14 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
                       {COLUMN_TITLES[status]} ({groupedTasks[status].length})
                     </h2>
                     {groupedTasks[status].map((task, index) => (
-                      <Draggable
+                      <KanbanCard
                         key={task.id}
-                        draggableId={task.id}
+                        task={task}
                         index={index}
-                      >
-                        {(provided, snapshot) => (
-                          <div
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                            className={`
-                              mb-3 rounded-lg bg-white p-4 shadow ring-1 ring-gray-100 transition-all duration-200 ease-in-out
-                              ${
-                                snapshot.isDragging
-                                  ? 'rotate-1 scale-105 transform ring-indigo-500 shadow-lg' // Visual feedback when dragging
-                                  : ''
-                              }
-                            `}
-                          >
-                            <h3 className="mb-2 text-base font-medium text-gray-900">
-                              {task.name}
-                            </h3>
-                            {task.description && (
-                              <p className="mb-2 line-clamp-2 text-sm text-gray-600">
-                                <Bars3BottomLeftIcon className="mr-1 inline-block h-4 w-4 text-gray-400" />
-                                {task.description}
-                              </p>
-                            )}
-                            <div className="flex items-center justify-between text-sm text-gray-500">
-                              {task.due_date && (
-                                <div className="flex items-center">
-                                  <CalendarIcon className="mr-1 h-4 w-4" />
-                                  <span>
-                                    {new Date(
-                                      task.due_date
-                                    ).toLocaleDateString()}
-                                  </span>
-                                </div>
-                              )}
-                              {task.assignee && (
-                                <div className="flex items-center">
-                                  <UserCircleIcon className="mr-1 h-4 w-4" />
-                                  <span>{task.assignee.name}</span>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )}
-                      </Draggable>
+                      />
                     ))}
                     {provided.placeholder}
-                    <button
-                      type="button"
-                      className="mt-auto block w-full rounded-md border border-dashed border-gray-300 py-2 text-sm font-medium text-gray-600 transition-colors hover:border-gray-400 hover:text-gray-800"
-                      disabled={isDisabled}
-                    >
-                      + Add New Task
-                    </button>
+                    <AddTask status={status} />
                   </div>
                 )}
               </Droppable>

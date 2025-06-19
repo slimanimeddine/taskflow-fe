@@ -31,7 +31,7 @@ export default function SignOutButton() {
       onClick={onSignOut}
       type="submit"
       disabled={isDisabled}
-      className="block w-full px-3 py-1 text-left text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+      className="block w-full cursor-pointer px-3 py-1 text-left text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50 hover:bg-gray-50"
     >
       Sign out
     </button>

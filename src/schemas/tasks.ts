@@ -22,9 +22,26 @@ export const editTaskBody = zod.object({
   name: zod.string().optional(),
   description: zod.string().nullable().optional(),
   due_date: zod.string().date().nullable().optional(),
+  position: zod.number().int().min(1).optional(),
   status: zod
     .enum(['backlog', 'todo', 'in_progress', 'in_review', 'done'])
     .optional(),
   project_id: zod.string().uuid().optional(),
   assignee_id: zod.string().uuid().optional(),
+})
+
+/**
+ * Bulk edit tasks in a workspace.
+ * @summary Bulk edit tasks
+ */
+export const bulkEditTasksBody = zod.object({
+  tasks: zod
+    .object({
+      id: zod.string().uuid(),
+      position: zod.number().int().min(1),
+      status: zod
+        .enum(['backlog', 'todo', 'in_progress', 'in_review', 'done'])
+        .optional(),
+    })
+    .array(),
 })

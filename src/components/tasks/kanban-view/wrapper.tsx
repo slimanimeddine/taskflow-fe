@@ -43,8 +43,6 @@ export default function KanbanViewWrapper() {
     Success: ({ data }) => {
       const tasks = data.data
 
-      console.log('kanban view: ', data)
-
       return <KanbanView tasks={tasks} />
     },
   })

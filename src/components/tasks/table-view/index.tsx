@@ -7,7 +7,7 @@ import {
   statusLabel,
 } from '@/lib/utils'
 import Pagination from './pagination'
-import RowDropdown from './row-dropdown'
+import RowDropdown from '../row-dropdown'
 import FieldSort from './sorting/field-sort'
 import { Task } from '@/types/models'
 import { PaginatedApiResponse } from '@/types/api-responses'
@@ -52,8 +52,7 @@ export default function TasksTableView() {
       const links = data.links
       const meta = data.meta
 
-      console.log('table view: ', data)
-
+      console.log(data)
       return (
         <div className="flow-root min-h-screen">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -61,15 +60,6 @@ export default function TasksTableView() {
               <table className="min-w-full divide-y divide-gray-300">
                 <thead>
                   <tr>
-                    <th
-                      scope="col"
-                      className="relative px-7 sm:w-12 sm:px-6"
-                    >
-                      <input
-                        type="checkbox"
-                        className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                      />
-                    </th>
                     <th
                       scope="col"
                       className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
@@ -131,15 +121,6 @@ export default function TasksTableView() {
                       key={task.id}
                       className="bg-white"
                     >
-                      <td className="relative px-7 sm:w-12 sm:px-6">
-                        {true && (
-                          <div className="absolute inset-y-0 left-0 w-0.5 bg-indigo-600" />
-                        )}
-                        <input
-                          type="checkbox"
-                          className="absolute left-4 top-1/2 -mt-2 h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                        />
-                      </td>
                       <td className="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
                         {task.name}
                       </td>

@@ -64,6 +64,11 @@ export type ShowTask403 = UnauthorizedApiResponse
 export type ShowTask401 = UnauthenticatedApiResponse
 export type ShowTask404 = NotFoundApiResponse
 
+export type BulkEditTasks200 = SuccessNoDataApiResponse
+export type BulkEditTasks401 = UnauthenticatedApiResponse
+export type BulkEditTasks400 = ErrorApiResponse
+export type BulkEditTasksBody = z.infer<typeof bulkEditTasksBody>
+
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
 import {
@@ -77,7 +82,11 @@ import {
 } from '@/types/api-responses'
 import { Task } from '@/types/models'
 import { z } from 'zod'
-import { createTaskBody, editTaskBody } from '@/schemas/tasks'
+import {
+  bulkEditTasksBody,
+  createTaskBody,
+  editTaskBody,
+} from '@/schemas/tasks'
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 
@@ -701,4 +710,111 @@ export const prefetchShowTask = async <
   await queryClient.prefetchQuery(queryOptions)
 
   return queryClient
+}
+
+/**
+ * Bulk edit tasks in a workspace.
+ * @summary Bulk edit tasks
+ */
+export const bulkEditTasks = (
+  bulkEditTasksBody: BodyType<BulkEditTasksBody>,
+  options?: SecondParameter<typeof customInstance>
+) => {
+  const data = new FormData()
+  if (bulkEditTasksBody.tasks[0].status) {
+    bulkEditTasksBody.tasks.forEach((value, index) => {
+      data.append(`tasks[${index}][id]`, value.id)
+      data.append(`tasks[${index}][position]`, `${value.position}`)
+      data.append(`tasks[${index}][status]`, value.status!)
+    })
+  } else {
+    bulkEditTasksBody.tasks.forEach((value, index) => {
+      data.append(`tasks[${index}][id]`, value.id)
+      data.append(`tasks[${index}][position]`, `${value.position}`)
+    })
+  }
+
+  return customInstance<BulkEditTasks200>(
+    {
+      url: `/api/v1/tasks`,
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      data,
+    },
+    options
+  )
+}
+
+export const getBulkEditTasksMutationOptions = <
+  TError = ErrorType<BulkEditTasks401 | BulkEditTasks400 | BulkEditTasks400>,
+  TContext = unknown,
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof bulkEditTasks>>,
+    TError,
+    { data: BodyType<BulkEditTasksBody> },
+    TContext
+  >
+  request?: SecondParameter<typeof customInstance>
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof bulkEditTasks>>,
+  TError,
+  { data: BodyType<BulkEditTasksBody> },
+  TContext
+> => {
+  const mutationKey = ['bulkEditTasks']
+  const { mutation: mutationOptions, request: requestOptions } = options
+    ? options.mutation &&
+      'mutationKey' in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, request: undefined }
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof bulkEditTasks>>,
+    { data: BodyType<BulkEditTasksBody> }
+  > = (props) => {
+    const { data } = props ?? {}
+
+    return bulkEditTasks(data, requestOptions)
+  }
+
+  return { mutationFn, ...mutationOptions }
+}
+
+export type BulkEditTasksMutationResult = NonNullable<
+  Awaited<ReturnType<typeof bulkEditTasks>>
+>
+export type BulkEditTasksMutationBody = BodyType<BulkEditTasksBody>
+export type BulkEditTasksMutationError = ErrorType<
+  BulkEditTasks401 | BulkEditTasks400
+>
+
+/**
+ * @summary Bulk edit tasks
+ */
+export const useBulkEditTasks = <
+  TError = ErrorType<BulkEditTasks401 | BulkEditTasks400>,
+  TContext = unknown,
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof bulkEditTasks>>,
+      TError,
+      { data: BodyType<BulkEditTasksBody> },
+      TContext
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof bulkEditTasks>>,
+  TError,
+  { data: BodyType<BulkEditTasksBody> },
+  TContext
+> => {
+  const mutationOptions = getBulkEditTasksMutationOptions(options)
+
+  return useMutation(mutationOptions, queryClient)
 }

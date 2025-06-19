@@ -48,9 +48,10 @@ export default function CreateWorkspaceForm() {
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/users/me/workspaces'],
           })
-          closeModal()
           if (pathname === '/workspaces/create') {
             router.push('/')
+          } else {
+            closeModal()
           }
           toast.success('Workspace created successfully!')
         },

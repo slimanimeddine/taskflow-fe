@@ -2,14 +2,13 @@
 
 import { DragDropContext, Droppable, DropResult } from '@hello-pangea/dnd'
 import { Task } from '@/types/models'
-import { BulkEditTasksBody, useBulkEditTasks } from '@/hooks/endpoints/tasks'
+import { useEditTask } from '@/hooks/endpoints/tasks'
 import { useSession } from '@/hooks/use-session'
 import { authHeader, onError } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 import { useState, useEffect } from 'react'
 import AddTask from './add-task'
 import KanbanCard from './kanban-card'
-import toast from 'react-hot-toast'
 
 type KanbanViewProps = {
   tasks: Task[]
@@ -58,22 +57,28 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
   )
   const { token } = useSession()
 
-  const bulkEditTasksMutation = useBulkEditTasks(authHeader(token))
+  const authConfig = authHeader(token)
+
+  const editTaskMutation = useEditTask(authConfig)
 
   const queryClient = useQueryClient()
 
-  function bulkUpdate(data: BulkEditTasksBody) {
-    bulkEditTasksMutation.mutate(
+  function updateTask(taskId: string, status: ColumnStatus, position?: number) {
+    editTaskMutation.mutate(
       {
-        data,
+        taskId,
+        data: {
+          status,
+          position,
+        },
       },
+
       {
         onError,
         onSuccess: () => {
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/tasks'],
           })
-          toast.success('Tasks updated successfully')
         },
       }
     )
@@ -105,107 +110,68 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
 
     const draggedTask = updatedTasks[draggedTaskIndex]
 
-    if (
-      source.droppableId === destination.droppableId &&
-      source.index !== destination.index
-    ) {
-      updatedTasks.splice(draggedTaskIndex, 1)
+    const oldStatus = draggedTask.status
+    const newStatus = destination.droppableId as ColumnStatus
 
-      updatedTasks.splice(destination.index, 0, draggedTask)
+    updatedTasks.splice(draggedTaskIndex, 1)
 
-      const currentGroupedTasks: Record<ColumnStatus, Task[]> =
-        COLUMN_STATUSES.reduce(
-          (acc, status) => {
-            acc[status] = updatedTasks
-              .filter((task) => task.status === status)
-              .sort((a, b) => a.position - b.position)
-            return acc
-          },
-          {} as Record<ColumnStatus, Task[]>
-        )
+    draggedTask.status = newStatus
 
-      Object.keys(currentGroupedTasks).forEach((statusKey) => {
-        const status = statusKey as ColumnStatus
-        currentGroupedTasks[status] = currentGroupedTasks[status].map(
-          (task, idx) => ({
-            ...task,
-            position: idx,
-          })
-        )
-      })
-
-      const finalTasks = Object.values(currentGroupedTasks).flat()
-      setInternalTasks(finalTasks)
-
-      const tasksToUpdate = currentGroupedTasks[
-        source.droppableId as ColumnStatus
-      ].map((task) => ({
-        id: task.id,
-        position: task.position,
-      }))
-
-      bulkUpdate({
-        tasks: tasksToUpdate,
-      })
-    }
-
-    if (source.droppableId !== destination.droppableId) {
-      const oldStatus = draggedTask.status
-
-      const newStatus = destination.droppableId as ColumnStatus
-
-      updatedTasks.splice(draggedTaskIndex, 1)
-
-      draggedTask.status = newStatus
-
-      const currentGroupedTasks: Record<ColumnStatus, Task[]> =
-        COLUMN_STATUSES.reduce(
-          (acc, status) => {
-            acc[status] = updatedTasks
-              .filter((task) => task.status === status)
-              .sort((a, b) => a.position - b.position)
-            return acc
-          },
-          {} as Record<ColumnStatus, Task[]>
-        )
-
-      currentGroupedTasks[newStatus].splice(destination.index, 0, draggedTask)
-
-      Object.keys(currentGroupedTasks).forEach((statusKey) => {
-        const status = statusKey as ColumnStatus
-
-        currentGroupedTasks[status] = currentGroupedTasks[status].map(
-          (task, idx) => ({
-            ...task,
-            position: idx,
-          })
-        )
-      })
-
-      const finalTasks = Object.values(currentGroupedTasks).flat()
-      setInternalTasks(finalTasks)
-
-      const oldStatusTasks = currentGroupedTasks[oldStatus as ColumnStatus].map(
-        (task) => ({
-          id: task.id,
-          position: task.position,
-          status: task.status,
-        })
+    const currentGroupedTasks: Record<ColumnStatus, Task[]> =
+      COLUMN_STATUSES.reduce(
+        (acc, status) => {
+          acc[status] = updatedTasks
+            .filter((task) => task.status === status)
+            .sort((a, b) => a.position - b.position)
+          return acc
+        },
+        {} as Record<ColumnStatus, Task[]>
       )
 
-      const newStatusTasks = currentGroupedTasks[newStatus].map((task) => ({
-        id: task.id,
-        position: task.position,
-        status: task.status,
-      }))
+    currentGroupedTasks[newStatus].splice(destination.index, 0, draggedTask)
 
-      const tasksToUpdate = [...oldStatusTasks, ...newStatusTasks]
+    Object.keys(currentGroupedTasks).forEach((statusKey) => {
+      const status = statusKey as ColumnStatus
 
-      bulkUpdate({
-        tasks: tasksToUpdate,
-      })
+      currentGroupedTasks[status] = currentGroupedTasks[status].map(
+        (task, idx) => ({
+          ...task,
+          position: idx,
+        })
+      )
+    })
+
+    setInternalTasks(Object.values(currentGroupedTasks).flat())
+
+    if (oldStatus !== newStatus) {
+      updateTask(draggableId, newStatus)
+
+      const oldStatusTasks = currentGroupedTasks[oldStatus]
+
+      if (oldStatusTasks.length > 0) {
+        oldStatusTasks.forEach((element) => {
+          updateTask(element.id, oldStatus, element.position)
+        })
+      }
+
+      const newStatusTasks = currentGroupedTasks[newStatus]
+
+      if (newStatusTasks.length > 0) {
+        newStatusTasks.forEach((element) => {
+          updateTask(element.id, newStatus, element.position)
+        })
+      }
+    } else {
+      const oldStatusTasks = currentGroupedTasks[oldStatus]
+
+      if (oldStatusTasks.length > 0) {
+        oldStatusTasks.forEach((element) => {
+          updateTask(element.id, oldStatus, element.position)
+        })
+      }
     }
   }
+
   return (
     <div className="min-h-screen bg-white p-4 antialiased rounded-lg">
       <div className="mx-auto max-w-7xl">

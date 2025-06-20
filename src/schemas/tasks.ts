@@ -31,17 +31,14 @@ export const editTaskBody = zod.object({
 })
 
 /**
- * Bulk edit tasks in a workspace.
- * @summary Bulk edit tasks
+ * Bulk edit tasks positions in a workspace.
+ * @summary Bulk edit tasks positions
  */
-export const bulkEditTasksBody = zod.object({
+export const bulkEditTasksPositionsBody = zod.object({
   tasks: zod
     .object({
       id: zod.string().uuid(),
       position: zod.number().int().min(1),
-      status: zod
-        .enum(['backlog', 'todo', 'in_progress', 'in_review', 'done'])
-        .optional(),
     })
     .array(),
 })

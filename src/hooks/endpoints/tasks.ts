@@ -64,10 +64,12 @@ export type ShowTask403 = UnauthorizedApiResponse
 export type ShowTask401 = UnauthenticatedApiResponse
 export type ShowTask404 = NotFoundApiResponse
 
-export type BulkEditTasks200 = SuccessNoDataApiResponse
-export type BulkEditTasks401 = UnauthenticatedApiResponse
-export type BulkEditTasks400 = ErrorApiResponse
-export type BulkEditTasksBody = z.infer<typeof bulkEditTasksBody>
+export type BulkEditTasksPositions200 = SuccessNoDataApiResponse
+export type BulkEditTasksPositions401 = UnauthenticatedApiResponse
+export type BulkEditTasksPositions400 = ErrorApiResponse
+export type BulkEditTasksPositionsBody = z.infer<
+  typeof bulkEditTasksPositionsBody
+>
 
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
@@ -83,7 +85,7 @@ import {
 import { Task } from '@/types/models'
 import { z } from 'zod'
 import {
-  bulkEditTasksBody,
+  bulkEditTasksPositionsBody,
   createTaskBody,
   editTaskBody,
 } from '@/schemas/tasks'
@@ -713,56 +715,65 @@ export const prefetchShowTask = async <
 }
 
 /**
- * Bulk edit tasks in a workspace.
- * @summary Bulk edit tasks
+ * Bulk edit tasks positions in a workspace.
+ * @summary Bulk edit tasks positions
  */
-export const bulkEditTasks = (
-  bulkEditTasksBody: BodyType<BulkEditTasksBody>,
+export const bulkEditTasksPositions = (
+  bulkEditTasksPositionsBody: BodyType<BulkEditTasksPositionsBody>,
   options?: SecondParameter<typeof customInstance>
 ) => {
   const data = new FormData()
-  if (bulkEditTasksBody.tasks[0].status) {
-    bulkEditTasksBody.tasks.forEach((value, index) => {
-      data.append(`tasks[${index}][id]`, value.id)
-      data.append(`tasks[${index}][position]`, `${value.position}`)
-      data.append(`tasks[${index}][status]`, value.status!)
-    })
-  } else {
-    bulkEditTasksBody.tasks.forEach((value, index) => {
-      data.append(`tasks[${index}][id]`, value.id)
-      data.append(`tasks[${index}][position]`, `${value.position}`)
-    })
-  }
+  bulkEditTasksPositionsBody.tasks.forEach((value, index) => {
+    data.append(`tasks[${index}][id]`, value.id)
+    data.append(`tasks[${index}][position]`, `${value.position}`)
+  })
 
-  return customInstance<BulkEditTasks200>(
+  const reconstructedTasks: { id: string; position: string }[] = []
+  for (const [key, value] of data.entries()) {
+    const match = key.match(/tasks\[(\d+)\]\[(id|position)\]/)
+    if (match) {
+      const index = parseInt(match[1])
+      const property = match[2]
+
+      if (!reconstructedTasks[index]) {
+        reconstructedTasks[index] = {} as { id: string; position: string }
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      ;(reconstructedTasks[index] as any)[property] = value
+    }
+  }
+  console.log('Reconstructed Tasks Array from FormData:', reconstructedTasks)
+  return customInstance<BulkEditTasksPositions200>(
     {
       url: `/api/v1/tasks`,
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      data,
+      data: {
+        tasks: reconstructedTasks,
+      },
     },
     options
   )
 }
 
-export const getBulkEditTasksMutationOptions = <
-  TError = ErrorType<BulkEditTasks401 | BulkEditTasks400 | BulkEditTasks400>,
+export const getBulkEditTasksPositionsMutationOptions = <
+  TError = ErrorType<BulkEditTasksPositions400 | BulkEditTasksPositions401>,
   TContext = unknown,
 >(options?: {
   mutation?: UseMutationOptions<
-    Awaited<ReturnType<typeof bulkEditTasks>>,
+    Awaited<ReturnType<typeof bulkEditTasksPositions>>,
     TError,
-    { data: BodyType<BulkEditTasksBody> },
+    { data: BodyType<BulkEditTasksPositionsBody> },
     TContext
   >
   request?: SecondParameter<typeof customInstance>
 }): UseMutationOptions<
-  Awaited<ReturnType<typeof bulkEditTasks>>,
+  Awaited<ReturnType<typeof bulkEditTasksPositions>>,
   TError,
-  { data: BodyType<BulkEditTasksBody> },
+  { data: BodyType<BulkEditTasksPositionsBody> },
   TContext
 > => {
-  const mutationKey = ['bulkEditTasks']
+  const mutationKey = ['bulkEditTasksPositions']
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
       'mutationKey' in options.mutation &&
@@ -772,49 +783,50 @@ export const getBulkEditTasksMutationOptions = <
     : { mutation: { mutationKey }, request: undefined }
 
   const mutationFn: MutationFunction<
-    Awaited<ReturnType<typeof bulkEditTasks>>,
-    { data: BodyType<BulkEditTasksBody> }
+    Awaited<ReturnType<typeof bulkEditTasksPositions>>,
+    { data: BodyType<BulkEditTasksPositionsBody> }
   > = (props) => {
     const { data } = props ?? {}
 
-    return bulkEditTasks(data, requestOptions)
+    return bulkEditTasksPositions(data, requestOptions)
   }
 
   return { mutationFn, ...mutationOptions }
 }
 
-export type BulkEditTasksMutationResult = NonNullable<
-  Awaited<ReturnType<typeof bulkEditTasks>>
+export type BulkEditTasksPositionsMutationResult = NonNullable<
+  Awaited<ReturnType<typeof bulkEditTasksPositions>>
 >
-export type BulkEditTasksMutationBody = BodyType<BulkEditTasksBody>
-export type BulkEditTasksMutationError = ErrorType<
-  BulkEditTasks401 | BulkEditTasks400
+export type BulkEditTasksPositionsMutationBody =
+  BodyType<BulkEditTasksPositionsBody>
+export type BulkEditTasksPositionsMutationError = ErrorType<
+  BulkEditTasksPositions400 | BulkEditTasksPositions401
 >
 
 /**
- * @summary Bulk edit tasks
+ * @summary Bulk edit tasks positions
  */
-export const useBulkEditTasks = <
-  TError = ErrorType<BulkEditTasks401 | BulkEditTasks400>,
+export const useBulkEditTasksPositions = <
+  TError = ErrorType<BulkEditTasksPositions400 | BulkEditTasksPositions401>,
   TContext = unknown,
 >(
   options?: {
     mutation?: UseMutationOptions<
-      Awaited<ReturnType<typeof bulkEditTasks>>,
+      Awaited<ReturnType<typeof bulkEditTasksPositions>>,
       TError,
-      { data: BodyType<BulkEditTasksBody> },
+      { data: BodyType<BulkEditTasksPositionsBody> },
       TContext
     >
     request?: SecondParameter<typeof customInstance>
   },
   queryClient?: QueryClient
 ): UseMutationResult<
-  Awaited<ReturnType<typeof bulkEditTasks>>,
+  Awaited<ReturnType<typeof bulkEditTasksPositions>>,
   TError,
-  { data: BodyType<BulkEditTasksBody> },
+  { data: BodyType<BulkEditTasksPositionsBody> },
   TContext
 > => {
-  const mutationOptions = getBulkEditTasksMutationOptions(options)
+  const mutationOptions = getBulkEditTasksPositionsMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
 }

@@ -2,8 +2,8 @@
 
 import TasksTableView from './table-view'
 import { useChangeTasksView } from '@/hooks/use-change-tasks-view'
-import CalendarView from './calendar-view'
 import KanbanViewWrapper from './kanban-view/wrapper'
+import CalendarViewWrapper from './calendar-view/wrapper'
 
 export default function ViewTasks() {
   const { view } = useChangeTasksView()
@@ -15,5 +15,5 @@ export default function ViewTasks() {
     return <KanbanViewWrapper />
   }
 
-  return <CalendarView />
+  return <CalendarViewWrapper />
 }

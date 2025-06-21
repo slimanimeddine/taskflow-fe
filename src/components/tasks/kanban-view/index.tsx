@@ -110,7 +110,7 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
 
     const draggedTask = updatedTasks[draggedTaskIndex]
 
-    const oldStatus = draggedTask.status
+    const oldStatus = draggedTask.status as ColumnStatus
     const newStatus = destination.droppableId as ColumnStatus
 
     updatedTasks.splice(draggedTaskIndex, 1)

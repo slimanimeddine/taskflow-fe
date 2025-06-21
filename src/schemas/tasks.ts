@@ -7,7 +7,7 @@ import { z as zod } from 'zod'
 export const createTaskBody = zod.object({
   name: zod.string(),
   description: zod.string().nullable(),
-  due_date: zod.string().date().nullable(),
+  due_date: zod.string().date(),
   status: zod.enum(['backlog', 'todo', 'in_progress', 'in_review', 'done']),
   workspace_id: zod.string().uuid(),
   project_id: zod.string().uuid(),
@@ -21,7 +21,7 @@ export const createTaskBody = zod.object({
 export const editTaskBody = zod.object({
   name: zod.string().optional(),
   description: zod.string().nullable().optional(),
-  due_date: zod.string().date().nullable().optional(),
+  due_date: zod.string().date().optional(),
   position: zod.number().int().min(1).optional(),
   status: zod
     .enum(['backlog', 'todo', 'in_progress', 'in_review', 'done'])

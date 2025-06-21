@@ -1,17 +1,16 @@
 'use client'
 
+import { useTasksPage } from '@/hooks/filtering/use-tasks-page'
 import { classNames } from '@/lib/utils'
 import { LinksField, MetaField } from '@/types/api-responses'
 import Link from 'next/link'
-import { useQueryState, parseAsInteger } from 'nuqs'
 interface PaginationProps {
   links: LinksField
   meta: MetaField
 }
 
 export default function Pagination({ links, meta }: PaginationProps) {
-  const [, setPage] = useQueryState('page', parseAsInteger)
-
+  const { setPage } = useTasksPage()
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= (meta?.last_page || 1)) {
       setPage(newPage)

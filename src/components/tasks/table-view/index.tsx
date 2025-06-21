@@ -21,6 +21,15 @@ import { useTaskStatusFilter } from '@/hooks/filtering/use-task-status-filter'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import { useTaskSort } from '@/hooks/sorting/use-task-sort'
 import { useSession } from '@/hooks/use-session'
+import { useTasksPage } from '@/hooks/filtering/use-tasks-page'
+
+const STATUS_COLORS: Record<Task['status'], string> = {
+  backlog: 'bg-gray-50 text-gray-700 ring-gray-600/20',
+  todo: 'bg-blue-50 text-blue-700 ring-blue-600/20',
+  in_progress: 'bg-yellow-50 text-yellow-700 ring-yellow-600/20',
+  in_review: 'bg-purple-50 text-purple-700 ring-purple-600/20',
+  done: 'bg-green-50 text-green-700 ring-green-600/20',
+}
 
 export default function TasksTableView() {
   const { token } = useSession()
@@ -30,6 +39,7 @@ export default function TasksTableView() {
   const { assignee } = useTaskAssigneeFilter()
   const { sort } = useTaskSort()
   const { dueDate } = useTaskDueDateFilter()
+  const { page } = useTasksPage()
 
   const listTasksQuery = useListTasks<PaginatedApiResponse<Task>>(
     {
@@ -40,6 +50,7 @@ export default function TasksTableView() {
       ...(dueDate && { 'filter[due_date]': dueDate.toDateString() }),
       ...(sort && { sort }),
       paginate: 1,
+      page: page || 1,
     },
     authHeader(token)
   )
@@ -139,15 +150,7 @@ export default function TasksTableView() {
                         <span
                           className={classNames(
                             'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
-                            task.status === 'todo'
-                              ? 'bg-red-50 text-red-700 ring-red-600/20'
-                              : task.status === 'backlog'
-                                ? 'bg-pink-50 text-pink-700 ring-pink-600/20'
-                                : task.status === 'in_progress'
-                                  ? 'bg-yellow-50 text-yellow-700 ring-yellow-600/20'
-                                  : task.status === 'done'
-                                    ? 'bg-blue-50 text-blue-700 ring-blue-600/20'
-                                    : 'bg-purple-50 text-purple-700 ring-purple-600/20'
+                            STATUS_COLORS[task.status]
                           )}
                         >
                           {statusLabel(task.status)}

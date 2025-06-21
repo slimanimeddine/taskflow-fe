@@ -46,6 +46,7 @@ export type ListTasksParams = {
     | '-assignee'
   )[]
   paginate: 1 | 0
+  page?: number
 }
 
 export type DeleteTask200 = SuccessNoDataApiResponse

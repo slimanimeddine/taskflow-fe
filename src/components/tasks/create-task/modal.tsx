@@ -5,7 +5,15 @@ import { PlusIcon } from '@heroicons/react/24/outline'
 import CreateTaskForm from './form'
 import { useOpenModal } from '@/hooks/use-open-modal'
 
-export default function CreateTaskModal() {
+type CreateTaskModalProps = {
+  defaultProjectId?: string
+  defaultAssigneeId?: string
+}
+
+export default function CreateTaskModal({
+  defaultProjectId,
+  defaultAssigneeId,
+}: CreateTaskModalProps) {
   const { modal, openModal, closeModal } = useOpenModal()
 
   return (
@@ -39,7 +47,10 @@ export default function CreateTaskModal() {
               className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 w-full max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
             >
               <div className="bg-white px-4 py-4">
-                <CreateTaskForm />
+                <CreateTaskForm
+                  defaultAssigneeId={defaultAssigneeId}
+                  defaultProjectId={defaultProjectId}
+                />
               </div>
             </DialogPanel>
           </div>

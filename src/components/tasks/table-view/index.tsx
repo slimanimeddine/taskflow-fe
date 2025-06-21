@@ -31,7 +31,15 @@ const STATUS_COLORS: Record<Task['status'], string> = {
   done: 'bg-green-50 text-green-700 ring-green-600/20',
 }
 
-export default function TasksTableView() {
+type TasksTableViewProps = {
+  defaultProjectId?: string
+  defaultAssigneeId?: string
+}
+
+export default function TasksTableView({
+  defaultProjectId,
+  defaultAssigneeId,
+}: TasksTableViewProps) {
   const { token } = useSession()
   const workspaceId = useWorkspaceId()
   const { status } = useTaskStatusFilter()
@@ -45,8 +53,12 @@ export default function TasksTableView() {
     {
       'filter[workspace]': workspaceId,
       ...(status && { 'filter[status]': status }),
-      ...(project && { 'filter[project]': project.id }),
-      ...(assignee && { 'filter[assignee]': assignee.id }),
+      ...(defaultProjectId
+        ? { 'filter[project]': defaultProjectId }
+        : project && { 'filter[project]': project.id }),
+      ...(defaultAssigneeId
+        ? { 'filter[assignee]': defaultAssigneeId }
+        : assignee && { 'filter[assignee]': assignee.id }),
       ...(dueDate && { 'filter[due_date]': dueDate.toDateString() }),
       ...(sort && { sort }),
       paginate: 1,
@@ -63,7 +75,6 @@ export default function TasksTableView() {
       const links = data.links
       const meta = data.meta
 
-      console.log(data)
       return (
         <div className="flow-root min-h-screen">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">

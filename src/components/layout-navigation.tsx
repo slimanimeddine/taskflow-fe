@@ -16,7 +16,11 @@ export default function LayoutNavigation() {
 
   const navigation = [
     { name: 'Home', href: '/', icon: HomeIcon },
-    { name: 'My Tasks', href: '/my-tasks', icon: ClipboardDocumentListIcon },
+    {
+      name: 'My Tasks',
+      href: `/workspaces/${workspaceId}/tasks`,
+      icon: ClipboardDocumentListIcon,
+    },
     {
       name: 'Members',
       href: `/workspaces/${workspaceId}/members`,

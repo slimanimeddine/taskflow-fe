@@ -15,7 +15,15 @@ import { useListWorkspaceProjects } from '@/hooks/endpoints/projects'
 import { useOpenModal } from '@/hooks/use-open-modal'
 import { useSetTaskStatusOnCreate } from '@/hooks/use-set-task-status-on-create'
 
-export default function CreateTaskForm() {
+type CreateTaskFormProps = {
+  defaultAssigneeId?: string
+  defaultProjectId?: string
+}
+
+export default function CreateTaskForm({
+  defaultAssigneeId,
+  defaultProjectId,
+}: CreateTaskFormProps) {
   const workspaceId = useWorkspaceId()
   const { taskStatus } = useSetTaskStatusOnCreate()
 
@@ -24,6 +32,8 @@ export default function CreateTaskForm() {
     defaultValues: {
       workspace_id: workspaceId,
       status: taskStatus ? taskStatus : undefined,
+      assignee_id: defaultAssigneeId ? defaultAssigneeId : undefined,
+      project_id: defaultProjectId ? defaultProjectId : undefined,
     },
   })
 
@@ -160,7 +170,7 @@ export default function CreateTaskForm() {
             <select
               id="status"
               disabled={!!taskStatus}
-              className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 disabled:opacity-50"
               {...register('status')}
             >
               <option value="backlog">Backlog</option>
@@ -195,7 +205,8 @@ export default function CreateTaskForm() {
                 return (
                   <select
                     id="assignee"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!!defaultAssigneeId}
+                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 disabled:opacity-50"
                     {...register('assignee_id')}
                   >
                     {members.map((member) => (
@@ -237,7 +248,8 @@ export default function CreateTaskForm() {
                 return (
                   <select
                     id="project"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    disabled={!!defaultProjectId}
+                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6 disabled:opacity-50"
                     {...register('project_id')}
                   >
                     {projects.map((project) => (

@@ -15,7 +15,15 @@ import { useTaskSort } from '@/hooks/sorting/use-task-sort'
 import { useSession } from '@/hooks/use-session'
 import KanbanView from '.'
 
-export default function KanbanViewWrapper() {
+type KanbanViewWrapperProps = {
+  defaultProjectId?: string
+  defaultAssigneeId?: string
+}
+
+export default function KanbanViewWrapper({
+  defaultProjectId,
+  defaultAssigneeId,
+}: KanbanViewWrapperProps) {
   const { token } = useSession()
   const workspaceId = useWorkspaceId()
   const { status } = useTaskStatusFilter()
@@ -28,8 +36,12 @@ export default function KanbanViewWrapper() {
     {
       'filter[workspace]': workspaceId,
       ...(status && { 'filter[status]': status }),
-      ...(project && { 'filter[project]': project.id }),
-      ...(assignee && { 'filter[assignee]': assignee.id }),
+      ...(defaultProjectId
+        ? { 'filter[project]': defaultProjectId }
+        : project && { 'filter[project]': project.id }),
+      ...(defaultAssigneeId
+        ? { 'filter[assignee]': defaultAssigneeId }
+        : assignee && { 'filter[assignee]': assignee.id }),
       ...(dueDate && { 'filter[due_date]': dueDate.toDateString() }),
       ...(sort && { sort }),
       paginate: 0,

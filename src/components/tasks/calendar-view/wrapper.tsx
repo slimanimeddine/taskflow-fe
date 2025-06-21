@@ -15,7 +15,15 @@ import { useTaskSort } from '@/hooks/sorting/use-task-sort'
 import { useSession } from '@/hooks/use-session'
 import CalendarView from '.'
 
-export default function CalendarViewWrapper() {
+type CalendarViewWrapperProps = {
+  defaultProjectId?: string
+  defaultAssigneeId?: string
+}
+
+export default function CalendarViewWrapper({
+  defaultProjectId,
+  defaultAssigneeId,
+}: CalendarViewWrapperProps) {
   const { token } = useSession()
   const workspaceId = useWorkspaceId()
   const { status } = useTaskStatusFilter()
@@ -28,8 +36,12 @@ export default function CalendarViewWrapper() {
     {
       'filter[workspace]': workspaceId,
       ...(status && { 'filter[status]': status }),
-      ...(project && { 'filter[project]': project.id }),
-      ...(assignee && { 'filter[assignee]': assignee.id }),
+      ...(defaultProjectId
+        ? { 'filter[project]': defaultProjectId }
+        : project && { 'filter[project]': project.id }),
+      ...(defaultAssigneeId
+        ? { 'filter[assignee]': defaultAssigneeId }
+        : assignee && { 'filter[assignee]': assignee.id }),
       ...(dueDate && { 'filter[due_date]': dueDate.toDateString() }),
       ...(sort && { sort }),
       paginate: 0,

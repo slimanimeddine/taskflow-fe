@@ -1,5 +1,5 @@
-import { useQueryState, parseAsStringLiteral, createParser } from 'nuqs'
-import { z } from 'zod'
+import { parseAsUuid } from '@/lib/uuid-parser'
+import { useQueryState, parseAsStringLiteral } from 'nuqs'
 
 const modals = [
   'create-project',
@@ -9,19 +9,6 @@ const modals = [
 ] as const
 
 type Modal = (typeof modals)[number]
-
-const uuidSchema = z.string().uuid()
-
-const parseAsUuid = createParser({
-  parse: (value: string) => {
-    const result = uuidSchema.safeParse(value)
-    if (!result.success) {
-      throw new Error('Invalid UUID format')
-    }
-    return result.data
-  },
-  serialize: (value: string) => value,
-})
 
 export function useOpenModal() {
   const [modal, setModal] = useQueryState(

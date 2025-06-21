@@ -743,7 +743,6 @@ export const bulkEditTasksPositions = (
       ;(reconstructedTasks[index] as any)[property] = value
     }
   }
-  console.log('Reconstructed Tasks Array from FormData:', reconstructedTasks)
   return customInstance<BulkEditTasksPositions200>(
     {
       url: `/api/v1/tasks`,

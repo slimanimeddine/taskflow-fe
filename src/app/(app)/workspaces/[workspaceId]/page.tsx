@@ -1,3 +1,4 @@
+import ViewWorkspace from '@/components/workspaces/view-workspace'
 import { showWorkspace } from '@/hooks/endpoints/workspaces'
 import { verifyAuth } from '@/lib/dal'
 import seo from '@/lib/seo'
@@ -25,8 +26,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
-export default async function Page({ params }: Props) {
-  const { workspaceId } = await params
+export default async function Page() {
   const {} = await verifyAuth()
-  return <div>workspace: {workspaceId}</div>
+  return <ViewWorkspace />
 }

@@ -18,7 +18,7 @@ type DefaultValues = {
   name: string
   status: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
   description: string | null
-  due_date: string | null
+  due_date: string
   project_id: string
   assignee_id: string
 }
@@ -70,6 +70,9 @@ export default function EditTaskForm({
           reset()
           queryClient.invalidateQueries({
             queryKey: ['/api/v1/tasks'],
+          })
+          queryClient.invalidateQueries({
+            queryKey: [`/api/v1/tasks/${taskId}`],
           })
           closeModal()
           toast.success('Task edit successfully!')

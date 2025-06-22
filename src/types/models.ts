@@ -30,7 +30,7 @@ export interface Task {
   name: string
   description: string | null
   due_date: string
-  status: string
+  status: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
   position: number
   workspace_id: string
   project_id: string

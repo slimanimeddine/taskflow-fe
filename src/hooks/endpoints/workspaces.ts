@@ -42,11 +42,23 @@ export type ResetWorkspaceInviteCode403 = UnauthorizedApiResponse
 export type ResetWorkspaceInviteCode404 = NotFoundApiResponse
 export type ResetWorkspaceInviteCode401 = UnauthenticatedApiResponse
 
+export type ViewWorkspaceStats200 = SuccessApiResponse<{
+  total_projects: number
+  total_tasks: number
+  total_members: number
+  completed_tasks: number
+  overdue_tasks: number
+}>
+export type ViewWorkspaceStats401 = UnauthenticatedApiResponse
+export type ViewWorkspaceStats403 = UnauthorizedApiResponse
+export type ViewWorkspaceStats404 = NotFoundApiResponse
+
 import { customInstance } from '@/lib/axios'
 import type { ErrorType, BodyType } from '@/lib/axios'
 import {
   ApiResource,
   NotFoundApiResponse,
+  SuccessApiResponse,
   SuccessNoDataApiResponse,
   UnauthenticatedApiResponse,
   UnauthorizedApiResponse,
@@ -812,4 +824,214 @@ export const useResetWorkspaceInviteCode = <
   const mutationOptions = getResetWorkspaceInviteCodeMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * View statistics for the specified workspace.
+ * @summary View workspace stats
+ */
+export const viewWorkspaceStats = (
+  workspaceId: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ViewWorkspaceStats200>(
+    { url: `/api/v1/workspaces/${workspaceId}/stats`, method: 'GET', signal },
+    options
+  )
+}
+
+export const getViewWorkspaceStatsQueryKey = (workspaceId: string) => {
+  return [`/api/v1/workspaces/${workspaceId}/stats`] as const
+}
+
+export const getViewWorkspaceStatsQueryOptions = <
+  TData = Awaited<ReturnType<typeof viewWorkspaceStats>>,
+  TError = ErrorType<
+    ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewWorkspaceStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey =
+    queryOptions?.queryKey ?? getViewWorkspaceStatsQueryKey(workspaceId)
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof viewWorkspaceStats>>
+  > = ({ signal }) => viewWorkspaceStats(workspaceId, requestOptions, signal)
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!workspaceId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof viewWorkspaceStats>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ViewWorkspaceStatsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof viewWorkspaceStats>>
+>
+export type ViewWorkspaceStatsQueryError = ErrorType<
+  ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+>
+
+export function useViewWorkspaceStats<
+  TData = Awaited<ReturnType<typeof viewWorkspaceStats>>,
+  TError = ErrorType<
+    ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+  >,
+>(
+  workspaceId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewWorkspaceStats>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof viewWorkspaceStats>>,
+          TError,
+          Awaited<ReturnType<typeof viewWorkspaceStats>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useViewWorkspaceStats<
+  TData = Awaited<ReturnType<typeof viewWorkspaceStats>>,
+  TError = ErrorType<
+    ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewWorkspaceStats>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof viewWorkspaceStats>>,
+          TError,
+          Awaited<ReturnType<typeof viewWorkspaceStats>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useViewWorkspaceStats<
+  TData = Awaited<ReturnType<typeof viewWorkspaceStats>>,
+  TError = ErrorType<
+    ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewWorkspaceStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary View workspace stats
+ */
+
+export function useViewWorkspaceStats<
+  TData = Awaited<ReturnType<typeof viewWorkspaceStats>>,
+  TError = ErrorType<
+    ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+  >,
+>(
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewWorkspaceStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getViewWorkspaceStatsQueryOptions(workspaceId, options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary View workspace stats
+ */
+export const prefetchViewWorkspaceStats = async <
+  TData = Awaited<ReturnType<typeof viewWorkspaceStats>>,
+  TError = ErrorType<
+    ViewWorkspaceStats401 | ViewWorkspaceStats403 | ViewWorkspaceStats404
+  >,
+>(
+  queryClient: QueryClient,
+  workspaceId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewWorkspaceStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+): Promise<QueryClient> => {
+  const queryOptions = getViewWorkspaceStatsQueryOptions(workspaceId, options)
+
+  await queryClient.prefetchQuery(queryOptions)
+
+  return queryClient
 }

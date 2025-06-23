@@ -41,11 +41,22 @@ export type DeleteProject403 = UnauthorizedApiResponse
 export type DeleteProject401 = UnauthenticatedApiResponse
 export type DeleteProject404 = NotFoundApiResponse
 
+export type ViewProjectStats200 = SuccessApiResponse<{
+  total_tasks: number
+  incomplete_tasks: number
+  completed_tasks: number
+  overdue_tasks: number
+}>
+export type ViewProjectStats401 = UnauthenticatedApiResponse
+export type ViewProjectStats403 = UnauthorizedApiResponse
+export type ViewProjectStats404 = NotFoundApiResponse
+
 import { customInstance } from '@/lib/axios'
 import type { BodyType, ErrorType } from '@/lib/axios'
 import {
   ApiResource,
   NotFoundApiResponse,
+  SuccessApiResponse,
   SuccessNoDataApiResponse,
   UnauthenticatedApiResponse,
   UnauthorizedApiResponse,
@@ -756,4 +767,214 @@ export const useDeleteProject = <
   const mutationOptions = getDeleteProjectMutationOptions(options)
 
   return useMutation(mutationOptions, queryClient)
+}
+
+/**
+ * View statistics for the specified project.
+ * @summary View project stats
+ */
+export const viewProjectStats = (
+  projectId: string,
+  options?: SecondParameter<typeof customInstance>,
+  signal?: AbortSignal
+) => {
+  return customInstance<ViewProjectStats200>(
+    { url: `/api/v1/projects/${projectId}/stats`, method: 'GET', signal },
+    options
+  )
+}
+
+export const getViewProjectStatsQueryKey = (projectId: string) => {
+  return [`/api/v1/projects/${projectId}/stats`] as const
+}
+
+export const getViewProjectStatsQueryOptions = <
+  TData = Awaited<ReturnType<typeof viewProjectStats>>,
+  TError = ErrorType<
+    ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+  >,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewProjectStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+) => {
+  const { query: queryOptions, request: requestOptions } = options ?? {}
+
+  const queryKey =
+    queryOptions?.queryKey ?? getViewProjectStatsQueryKey(projectId)
+
+  const queryFn: QueryFunction<
+    Awaited<ReturnType<typeof viewProjectStats>>
+  > = ({ signal }) => viewProjectStats(projectId, requestOptions, signal)
+
+  return {
+    queryKey,
+    queryFn,
+    enabled: !!projectId,
+    ...queryOptions,
+  } as UseQueryOptions<
+    Awaited<ReturnType<typeof viewProjectStats>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+}
+
+export type ViewProjectStatsQueryResult = NonNullable<
+  Awaited<ReturnType<typeof viewProjectStats>>
+>
+export type ViewProjectStatsQueryError = ErrorType<
+  ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+>
+
+export function useViewProjectStats<
+  TData = Awaited<ReturnType<typeof viewProjectStats>>,
+  TError = ErrorType<
+    ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+  >,
+>(
+  projectId: string,
+  options: {
+    query: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewProjectStats>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof viewProjectStats>>,
+          TError,
+          Awaited<ReturnType<typeof viewProjectStats>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useViewProjectStats<
+  TData = Awaited<ReturnType<typeof viewProjectStats>>,
+  TError = ErrorType<
+    ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+  >,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewProjectStats>>,
+        TError,
+        TData
+      >
+    > &
+      Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof viewProjectStats>>,
+          TError,
+          Awaited<ReturnType<typeof viewProjectStats>>
+        >,
+        'initialData'
+      >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+export function useViewProjectStats<
+  TData = Awaited<ReturnType<typeof viewProjectStats>>,
+  TError = ErrorType<
+    ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+  >,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewProjectStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+}
+/**
+ * @summary View project stats
+ */
+
+export function useViewProjectStats<
+  TData = Awaited<ReturnType<typeof viewProjectStats>>,
+  TError = ErrorType<
+    ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+  >,
+>(
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewProjectStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>
+} {
+  const queryOptions = getViewProjectStatsQueryOptions(projectId, options)
+
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> }
+
+  query.queryKey = queryOptions.queryKey
+
+  return query
+}
+
+/**
+ * @summary View project stats
+ */
+export const prefetchViewProjectStats = async <
+  TData = Awaited<ReturnType<typeof viewProjectStats>>,
+  TError = ErrorType<
+    ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
+  >,
+>(
+  queryClient: QueryClient,
+  projectId: string,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<
+        Awaited<ReturnType<typeof viewProjectStats>>,
+        TError,
+        TData
+      >
+    >
+    request?: SecondParameter<typeof customInstance>
+  }
+): Promise<QueryClient> => {
+  const queryOptions = getViewProjectStatsQueryOptions(projectId, options)
+
+  await queryClient.prefetchQuery(queryOptions)
+
+  return queryClient
 }

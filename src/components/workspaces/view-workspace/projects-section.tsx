@@ -5,8 +5,9 @@ import LoadingUI from '@/components/loading-ui'
 import { useListWorkspaceProjects } from '@/hooks/endpoints/projects'
 import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
 import { useSession } from '@/hooks/use-session'
-import { authHeader, matchQueryStatus } from '@/lib/utils'
+import { authHeader, fileUrl, matchQueryStatus } from '@/lib/utils'
 import { ChevronRightIcon } from '@heroicons/react/24/solid'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export default function ProjectsSection() {
@@ -37,11 +38,22 @@ export default function ProjectsSection() {
                 className="flex items-center justify-between py-3"
               >
                 <div className="flex items-center">
-                  <div className="h-10 w-10 flex-shrink-0">
-                    <div className="flex h-full w-full items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
-                      {project.name.charAt(0)}
+                  {project.image_path ? (
+                    <Image
+                      alt=""
+                      src={fileUrl(project.image_path)!}
+                      className="size-10 shrink-0 rounded-lg"
+                      width={40}
+                      height={40}
+                    />
+                  ) : (
+                    <div className="h-10 w-10 flex-shrink-0">
+                      <div className="flex h-full w-full items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
+                        {project.name.charAt(0)}
+                      </div>
                     </div>
-                  </div>
+                  )}
+
                   <div className="ml-4">
                     <p className="text-sm font-medium text-gray-900">
                       {project.name}
@@ -49,7 +61,7 @@ export default function ProjectsSection() {
                   </div>
                 </div>
                 <Link
-                  href={`/projects/${project.id}`}
+                  href={`/workspaces/${workspaceId}/projects/${project.id}`}
                   className="rounded-full bg-white p-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 >
                   <ChevronRightIcon

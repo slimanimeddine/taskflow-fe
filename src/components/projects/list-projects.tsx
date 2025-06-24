@@ -31,6 +31,10 @@ export default function ListProjects() {
     Empty: <></>,
     Success: ({ data }) => {
       const projects = data.data
+      console.log(
+        'test projects: ',
+        projects.map((item) => fileUrl(item.image_path))
+      )
       return (
         <div>
           <ul

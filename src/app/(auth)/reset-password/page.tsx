@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   ...seo('Reset Password', 'Reset your password'),
 }
 
-type SearchParams = { [key: string]: string }
+type SearchParams = Promise<{ [key: string]: string }>
 
 export default async function Page({
   searchParams,

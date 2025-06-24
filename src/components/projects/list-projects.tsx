@@ -58,7 +58,8 @@ export default function ListProjects() {
                     {project.image_path ? (
                       <Image
                         alt=""
-                        src={fileUrl(project.image_path)!}
+                        // src={fileUrl(project.image_path)!}
+                        src="https://taskflow-be-e9cwcqfrgmd9cngf.francecentral-01.azurewebsites.net/storage/workspaces/VqqqmsuBdpPf7Hevt8yPLQdZvfu2V0gGjEHyw4Yc.webp"
                         className="size-6 shrink-0 rounded-lg"
                         width={24}
                         height={24}

@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         port: '8000',
         pathname: '/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname:
+          'taskflow-be-e9cwcqfrgmd9cngf.francecentral-01.azurewebsites.net',
+      },
     ],
   },
 }

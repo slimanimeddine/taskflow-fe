@@ -1,7 +1,7 @@
 module.exports = {
     apps: [
         {
-            name: "slimanimeddine",
+            name: "nextjs-app",
             script: "node_modules/next/dist/bin/next",
             args: "start",
             env: {

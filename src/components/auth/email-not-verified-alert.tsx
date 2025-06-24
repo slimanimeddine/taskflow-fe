@@ -1,11 +1,11 @@
 'use client'
 import { InformationCircleIcon } from '@heroicons/react/20/solid'
-import LoadingUI from './loading-ui'
-import ErrorUI from './error-ui'
 import { authHeader, matchQueryStatus, onError } from '@/lib/utils'
 import toast from 'react-hot-toast'
 import { useGetAuthenticatedUser } from '@/hooks/endpoints/users'
 import { useResendEmailVerification } from '@/hooks/endpoints/authentication'
+import LoadingUI from '../loading-ui'
+import ErrorUI from '../error-ui'
 
 export default function EmailNotVerifiedAlert({ token }: { token: string }) {
   const authConfig = authHeader(token)

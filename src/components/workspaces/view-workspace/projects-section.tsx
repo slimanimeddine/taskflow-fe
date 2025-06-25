@@ -42,7 +42,6 @@ export default function ProjectsSection() {
                     <Image
                       alt=""
                       src={fileUrl(project.image_path)!}
-                      overrideSrc={fileUrl(project.image_path)!}
                       className="size-10 shrink-0 rounded-lg"
                       width={40}
                       height={40}

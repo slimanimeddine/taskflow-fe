@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname:
           'taskflow-be-e9cwcqfrgmd9cngf.francecentral-01.azurewebsites.net',
+        port: '',
         pathname: '/storage/**',
       },
     ],

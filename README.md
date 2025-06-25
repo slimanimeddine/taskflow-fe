@@ -39,7 +39,7 @@
 
 ## About The Project
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+TaskFlow is a comprehensive project management tool designed to help teams organize tasks, track progress, and collaborate effectively.
 
 ### Other Parts
 
@@ -47,9 +47,12 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor i
 
 ### Features
 
-#### Feature 00
-
-Lorem ipsum dolor sit amet,
+- Data fetching using Tanstack query
+- URL state management using nuqs
+- Tasks Kanban board view with drag and drop functionality
+- Tasks Calendar view
+- Code generation using Orval to ensure type safety between backend and frontend
+-
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -64,6 +67,8 @@ These are the main technologies I have used to build this app, for a complete li
 - [HeadlessUI](https://headlessui.com/)
 - [React Hook Form](https://react-hook-form.com/)
 - [TanStack Query](https://tanstack.com/query/latest/docs/framework/react/overview)
+- [React Big Calendar](https://github.com/jquense/react-big-calendar)
+- [@hello-pangea/dnd](https://github.com/hello-pangea/dnd)
 - [Axios](https://axios-http.com/docs/intro)
 - [nuqs](https://nuqs.47ng.com/)
 - [Orval](https://orval.dev/)

@@ -3,19 +3,10 @@ import type { NextConfig } from 'next'
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: 'http',
-        hostname: 'localhost',
-        port: '8000',
-        pathname: '/storage/**',
-      },
-      {
-        protocol: 'https',
-        hostname:
-          'taskflow-be-e9cwcqfrgmd9cngf.francecentral-01.azurewebsites.net',
-        port: '',
-        pathname: '/storage/**',
-      },
+      new URL(
+        'https://taskflow-be-e9cwcqfrgmd9cngf.francecentral-01.azurewebsites.net/storage/**'
+      ),
+      new URL('http://localhost:8000/storage/**'),
     ],
   },
 }

@@ -42,6 +42,7 @@ export default function ViewProject() {
                     <Image
                       alt=""
                       src={fileUrl(project.image_path)!}
+                      overrideSrc={fileUrl(project.image_path)!}
                       className="size-8 shrink-0 rounded-lg"
                       width={32}
                       height={32}

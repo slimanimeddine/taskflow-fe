@@ -44,6 +44,7 @@ export default function WorkspaceSwitcher({
               <Image
                 alt=""
                 src={fileUrl(selected.image_path)!}
+                overrideSrc={fileUrl(selected.image_path)!}
                 className="size-5 shrink-0 rounded-full"
                 width={20}
                 height={20}
@@ -81,6 +82,7 @@ export default function WorkspaceSwitcher({
                   <Image
                     alt=""
                     src={fileUrl(workspace.image_path)!}
+                    overrideSrc={fileUrl(workspace.image_path)!}
                     className="size-5 shrink-0 rounded-full"
                     width={20}
                     height={20}

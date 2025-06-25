@@ -56,6 +56,7 @@ export default function ListProjects() {
                       <Image
                         alt=""
                         src={fileUrl(project.image_path)!}
+                        overrideSrc={fileUrl(project.image_path)!}
                         className="size-6 shrink-0 rounded-lg"
                         width={24}
                         height={24}

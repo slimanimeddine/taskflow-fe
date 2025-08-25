@@ -1,24 +1,41 @@
-import MyTasks from '@/components/tasks/my-tasks'
-import { verifyAuth, verifyMember } from '@/lib/dal'
-import seo from '@/lib/seo'
-import { Metadata } from 'next'
-import { redirect } from 'next/navigation'
+import InvalidParams from "@/components/invalid-params";
+import MyTasks from "@/components/tasks/my-tasks";
+import { verifyAuth, verifyMember } from "@/lib/dal";
+import seo from "@/lib/seo";
+import { parseParams } from "@/lib/utils";
+import { type Metadata } from "next";
+import { redirect } from "next/navigation";
+import z from "zod/v4";
 
 export const metadata: Metadata = {
-  ...seo('My Tasks', 'View your tasks'),
-}
+  ...seo("My Tasks", "View your tasks"),
+};
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ workspaceId: string }>
-}) {
-  const { token } = await verifyAuth()
-  const { workspaceId } = await params
-  const isMember = await verifyMember(token, workspaceId)
-  if (!isMember) {
-    redirect('/')
+const paramsSchema = z.object({
+  workspaceId: z.uuid(),
+});
+
+type Props = {
+  params: Promise<z.infer<typeof paramsSchema>>;
+};
+
+export default async function Page({ params }: Props) {
+  const { token } = await verifyAuth();
+  const { data, success, error } = parseParams(await params, paramsSchema);
+
+  if (!success) {
+    const errors = Object.values(z.flattenError(error).fieldErrors).map((err) =>
+      err.join(", "),
+    );
+    return <InvalidParams errors={errors} />;
   }
 
-  return <MyTasks />
+  const { workspaceId } = data;
+
+  const isMember = await verifyMember(token, workspaceId);
+  if (!isMember) {
+    redirect("/");
+  }
+
+  return <MyTasks />;
 }

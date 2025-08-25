@@ -1,49 +1,46 @@
-'use client'
-import { useDeleteWorkspace } from '@/hooks/endpoints/workspaces'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { authHeader, onError } from '@/lib/utils'
-import { XCircleIcon } from '@heroicons/react/20/solid'
-import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+"use client";
+import { useDeleteWorkspace } from "@/hooks/endpoints/workspaces";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { authHeader, onError } from "@/lib/utils";
+import { XCircleIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function DeleteWorkspace() {
-  const { token } = useSession()
-  const workspaceId = useWorkspaceId()
-  const deleteWorkspaceMutation = useDeleteWorkspace(authHeader(token))
-  const router = useRouter()
+  const { token } = useSession();
+  const workspaceId = useWorkspaceId();
+  const { mutate, isPending } = useDeleteWorkspace(authHeader(token));
+  const router = useRouter();
 
   function onDelete() {
     if (
       window.confirm(
-        'Are you sure you want to delete this workspace? This action cannot be undone.'
+        "Are you sure you want to delete this workspace? This action cannot be undone.",
       )
     ) {
-      deleteWorkspaceMutation.mutate(
+      mutate(
         {
           workspaceId,
         },
         {
           onError,
-          onSuccess: async () => {
-            toast.success('Workspace deleted successfully')
-            router.push('/')
+          onSuccess: () => {
+            toast.success("Workspace deleted successfully");
+            router.push("/");
           },
-        }
-      )
+        },
+      );
     }
   }
 
-  const isDisabled = deleteWorkspaceMutation.isPending
+  const isDisabled = isPending;
 
   return (
     <div className="rounded-md bg-red-50 p-4">
       <div className="flex">
         <div className="flex-shrink-0">
-          <XCircleIcon
-            className="h-5 w-5 text-red-400"
-            aria-hidden="true"
-          />
+          <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
         </div>
         <div className="ml-3">
           <h3 className="text-sm font-medium text-red-800">Delete workspace</h3>
@@ -66,5 +63,5 @@ export default function DeleteWorkspace() {
         </div>
       </div>
     </div>
-  )
+  );
 }

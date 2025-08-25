@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import ErrorUI from '@/components/error-ui'
-import LoadingUI from '@/components/loading-ui'
-import { useSession } from '@/hooks/use-session'
-import { authHeader, matchQueryStatus } from '@/lib/utils'
-import { useProjectId } from '@/hooks/params/use-project-id'
-import { useShowProject } from '@/hooks/endpoints/projects'
-import EditProjectForm from './form'
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useSession } from "@/hooks/use-session";
+import { authHeader, matchQueryStatus } from "@/lib/utils";
+import { useProjectId } from "@/hooks/params/use-project-id";
+import { useShowProject } from "@/hooks/endpoints/projects";
+import EditProjectForm from "./form";
 
 export default function EditProjectWrapper() {
-  const { token } = useSession()
-  const projectId = useProjectId()
+  const { token } = useSession();
+  const projectId = useProjectId();
 
-  const showProjectQuery = useShowProject(projectId, authHeader(token))
+  const showProjectQuery = useShowProject(projectId, authHeader(token));
 
   return matchQueryStatus(showProjectQuery, {
     Loading: <LoadingUI />,
@@ -24,7 +24,7 @@ export default function EditProjectWrapper() {
           name={data.data.name}
           imagePath={data.data.image_path}
         />
-      )
+      );
     },
-  })
+  });
 }

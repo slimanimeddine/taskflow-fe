@@ -1,49 +1,46 @@
-'use client'
-import { useDeleteProject } from '@/hooks/endpoints/projects'
-import { useProjectId } from '@/hooks/params/use-project-id'
-import { useSession } from '@/hooks/use-session'
-import { authHeader, onError } from '@/lib/utils'
-import { XCircleIcon } from '@heroicons/react/20/solid'
-import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+"use client";
+import { useDeleteProject } from "@/hooks/endpoints/projects";
+import { useProjectId } from "@/hooks/params/use-project-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader, onError } from "@/lib/utils";
+import { XCircleIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function DeleteProject() {
-  const { token } = useSession()
-  const projectId = useProjectId()
-  const deleteProjectMutation = useDeleteProject(authHeader(token))
-  const router = useRouter()
+  const { token } = useSession();
+  const projectId = useProjectId();
+  const { mutate, isPending } = useDeleteProject(authHeader(token));
+  const router = useRouter();
 
   function onDelete() {
     if (
       window.confirm(
-        'Are you sure you want to delete this project? This action cannot be undone.'
+        "Are you sure you want to delete this project? This action cannot be undone.",
       )
     ) {
-      deleteProjectMutation.mutate(
+      mutate(
         {
           projectId,
         },
         {
           onError,
-          onSuccess: async () => {
-            toast.success('Project deleted successfully')
-            router.push('/')
+          onSuccess: () => {
+            toast.success("Project deleted successfully");
+            router.push("/");
           },
-        }
-      )
+        },
+      );
     }
   }
 
-  const isDisabled = deleteProjectMutation.isPending
+  const isDisabled = isPending;
 
   return (
     <div className="rounded-md bg-red-50 p-4">
       <div className="flex">
         <div className="flex-shrink-0">
-          <XCircleIcon
-            className="h-5 w-5 text-red-400"
-            aria-hidden="true"
-          />
+          <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
         </div>
         <div className="ml-3">
           <h3 className="text-sm font-medium text-red-800">Delete project</h3>
@@ -66,5 +63,5 @@ export default function DeleteProject() {
         </div>
       </div>
     </div>
-  )
+  );
 }

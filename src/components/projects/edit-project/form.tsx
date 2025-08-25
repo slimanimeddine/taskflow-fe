@@ -1,23 +1,26 @@
-'use client'
-import { PhotoIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
-import toast from 'react-hot-toast'
-import Image from 'next/image'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
-import { EditProjectBody, useEditProject } from '@/hooks/endpoints/projects'
-import { editProjectBody } from '@/schemas/projects'
-import { authHeader, fileUrl, getDirtyValues, onError } from '@/lib/utils'
-import { useQueryClient } from '@tanstack/react-query'
-import { useSession } from '@/hooks/use-session'
-import { useRouter } from 'next/navigation'
-import { useProjectId } from '@/hooks/params/use-project-id'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
+"use client";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import {
+  type EditProjectBody,
+  useEditProject,
+} from "@/hooks/endpoints/projects";
+import { editProjectBody } from "@/schemas/projects";
+import { authHeader, fileUrl, getDirtyValues, onError } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/hooks/use-session";
+import { useRouter } from "next/navigation";
+import { useProjectId } from "@/hooks/params/use-project-id";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 
 type EditProjectFormProps = {
-  name: string
-  imagePath: string | null
-}
+  name: string;
+  imagePath: string | null;
+};
 
 export default function EditProjectForm({
   name,
@@ -29,26 +32,26 @@ export default function EditProjectForm({
       defaultValues: {
         name,
       },
-    })
+    });
 
-  const projectId = useProjectId()
-  const workspaceId = useWorkspaceId()
+  const projectId = useProjectId();
+  const workspaceId = useWorkspaceId();
   const [imagePreview, setImagePreview] = useState<string | undefined | null>(
-    fileUrl(imagePath)
-  )
+    fileUrl(imagePath),
+  );
 
-  const { token } = useSession()
+  const { token } = useSession();
 
-  const editProjectMutation = useEditProject(authHeader(token))
+  const { mutate, isPending } = useEditProject(authHeader(token));
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-  const router = useRouter()
+  const router = useRouter();
 
   function onSubmit(data: EditProjectBody) {
-    const dirtyValues = getDirtyValues(formState.dirtyFields, data)
+    const dirtyValues = getDirtyValues(formState.dirtyFields, data);
 
-    editProjectMutation.mutate(
+    mutate(
       {
         projectId,
         data: dirtyValues,
@@ -56,43 +59,40 @@ export default function EditProjectForm({
       {
         onError,
         onSuccess: () => {
-          reset()
-          setImagePreview(null)
-          queryClient.invalidateQueries({
+          reset();
+          setImagePreview(null);
+          void queryClient.invalidateQueries({
             queryKey: [`/api/v1/projects/${projectId}`],
-          })
-          queryClient.invalidateQueries({
+          });
+          void queryClient.invalidateQueries({
             queryKey: [`/api/v1/workspaces/${workspaceId}/projects`],
-          })
-          router.push(`/workspaces/${workspaceId}/projects/${projectId}`)
-          toast.success('Project edited successfully!')
+          });
+          router.push(`/workspaces/${workspaceId}/projects/${projectId}`);
+          toast.success("Project edited successfully!");
         },
-      }
-    )
+      },
+    );
   }
 
-  const isDisabled =
-    formState.isSubmitting ||
-    editProjectMutation.isPending ||
-    !formState.isDirty
+  const isDisabled = formState.isSubmitting || isPending || !formState.isDirty;
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     } else {
-      setImagePreview(null)
+      setImagePreview(null);
     }
-  }
+  };
 
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6 bg-gray-50 p-6 rounded-lg shadow-sm"
+      className="space-y-6 rounded-lg bg-gray-50 p-6 shadow-sm"
     >
       <div>
         <h2 className="text-xl leading-7 font-semibold text-gray-900">
@@ -114,8 +114,8 @@ export default function EditProjectForm({
               id="name"
               type="text"
               placeholder="Enter workspace name"
-              className="block bg-white w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
-              {...register('name')}
+              className="block w-full rounded-md border-0 bg-white px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
+              {...register("name")}
             />
             {formState.errors.name && (
               <p className="mt-2 text-sm text-red-600">
@@ -159,8 +159,8 @@ export default function EditProjectForm({
                   name={name}
                   onBlur={onBlur}
                   onChange={(e) => {
-                    onChange(e.target.files?.[0])
-                    handleImageChange(e)
+                    onChange(e.target.files?.[0]);
+                    handleImageChange(e);
                   }}
                   className="sr-only"
                 />
@@ -202,5 +202,5 @@ export default function EditProjectForm({
         </button>
       </div>
     </form>
-  )
+  );
 }

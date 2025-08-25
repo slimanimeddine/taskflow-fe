@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -9,27 +9,26 @@ import type {
   UndefinedInitialDataOptions,
   UseQueryOptions,
   UseQueryResult,
-} from '@tanstack/react-query'
-
-export type GetAuthenticatedUser200 = ApiResource<User>
-export type GetAuthenticatedUser401 = UnauthenticatedApiResponse
-
-export type ListWorkspaceMembers200 = ApiResource<User[]>
-export type ListWorkspaceMembers401 = UnauthenticatedApiResponse
-export type ListWorkspaceMembers403 = UnauthorizedApiResponse
-export type ListWorkspaceMembers404 = NotFoundApiResponse
-
-import { customInstance } from '@/lib/axios'
-import type { ErrorType } from '@/lib/axios'
+} from "@tanstack/react-query";
+import { customInstance } from "@/lib/axios";
+import type { ErrorType } from "@/lib/axios";
 import {
-  ApiResource,
-  NotFoundApiResponse,
-  UnauthenticatedApiResponse,
-  UnauthorizedApiResponse,
-} from '@/types/api-responses'
-import { User } from '@/types/models'
+  type ApiResource,
+  type NotFoundApiResponse,
+  type UnauthenticatedApiResponse,
+  type UnauthorizedApiResponse,
+} from "@/types/api-responses";
+import { type User } from "@/types/models";
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+export type GetAuthenticatedUser200 = ApiResource<User>;
+export type GetAuthenticatedUser401 = UnauthenticatedApiResponse;
+
+export type ListWorkspaceMembers200 = ApiResource<User[]>;
+export type ListWorkspaceMembers401 = UnauthenticatedApiResponse;
+export type ListWorkspaceMembers403 = UnauthorizedApiResponse;
+export type ListWorkspaceMembers404 = NotFoundApiResponse;
 
 /**
  * Retrieve the currently authenticated user
@@ -37,17 +36,17 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
  */
 export const getAuthenticatedUser = (
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<GetAuthenticatedUser200>(
-    { url: `/api/v1/users/me`, method: 'GET', signal },
-    options
-  )
-}
+    { url: `/api/v1/users/me`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getGetAuthenticatedUserQueryKey = () => {
-  return [`/api/v1/users/me`] as const
-}
+  return [`/api/v1/users/me`] as const;
+};
 
 export const getGetAuthenticatedUserQueryOptions = <
   TData = Awaited<ReturnType<typeof getAuthenticatedUser>>,
@@ -59,28 +58,28 @@ export const getGetAuthenticatedUserQueryOptions = <
       TError,
       TData
     >
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getGetAuthenticatedUserQueryKey()
+  const queryKey = queryOptions?.queryKey ?? getGetAuthenticatedUserQueryKey();
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof getAuthenticatedUser>>
-  > = ({ signal }) => getAuthenticatedUser(requestOptions, signal)
+  > = ({ signal }) => getAuthenticatedUser(requestOptions, signal);
 
   return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
     Awaited<ReturnType<typeof getAuthenticatedUser>>,
     TError,
     TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
 export type GetAuthenticatedUserQueryResult = NonNullable<
   Awaited<ReturnType<typeof getAuthenticatedUser>>
->
-export type GetAuthenticatedUserQueryError = ErrorType<GetAuthenticatedUser401>
+>;
+export type GetAuthenticatedUserQueryError = ErrorType<GetAuthenticatedUser401>;
 
 export function useGetAuthenticatedUser<
   TData = Awaited<ReturnType<typeof getAuthenticatedUser>>,
@@ -100,14 +99,14 @@ export function useGetAuthenticatedUser<
           TError,
           Awaited<ReturnType<typeof getAuthenticatedUser>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useGetAuthenticatedUser<
   TData = Awaited<ReturnType<typeof getAuthenticatedUser>>,
   TError = ErrorType<GetAuthenticatedUser401>,
@@ -126,14 +125,14 @@ export function useGetAuthenticatedUser<
           TError,
           Awaited<ReturnType<typeof getAuthenticatedUser>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useGetAuthenticatedUser<
   TData = Awaited<ReturnType<typeof getAuthenticatedUser>>,
   TError = ErrorType<GetAuthenticatedUser401>,
@@ -145,13 +144,13 @@ export function useGetAuthenticatedUser<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Get Authenticated User
  */
@@ -167,23 +166,23 @@ export function useGetAuthenticatedUser<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+  queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getGetAuthenticatedUserQueryOptions(options)
+  const queryOptions = getGetAuthenticatedUserQueryOptions(options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey;
 
-  return query
+  return query;
 }
 
 /**
@@ -193,17 +192,17 @@ export function useGetAuthenticatedUser<
 export const listWorkspaceMembers = (
   workspaceId: string,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<ListWorkspaceMembers200>(
-    { url: `/api/v1/workspaces/${workspaceId}/users`, method: 'GET', signal },
-    options
-  )
-}
+    { url: `/api/v1/workspaces/${workspaceId}/users`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getListWorkspaceMembersQueryKey = (workspaceId: string) => {
-  return [`/api/v1/workspaces/${workspaceId}/users`] as const
-}
+  return [`/api/v1/workspaces/${workspaceId}/users`] as const;
+};
 
 export const getListWorkspaceMembersQueryOptions = <
   TData = Awaited<ReturnType<typeof listWorkspaceMembers>>,
@@ -219,18 +218,18 @@ export const getListWorkspaceMembersQueryOptions = <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getListWorkspaceMembersQueryKey(workspaceId)
+    queryOptions?.queryKey ?? getListWorkspaceMembersQueryKey(workspaceId);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof listWorkspaceMembers>>
-  > = ({ signal }) => listWorkspaceMembers(workspaceId, requestOptions, signal)
+  > = ({ signal }) => listWorkspaceMembers(workspaceId, requestOptions, signal);
 
   return {
     queryKey,
@@ -241,15 +240,15 @@ export const getListWorkspaceMembersQueryOptions = <
     Awaited<ReturnType<typeof listWorkspaceMembers>>,
     TError,
     TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
 export type ListWorkspaceMembersQueryResult = NonNullable<
   Awaited<ReturnType<typeof listWorkspaceMembers>>
->
+>;
 export type ListWorkspaceMembersQueryError = ErrorType<
   ListWorkspaceMembers401 | ListWorkspaceMembers403 | ListWorkspaceMembers404
->
+>;
 
 export function useListWorkspaceMembers<
   TData = Awaited<ReturnType<typeof listWorkspaceMembers>>,
@@ -272,14 +271,14 @@ export function useListWorkspaceMembers<
           TError,
           Awaited<ReturnType<typeof listWorkspaceMembers>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useListWorkspaceMembers<
   TData = Awaited<ReturnType<typeof listWorkspaceMembers>>,
   TError = ErrorType<
@@ -301,14 +300,14 @@ export function useListWorkspaceMembers<
           TError,
           Awaited<ReturnType<typeof listWorkspaceMembers>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useListWorkspaceMembers<
   TData = Awaited<ReturnType<typeof listWorkspaceMembers>>,
   TError = ErrorType<
@@ -323,13 +322,13 @@ export function useListWorkspaceMembers<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary List Workspace Members
  */
@@ -348,23 +347,26 @@ export function useListWorkspaceMembers<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+  queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getListWorkspaceMembersQueryOptions(workspaceId, options)
+  const queryOptions = getListWorkspaceMembersQueryOptions(
+    workspaceId,
+    options,
+  );
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey;
 
-  return query
+  return query;
 }
 
 /**
@@ -385,13 +387,16 @@ export const prefetchListWorkspaceMembers = async <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ): Promise<QueryClient> => {
-  const queryOptions = getListWorkspaceMembersQueryOptions(workspaceId, options)
+  const queryOptions = getListWorkspaceMembersQueryOptions(
+    workspaceId,
+    options,
+  );
 
-  await queryClient.prefetchQuery(queryOptions)
+  await queryClient.prefetchQuery(queryOptions);
 
-  return queryClient
-}
+  return queryClient;
+};

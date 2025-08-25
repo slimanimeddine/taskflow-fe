@@ -1,12 +1,12 @@
-import ForgotPasswordForm from '@/components/auth/forgot-password-form'
-import Logo from '@/components/logo'
-import seo from '@/lib/seo'
-import { Metadata } from 'next'
-import Link from 'next/link'
+import ForgotPasswordForm from "@/components/auth/forgot-password-form";
+import Logo from "@/components/logo";
+import seo from "@/lib/seo";
+import { type Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
-  ...seo('Forgot Password', 'Reset your password'),
-}
+  ...seo("Forgot Password", "Reset your password"),
+};
 
 export default function Page() {
   return (
@@ -14,7 +14,7 @@ export default function Page() {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <Link
           href="/"
-          className="flex items-center justify-center h-full w-full"
+          className="flex h-full w-full items-center justify-center"
         >
           <Logo />
         </Link>
@@ -27,5 +27,5 @@ export default function Page() {
         <ForgotPasswordForm />
       </div>
     </div>
-  )
+  );
 }

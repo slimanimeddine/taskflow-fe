@@ -1,22 +1,22 @@
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import './globals.css'
-import { Toaster } from 'react-hot-toast'
-import { NuqsAdapter } from 'nuqs/adapters/next/app'
-import TanQueryClientProvider from '@/providers/query-client-provider'
-import { SessionProvider } from '@/providers/session-provider'
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "@/styles/globals.css";
+import { Toaster } from "react-hot-toast";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import TanQueryClientProvider from "@/providers/query-client-provider";
+import { SessionProvider } from "@/providers/session-provider";
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: 'App',
-}
+  title: "App",
+};
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
+type Props = Readonly<{
+  children: React.ReactNode;
+}>;
+
+export default function RootLayout({ children }: Props) {
   return (
     <html lang="en">
       <body className={`${inter.className} antialiased`}>
@@ -28,5 +28,5 @@ export default function RootLayout({
         </SessionProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -1,50 +1,50 @@
-'use client'
+"use client";
 
-import ErrorUI from '@/components/error-ui'
-import LoadingUI from '@/components/loading-ui'
-import { useListTasks } from '@/hooks/endpoints/tasks'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { useSession } from '@/hooks/use-session'
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useListTasks } from "@/hooks/endpoints/tasks";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
 import {
   authHeader,
   classNames,
   matchQueryStatus,
   statusLabel,
-} from '@/lib/utils'
-import { PaginatedApiResponse } from '@/types/api-responses'
-import { Task } from '@/types/models'
-import { ChevronRightIcon, ClockIcon } from '@heroicons/react/24/solid'
-import Link from 'next/link'
+} from "@/lib/utils";
+import { type PaginatedApiResponse } from "@/types/api-responses";
+import { type Task } from "@/types/models";
+import { ChevronRightIcon, ClockIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 
-const STATUS_COLORS: Record<Task['status'], string> = {
-  backlog: 'bg-gray-100 text-gray-800',
-  todo: 'bg-blue-100 text-blue-800',
-  in_progress: 'bg-yellow-100 text-yellow-800',
-  in_review: 'bg-purple-100 text-purple-800',
-  done: 'bg-green-100 text-green-800',
-}
+const STATUS_COLORS: Record<Task["status"], string> = {
+  backlog: "bg-gray-100 text-gray-800",
+  todo: "bg-blue-100 text-blue-800",
+  in_progress: "bg-yellow-100 text-yellow-800",
+  in_review: "bg-purple-100 text-purple-800",
+  done: "bg-green-100 text-green-800",
+};
 
 export default function TasksCard() {
-  const { token, id } = useSession()
-  const workspaceId = useWorkspaceId()
+  const { token, id } = useSession();
+  const workspaceId = useWorkspaceId();
 
   const listTasksQuery = useListTasks<PaginatedApiResponse<Task>>(
     {
-      'filter[workspace]': workspaceId,
-      'filter[assignee]': id,
+      "filter[workspace]": workspaceId,
+      "filter[assignee]": id,
       paginate: 1,
       page: 1,
     },
-    authHeader(token)
-  )
+    authHeader(token),
+  );
   return matchQueryStatus(listTasksQuery, {
     Loading: <LoadingUI />,
     Errored: <ErrorUI message="Something went wrong!" />,
     Empty: <></>,
     Success: ({ data }) => {
-      const tasks = data.data.slice(0, 5)
+      const tasks = data.data.slice(0, 5);
       return (
-        <section className="lg:col-span-2 bg-gray-50 p-6 rounded-lg shadow">
+        <section className="rounded-lg bg-gray-50 p-6 shadow lg:col-span-2">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-gray-900">Assigned to You</h2>
             <Link
@@ -55,10 +55,7 @@ export default function TasksCard() {
             </Link>
           </div>
           <div className="mt-4 overflow-hidden bg-white shadow sm:rounded-md">
-            <ul
-              role="list"
-              className="divide-y divide-gray-200"
-            >
+            <ul role="list" className="divide-y divide-gray-200">
               {tasks.slice(0, 5).map((task) => (
                 <li key={task.id}>
                   <Link
@@ -83,7 +80,7 @@ export default function TasksCard() {
                                 aria-hidden="true"
                               />
                               <p>
-                                Due on{' '}
+                                Due on{" "}
                                 <time dateTime={task.due_date}>
                                   {new Date(task.due_date).toLocaleDateString()}
                                 </time>
@@ -91,11 +88,11 @@ export default function TasksCard() {
                             </div>
                           </div>
                         </div>
-                        <div className="mt-4 flex-shrink-0 sm:ml-5 sm:mt-0">
+                        <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
                           <span
                             className={classNames(
-                              'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
-                              STATUS_COLORS[task.status]
+                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                              STATUS_COLORS[task.status],
                             )}
                           >
                             {statusLabel(task.status)}
@@ -115,7 +112,7 @@ export default function TasksCard() {
             </ul>
           </div>
         </section>
-      )
+      );
     },
-  })
+  });
 }

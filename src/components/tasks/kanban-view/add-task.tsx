@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { useOpenModal } from '@/hooks/use-open-modal'
-import { useSetTaskStatusOnCreate } from '@/hooks/use-set-task-status-on-create'
+import { useOpenModal } from "@/hooks/use-open-modal";
+import { useSetTaskStatusOnCreate } from "@/hooks/use-set-task-status-on-create";
 
 type AddTaskProps = {
-  status: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
-}
+  status: "backlog" | "todo" | "in_progress" | "in_review" | "done";
+};
 
 export default function AddTask({ status }: AddTaskProps) {
-  const { openModal } = useOpenModal()
-  const { setTaskStatus } = useSetTaskStatusOnCreate()
+  const { openModal } = useOpenModal();
+  const { setTaskStatus } = useSetTaskStatusOnCreate();
   function onOpen() {
-    openModal('create-task')
-    setTaskStatus(status)
+    openModal("create-task");
+    void setTaskStatus(status);
   }
 
   return (
@@ -23,5 +23,5 @@ export default function AddTask({ status }: AddTaskProps) {
     >
       + Add New Task
     </button>
-  )
+  );
 }

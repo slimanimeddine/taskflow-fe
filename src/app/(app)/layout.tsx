@@ -1,27 +1,27 @@
-'use client'
-import Logo from '@/components/logo'
+"use client";
+import Logo from "@/components/logo";
 import {
   Dialog,
   DialogBackdrop,
   DialogPanel,
   TransitionChild,
-} from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
-import { useState } from 'react'
-import WorkspaceSwitcherWrapper from '@/components/workspaces/workspace-switcher/wrapper'
-import CreateWorkspaceModal from '@/components/workspaces/create-workspace/modal'
-import UserDropdown from '@/components/user-dropdown'
-import ListProjects from '@/components/projects/list-projects'
-import LayoutNavigation from '@/components/layout-navigation'
-import CreateProjectModal from '@/components/projects/create-project/modal'
+} from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { useState } from "react";
+import WorkspaceSwitcherWrapper from "@/components/workspaces/workspace-switcher/wrapper";
+import CreateWorkspaceModal from "@/components/workspaces/create-workspace/modal";
+import UserDropdown from "@/components/user-dropdown";
+import ListProjects from "@/components/projects/list-projects";
+import LayoutNavigation from "@/components/layout-navigation";
+import CreateProjectModal from "@/components/projects/create-project/modal";
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
+type Props = Readonly<{
+  children: React.ReactNode;
+}>;
+
+export default function Layout({ children }: Props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
     <div>
@@ -63,10 +63,7 @@ export default function Layout({
                 </Link>
               </div>
               <nav className="flex flex-1 flex-col">
-                <ul
-                  role="list"
-                  className="flex flex-1 flex-col gap-y-7"
-                >
+                <ul role="list" className="flex flex-1 flex-col gap-y-7">
                   <li>
                     <LayoutNavigation />
                   </li>
@@ -108,10 +105,7 @@ export default function Layout({
             </Link>
           </div>
           <nav className="flex flex-1 flex-col">
-            <ul
-              role="list"
-              className="flex flex-1 flex-col gap-y-7"
-            >
+            <ul role="list" className="flex flex-1 flex-col gap-y-7">
               <li>
                 <LayoutNavigation />
               </li>
@@ -149,10 +143,7 @@ export default function Layout({
             className="-m-2.5 p-2.5 text-gray-700 lg:hidden"
           >
             <span className="sr-only">Open sidebar</span>
-            <Bars3Icon
-              aria-hidden="true"
-              className="h-6 w-6"
-            />
+            <Bars3Icon aria-hidden="true" className="h-6 w-6" />
           </button>
           <div className="flex flex-1 justify-end gap-x-4 self-stretch lg:gap-x-6">
             <div className="flex items-center gap-x-4 lg:gap-x-6">
@@ -167,5 +158,5 @@ export default function Layout({
         </main>
       </div>
     </div>
-  )
+  );
 }

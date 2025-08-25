@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -12,60 +12,59 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
-} from '@tanstack/react-query'
+} from "@tanstack/react-query";
+import { customInstance } from "@/lib/axios";
+import type { BodyType, ErrorType } from "@/lib/axios";
+import {
+  type ApiResource,
+  type NotFoundApiResponse,
+  type SuccessApiResponse,
+  type SuccessNoDataApiResponse,
+  type UnauthenticatedApiResponse,
+  type UnauthorizedApiResponse,
+} from "@/types/api-responses";
+import { type Project } from "@/types/models";
+import { type z } from "zod/v4";
+import { type createProjectBody, type editProjectBody } from "@/schemas/projects";
 
-export type ListWorkspaceProjects200 = ApiResource<Project[]>
-export type ListWorkspaceProjects403 = UnauthorizedApiResponse
-export type ListWorkspaceProjects401 = UnauthenticatedApiResponse
-export type ListWorkspaceProjects404 = NotFoundApiResponse
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
-export type CreateProject200 = ApiResource<Project>
-export type CreateProject403 = UnauthorizedApiResponse
-export type CreateProject404 = NotFoundApiResponse
-export type CreateProject401 = UnauthenticatedApiResponse
-export type CreateProjectBody = z.infer<typeof createProjectBody>
+export type ListWorkspaceProjects200 = ApiResource<Project[]>;
+export type ListWorkspaceProjects403 = UnauthorizedApiResponse;
+export type ListWorkspaceProjects401 = UnauthenticatedApiResponse;
+export type ListWorkspaceProjects404 = NotFoundApiResponse;
 
-export type ShowProject200 = ApiResource<Project>
-export type ShowProject403 = UnauthorizedApiResponse
-export type ShowProject401 = UnauthenticatedApiResponse
-export type ShowProject404 = NotFoundApiResponse
+export type CreateProject200 = ApiResource<Project>;
+export type CreateProject403 = UnauthorizedApiResponse;
+export type CreateProject404 = NotFoundApiResponse;
+export type CreateProject401 = UnauthenticatedApiResponse;
+export type CreateProjectBody = z.infer<typeof createProjectBody>;
 
-export type EditProject200 = ApiResource<Project>
-export type EditProject403 = UnauthorizedApiResponse
-export type EditProject404 = NotFoundApiResponse
-export type EditProject401 = UnauthenticatedApiResponse
-export type EditProjectBody = z.infer<typeof editProjectBody>
+export type ShowProject200 = ApiResource<Project>;
+export type ShowProject403 = UnauthorizedApiResponse;
+export type ShowProject401 = UnauthenticatedApiResponse;
+export type ShowProject404 = NotFoundApiResponse;
 
-export type DeleteProject200 = SuccessNoDataApiResponse
-export type DeleteProject403 = UnauthorizedApiResponse
-export type DeleteProject401 = UnauthenticatedApiResponse
-export type DeleteProject404 = NotFoundApiResponse
+export type EditProject200 = ApiResource<Project>;
+export type EditProject403 = UnauthorizedApiResponse;
+export type EditProject404 = NotFoundApiResponse;
+export type EditProject401 = UnauthenticatedApiResponse;
+export type EditProjectBody = z.infer<typeof editProjectBody>;
+
+export type DeleteProject200 = SuccessNoDataApiResponse;
+export type DeleteProject403 = UnauthorizedApiResponse;
+export type DeleteProject401 = UnauthenticatedApiResponse;
+export type DeleteProject404 = NotFoundApiResponse;
 
 export type ViewProjectStats200 = SuccessApiResponse<{
-  total_tasks: number
-  incomplete_tasks: number
-  completed_tasks: number
-  overdue_tasks: number
-}>
-export type ViewProjectStats401 = UnauthenticatedApiResponse
-export type ViewProjectStats403 = UnauthorizedApiResponse
-export type ViewProjectStats404 = NotFoundApiResponse
-
-import { customInstance } from '@/lib/axios'
-import type { BodyType, ErrorType } from '@/lib/axios'
-import {
-  ApiResource,
-  NotFoundApiResponse,
-  SuccessApiResponse,
-  SuccessNoDataApiResponse,
-  UnauthenticatedApiResponse,
-  UnauthorizedApiResponse,
-} from '@/types/api-responses'
-import { Project } from '@/types/models'
-import { z } from 'zod'
-import { createProjectBody, editProjectBody } from '@/schemas/projects'
-
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+  total_tasks: number;
+  incomplete_tasks: number;
+  completed_tasks: number;
+  overdue_tasks: number;
+}>;
+export type ViewProjectStats401 = UnauthenticatedApiResponse;
+export type ViewProjectStats403 = UnauthorizedApiResponse;
+export type ViewProjectStats404 = NotFoundApiResponse;
 
 /**
  * List all projects in a specific workspace that the authenticated user has access to.
@@ -74,21 +73,21 @@ type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
 export const listWorkspaceProjects = (
   workspaceId: string,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<ListWorkspaceProjects200>(
     {
       url: `/api/v1/workspaces/${workspaceId}/projects`,
-      method: 'GET',
+      method: "GET",
       signal,
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getListWorkspaceProjectsQueryKey = (workspaceId: string) => {
-  return [`/api/v1/workspaces/${workspaceId}/projects`] as const
-}
+  return [`/api/v1/workspaces/${workspaceId}/projects`] as const;
+};
 
 export const getListWorkspaceProjectsQueryOptions = <
   TData = Awaited<ReturnType<typeof listWorkspaceProjects>>,
@@ -106,18 +105,19 @@ export const getListWorkspaceProjectsQueryOptions = <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getListWorkspaceProjectsQueryKey(workspaceId)
+    queryOptions?.queryKey ?? getListWorkspaceProjectsQueryKey(workspaceId);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof listWorkspaceProjects>>
-  > = ({ signal }) => listWorkspaceProjects(workspaceId, requestOptions, signal)
+  > = ({ signal }) =>
+    listWorkspaceProjects(workspaceId, requestOptions, signal);
 
   return {
     queryKey,
@@ -128,15 +128,15 @@ export const getListWorkspaceProjectsQueryOptions = <
     Awaited<ReturnType<typeof listWorkspaceProjects>>,
     TError,
     TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
 export type ListWorkspaceProjectsQueryResult = NonNullable<
   Awaited<ReturnType<typeof listWorkspaceProjects>>
->
+>;
 export type ListWorkspaceProjectsQueryError = ErrorType<
   ListWorkspaceProjects401 | ListWorkspaceProjects403 | ListWorkspaceProjects404
->
+>;
 
 export function useListWorkspaceProjects<
   TData = Awaited<ReturnType<typeof listWorkspaceProjects>>,
@@ -161,14 +161,14 @@ export function useListWorkspaceProjects<
           TError,
           Awaited<ReturnType<typeof listWorkspaceProjects>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useListWorkspaceProjects<
   TData = Awaited<ReturnType<typeof listWorkspaceProjects>>,
   TError = ErrorType<
@@ -192,14 +192,14 @@ export function useListWorkspaceProjects<
           TError,
           Awaited<ReturnType<typeof listWorkspaceProjects>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useListWorkspaceProjects<
   TData = Awaited<ReturnType<typeof listWorkspaceProjects>>,
   TError = ErrorType<
@@ -216,13 +216,13 @@ export function useListWorkspaceProjects<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary List workspace projects
  */
@@ -243,26 +243,26 @@ export function useListWorkspaceProjects<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+  queryKey: DataTag<QueryKey, TData, TError>;
 } {
   const queryOptions = getListWorkspaceProjectsQueryOptions(
     workspaceId,
-    options
-  )
+    options,
+  );
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey;
 
-  return query
+  return query;
 }
 
 /**
@@ -285,19 +285,19 @@ export const prefetchListWorkspaceProjects = async <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ): Promise<QueryClient> => {
   const queryOptions = getListWorkspaceProjectsQueryOptions(
     workspaceId,
-    options
-  )
+    options,
+  );
 
-  await queryClient.prefetchQuery(queryOptions)
+  await queryClient.prefetchQuery(queryOptions);
 
-  return queryClient
-}
+  return queryClient;
+};
 
 /**
  * Create a new project in a specific workspace for the authenticated user.
@@ -307,28 +307,28 @@ export const createProject = (
   workspaceId: string,
   createProjectBody: BodyType<CreateProjectBody>,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
-  const formData = new FormData()
-  formData.append('name', createProjectBody.name)
+  const formData = new FormData();
+  formData.append("name", createProjectBody.name);
   if (
     createProjectBody.image !== undefined &&
     createProjectBody.image !== null
   ) {
-    formData.append('image', createProjectBody.image)
+    formData.append("image", createProjectBody.image);
   }
 
   return customInstance<CreateProject200>(
     {
       url: `/api/v1/workspaces/${workspaceId}/projects`,
-      method: 'POST',
-      headers: { 'Content-Type': 'multipart/form-data' },
+      method: "POST",
+      headers: { "Content-Type": "multipart/form-data" },
       data: formData,
       signal,
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getCreateProjectMutationOptions = <
   TError = ErrorType<CreateProject401 | CreateProject403 | CreateProject404>,
@@ -339,42 +339,42 @@ export const getCreateProjectMutationOptions = <
     TError,
     { workspaceId: string; data: BodyType<CreateProjectBody> },
     TContext
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createProject>>,
   TError,
   { workspaceId: string; data: BodyType<CreateProjectBody> },
   TContext
 > => {
-  const mutationKey = ['createProject']
+  const mutationKey = ["createProject"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
-      'mutationKey' in options.mutation &&
+      "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createProject>>,
     { workspaceId: string; data: BodyType<CreateProjectBody> }
   > = (props) => {
-    const { workspaceId, data } = props ?? {}
+    const { workspaceId, data } = props ?? {};
 
-    return createProject(workspaceId, data, requestOptions)
-  }
+    return createProject(workspaceId, data, requestOptions);
+  };
 
-  return { mutationFn, ...mutationOptions }
-}
+  return { mutationFn, ...mutationOptions };
+};
 
 export type CreateProjectMutationResult = NonNullable<
   Awaited<ReturnType<typeof createProject>>
->
-export type CreateProjectMutationBody = BodyType<CreateProjectBody>
+>;
+export type CreateProjectMutationBody = BodyType<CreateProjectBody>;
 export type CreateProjectMutationError = ErrorType<
   CreateProject401 | CreateProject403 | CreateProject404
->
+>;
 
 /**
  * @summary Create project
@@ -389,20 +389,20 @@ export const useCreateProject = <
       TError,
       { workspaceId: string; data: BodyType<CreateProjectBody> },
       TContext
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseMutationResult<
   Awaited<ReturnType<typeof createProject>>,
   TError,
   { workspaceId: string; data: BodyType<CreateProjectBody> },
   TContext
 > => {
-  const mutationOptions = getCreateProjectMutationOptions(options)
+  const mutationOptions = getCreateProjectMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient)
-}
+  return useMutation(mutationOptions, queryClient);
+};
 
 /**
  * Show the specified project.
@@ -411,17 +411,17 @@ export const useCreateProject = <
 export const showProject = (
   projectId: string,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<ShowProject200>(
-    { url: `/api/v1/projects/${projectId}`, method: 'GET', signal },
-    options
-  )
-}
+    { url: `/api/v1/projects/${projectId}`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getShowProjectQueryKey = (projectId: string) => {
-  return [`/api/v1/projects/${projectId}`] as const
-}
+  return [`/api/v1/projects/${projectId}`] as const;
+};
 
 export const getShowProjectQueryOptions = <
   TData = Awaited<ReturnType<typeof showProject>>,
@@ -431,17 +431,17 @@ export const getShowProjectQueryOptions = <
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof showProject>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
-  const queryKey = queryOptions?.queryKey ?? getShowProjectQueryKey(projectId)
+  const queryKey = queryOptions?.queryKey ?? getShowProjectQueryKey(projectId);
 
   const queryFn: QueryFunction<Awaited<ReturnType<typeof showProject>>> = ({
     signal,
-  }) => showProject(projectId, requestOptions, signal)
+  }) => showProject(projectId, requestOptions, signal);
 
   return {
     queryKey,
@@ -452,15 +452,15 @@ export const getShowProjectQueryOptions = <
     Awaited<ReturnType<typeof showProject>>,
     TError,
     TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
 export type ShowProjectQueryResult = NonNullable<
   Awaited<ReturnType<typeof showProject>>
->
+>;
 export type ShowProjectQueryError = ErrorType<
   ShowProject401 | ShowProject403 | ShowProject404
->
+>;
 
 export function useShowProject<
   TData = Awaited<ReturnType<typeof showProject>>,
@@ -477,14 +477,14 @@ export function useShowProject<
           TError,
           Awaited<ReturnType<typeof showProject>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useShowProject<
   TData = Awaited<ReturnType<typeof showProject>>,
   TError = ErrorType<ShowProject401 | ShowProject403 | ShowProject404>,
@@ -500,14 +500,14 @@ export function useShowProject<
           TError,
           Awaited<ReturnType<typeof showProject>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useShowProject<
   TData = Awaited<ReturnType<typeof showProject>>,
   TError = ErrorType<ShowProject401 | ShowProject403 | ShowProject404>,
@@ -516,13 +516,13 @@ export function useShowProject<
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof showProject>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Show project
  */
@@ -535,23 +535,23 @@ export function useShowProject<
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof showProject>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+  queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getShowProjectQueryOptions(projectId, options)
+  const queryOptions = getShowProjectQueryOptions(projectId, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey;
 
-  return query
+  return query;
 }
 
 /**
@@ -566,16 +566,16 @@ export const prefetchShowProject = async <
   options?: {
     query?: Partial<
       UseQueryOptions<Awaited<ReturnType<typeof showProject>>, TError, TData>
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ): Promise<QueryClient> => {
-  const queryOptions = getShowProjectQueryOptions(projectId, options)
+  const queryOptions = getShowProjectQueryOptions(projectId, options);
 
-  await queryClient.prefetchQuery(queryOptions)
+  await queryClient.prefetchQuery(queryOptions);
 
-  return queryClient
-}
+  return queryClient;
+};
 
 /**
  * Edit the specified project.
@@ -585,27 +585,27 @@ export const editProject = (
   projectId: string,
   editProjectBody?: BodyType<EditProjectBody>,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
-  const formData = new FormData()
+  const formData = new FormData();
   if (editProjectBody?.name !== undefined) {
-    formData.append('name', editProjectBody.name)
+    formData.append("name", editProjectBody.name);
   }
   if (editProjectBody?.image !== undefined && editProjectBody.image !== null) {
-    formData.append('image', editProjectBody.image)
+    formData.append("image", editProjectBody.image);
   }
 
   return customInstance<EditProject200>(
     {
       url: `/api/v1/projects/${projectId}`,
-      method: 'POST',
-      headers: { 'Content-Type': 'multipart/form-data' },
+      method: "POST",
+      headers: { "Content-Type": "multipart/form-data" },
       data: formData,
       signal,
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getEditProjectMutationOptions = <
   TError = ErrorType<EditProject401 | EditProject403 | EditProject404>,
@@ -616,42 +616,42 @@ export const getEditProjectMutationOptions = <
     TError,
     { projectId: string; data: BodyType<EditProjectBody> },
     TContext
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof editProject>>,
   TError,
   { projectId: string; data: BodyType<EditProjectBody> },
   TContext
 > => {
-  const mutationKey = ['editProject']
+  const mutationKey = ["editProject"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
-      'mutationKey' in options.mutation &&
+      "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof editProject>>,
     { projectId: string; data: BodyType<EditProjectBody> }
   > = (props) => {
-    const { projectId, data } = props ?? {}
+    const { projectId, data } = props ?? {};
 
-    return editProject(projectId, data, requestOptions)
-  }
+    return editProject(projectId, data, requestOptions);
+  };
 
-  return { mutationFn, ...mutationOptions }
-}
+  return { mutationFn, ...mutationOptions };
+};
 
 export type EditProjectMutationResult = NonNullable<
   Awaited<ReturnType<typeof editProject>>
->
-export type EditProjectMutationBody = BodyType<EditProjectBody>
+>;
+export type EditProjectMutationBody = BodyType<EditProjectBody>;
 export type EditProjectMutationError = ErrorType<
   EditProject401 | EditProject403 | EditProject404
->
+>;
 
 /**
  * @summary Edit project
@@ -666,20 +666,20 @@ export const useEditProject = <
       TError,
       { projectId: string; data: BodyType<EditProjectBody> },
       TContext
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseMutationResult<
   Awaited<ReturnType<typeof editProject>>,
   TError,
   { projectId: string; data: BodyType<EditProjectBody> },
   TContext
 > => {
-  const mutationOptions = getEditProjectMutationOptions(options)
+  const mutationOptions = getEditProjectMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient)
-}
+  return useMutation(mutationOptions, queryClient);
+};
 
 /**
  * Delete the specified project.
@@ -687,13 +687,13 @@ export const useEditProject = <
  */
 export const deleteProject = (
   projectId: string,
-  options?: SecondParameter<typeof customInstance>
+  options?: SecondParameter<typeof customInstance>,
 ) => {
   return customInstance<DeleteProject200>(
-    { url: `/api/v1/projects/${projectId}`, method: 'DELETE' },
-    options
-  )
-}
+    { url: `/api/v1/projects/${projectId}`, method: "DELETE" },
+    options,
+  );
+};
 
 export const getDeleteProjectMutationOptions = <
   TError = ErrorType<DeleteProject401 | DeleteProject403 | DeleteProject404>,
@@ -704,42 +704,42 @@ export const getDeleteProjectMutationOptions = <
     TError,
     { projectId: string },
     TContext
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteProject>>,
   TError,
   { projectId: string },
   TContext
 > => {
-  const mutationKey = ['deleteProject']
+  const mutationKey = ["deleteProject"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
-      'mutationKey' in options.mutation &&
+      "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteProject>>,
     { projectId: string }
   > = (props) => {
-    const { projectId } = props ?? {}
+    const { projectId } = props ?? {};
 
-    return deleteProject(projectId, requestOptions)
-  }
+    return deleteProject(projectId, requestOptions);
+  };
 
-  return { mutationFn, ...mutationOptions }
-}
+  return { mutationFn, ...mutationOptions };
+};
 
 export type DeleteProjectMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteProject>>
->
+>;
 
 export type DeleteProjectMutationError = ErrorType<
   DeleteProject401 | DeleteProject403 | DeleteProject404
->
+>;
 
 /**
  * @summary Delete project
@@ -754,20 +754,20 @@ export const useDeleteProject = <
       TError,
       { projectId: string },
       TContext
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseMutationResult<
   Awaited<ReturnType<typeof deleteProject>>,
   TError,
   { projectId: string },
   TContext
 > => {
-  const mutationOptions = getDeleteProjectMutationOptions(options)
+  const mutationOptions = getDeleteProjectMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient)
-}
+  return useMutation(mutationOptions, queryClient);
+};
 
 /**
  * View statistics for the specified project.
@@ -776,17 +776,17 @@ export const useDeleteProject = <
 export const viewProjectStats = (
   projectId: string,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<ViewProjectStats200>(
-    { url: `/api/v1/projects/${projectId}/stats`, method: 'GET', signal },
-    options
-  )
-}
+    { url: `/api/v1/projects/${projectId}/stats`, method: "GET", signal },
+    options,
+  );
+};
 
 export const getViewProjectStatsQueryKey = (projectId: string) => {
-  return [`/api/v1/projects/${projectId}/stats`] as const
-}
+  return [`/api/v1/projects/${projectId}/stats`] as const;
+};
 
 export const getViewProjectStatsQueryOptions = <
   TData = Awaited<ReturnType<typeof viewProjectStats>>,
@@ -802,18 +802,18 @@ export const getViewProjectStatsQueryOptions = <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
-    queryOptions?.queryKey ?? getViewProjectStatsQueryKey(projectId)
+    queryOptions?.queryKey ?? getViewProjectStatsQueryKey(projectId);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof viewProjectStats>>
-  > = ({ signal }) => viewProjectStats(projectId, requestOptions, signal)
+  > = ({ signal }) => viewProjectStats(projectId, requestOptions, signal);
 
   return {
     queryKey,
@@ -824,15 +824,15 @@ export const getViewProjectStatsQueryOptions = <
     Awaited<ReturnType<typeof viewProjectStats>>,
     TError,
     TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
 export type ViewProjectStatsQueryResult = NonNullable<
   Awaited<ReturnType<typeof viewProjectStats>>
->
+>;
 export type ViewProjectStatsQueryError = ErrorType<
   ViewProjectStats401 | ViewProjectStats403 | ViewProjectStats404
->
+>;
 
 export function useViewProjectStats<
   TData = Awaited<ReturnType<typeof viewProjectStats>>,
@@ -855,14 +855,14 @@ export function useViewProjectStats<
           TError,
           Awaited<ReturnType<typeof viewProjectStats>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useViewProjectStats<
   TData = Awaited<ReturnType<typeof viewProjectStats>>,
   TError = ErrorType<
@@ -884,14 +884,14 @@ export function useViewProjectStats<
           TError,
           Awaited<ReturnType<typeof viewProjectStats>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useViewProjectStats<
   TData = Awaited<ReturnType<typeof viewProjectStats>>,
   TError = ErrorType<
@@ -906,13 +906,13 @@ export function useViewProjectStats<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary View project stats
  */
@@ -931,23 +931,23 @@ export function useViewProjectStats<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+  queryKey: DataTag<QueryKey, TData, TError>;
 } {
-  const queryOptions = getViewProjectStatsQueryOptions(projectId, options)
+  const queryOptions = getViewProjectStatsQueryOptions(projectId, options);
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey;
 
-  return query
+  return query;
 }
 
 /**
@@ -968,13 +968,13 @@ export const prefetchViewProjectStats = async <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ): Promise<QueryClient> => {
-  const queryOptions = getViewProjectStatsQueryOptions(projectId, options)
+  const queryOptions = getViewProjectStatsQueryOptions(projectId, options);
 
-  await queryClient.prefetchQuery(queryOptions)
+  await queryClient.prefetchQuery(queryOptions);
 
-  return queryClient
-}
+  return queryClient;
+};

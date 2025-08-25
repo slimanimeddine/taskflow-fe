@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import { useCreateMember } from '@/hooks/endpoints/members'
-import { useInviteCode } from '@/hooks/params/use-invite-code'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { authHeader, onError } from '@/lib/utils'
-import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+import { useCreateMember } from "@/hooks/endpoints/members";
+import { useInviteCode } from "@/hooks/params/use-invite-code";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { authHeader, onError } from "@/lib/utils";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function JoinWorkspace() {
-  const inviteCode = useInviteCode()
-  const workspaceId = useWorkspaceId()
-  const { token } = useSession()
-  const createMemberMutation = useCreateMember(authHeader(token))
+  const inviteCode = useInviteCode();
+  const workspaceId = useWorkspaceId();
+  const { token } = useSession();
+  const { mutate, isPending } = useCreateMember(authHeader(token));
 
-  const router = useRouter()
+  const router = useRouter();
 
   function onSubmit() {
-    createMemberMutation.mutate(
+    mutate(
       {
         workspaceId,
         data: { invite_code: inviteCode },
@@ -25,18 +25,18 @@ export default function JoinWorkspace() {
       {
         onError,
         onSuccess: () => {
-          router.push(`/workspaces/${workspaceId}`)
-          toast.success('Workspace edited successfully!')
+          router.push(`/workspaces/${workspaceId}`);
+          toast.success("Workspace edited successfully!");
         },
-      }
-    )
+      },
+    );
   }
 
-  const isDisabled = createMemberMutation.isPending
+  const isDisabled = isPending;
 
   return (
     <div className="p-4">
-      <div className="space-y-6 bg-gray-50 p-6 rounded-lg shadow-sm w-full">
+      <div className="w-full space-y-6 rounded-lg bg-gray-50 p-6 shadow-sm">
         <div>
           <h2 className="text-xl leading-7 font-semibold text-gray-900">
             Join Workspace
@@ -54,7 +54,7 @@ export default function JoinWorkspace() {
         <div className="flex items-center justify-end gap-x-6">
           <button
             type="button"
-            onClick={() => router.push('/')}
+            onClick={() => router.push("/")}
             className="text-sm leading-6 font-semibold text-gray-900"
           >
             Cancel
@@ -70,5 +70,5 @@ export default function JoinWorkspace() {
         </div>
       </div>
     </div>
-  )
+  );
 }

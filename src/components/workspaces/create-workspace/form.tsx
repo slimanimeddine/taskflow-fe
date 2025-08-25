@@ -1,84 +1,81 @@
-'use client'
-import { PhotoIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
-import toast from 'react-hot-toast'
-import Image from 'next/image'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
+"use client";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
 import {
-  CreateWorkspaceBody,
+  type CreateWorkspaceBody,
   useCreateWorkspace,
-} from '@/hooks/endpoints/workspaces'
-import { createWorkspaceBody } from '@/schemas/workspaces'
-import { authHeader, onError } from '@/lib/utils'
-import { useQueryClient } from '@tanstack/react-query'
-import { useSession } from '@/hooks/use-session'
-import { usePathname, useRouter } from 'next/navigation'
-import { useOpenModal } from '@/hooks/use-open-modal'
+} from "@/hooks/endpoints/workspaces";
+import { createWorkspaceBody } from "@/schemas/workspaces";
+import { authHeader, onError } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/hooks/use-session";
+import { usePathname, useRouter } from "next/navigation";
+import { useOpenModal } from "@/hooks/use-open-modal";
 
 export default function CreateWorkspaceForm() {
   const { handleSubmit, register, formState, reset, control } =
     useForm<CreateWorkspaceBody>({
       resolver: zodResolver(createWorkspaceBody),
-    })
+    });
 
-  const { closeModal } = useOpenModal()
+  const { closeModal } = useOpenModal();
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { token } = useSession()
+  const { token } = useSession();
 
-  const createWorkspaceMutation = useCreateWorkspace(authHeader(token))
+  const { mutate, isPending } = useCreateWorkspace(authHeader(token));
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
-  const pathname = usePathname()
-  const router = useRouter()
+  const pathname = usePathname();
+  const router = useRouter();
 
   function onSubmit(data: CreateWorkspaceBody) {
-    createWorkspaceMutation.mutate(
+    mutate(
       {
         data,
       },
       {
         onError,
         onSuccess: () => {
-          reset()
-          setImagePreview(null)
-          queryClient.invalidateQueries({
-            queryKey: ['/api/v1/users/me/workspaces'],
-          })
-          if (pathname === '/workspaces/create') {
-            router.push('/')
+          reset();
+          setImagePreview(null);
+          void queryClient.invalidateQueries({
+            queryKey: ["/api/v1/users/me/workspaces"],
+          });
+          if (pathname === "/workspaces/create") {
+            router.push("/");
           } else {
-            closeModal()
+            closeModal();
           }
-          toast.success('Workspace created successfully!')
+          toast.success("Workspace created successfully!");
         },
-      }
-    )
+      },
+    );
   }
 
-  const isDisabled = formState.isSubmitting || createWorkspaceMutation.isPending
+  const isDisabled = formState.isSubmitting || isPending;
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     } else {
-      setImagePreview(null)
+      setImagePreview(null);
     }
-  }
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <h2 className="text-xl leading-7 font-semibold text-gray-900">
           Create workspace
@@ -100,7 +97,7 @@ export default function CreateWorkspaceForm() {
               type="text"
               placeholder="Enter workspace name"
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
-              {...register('name')}
+              {...register("name")}
             />
             {formState.errors.name && (
               <p className="mt-2 text-sm text-red-600">
@@ -144,8 +141,8 @@ export default function CreateWorkspaceForm() {
                   name={name}
                   onBlur={onBlur}
                   onChange={(e) => {
-                    onChange(e.target.files?.[0])
-                    handleImageChange(e)
+                    onChange(e.target.files?.[0]);
+                    handleImageChange(e);
                   }}
                   className="sr-only"
                 />
@@ -169,7 +166,7 @@ export default function CreateWorkspaceForm() {
       <div className="border-t border-dotted border-gray-300"></div>
 
       <div className="flex items-center justify-end gap-x-6">
-        {pathname !== '/workspaces/create' && (
+        {pathname !== "/workspaces/create" && (
           <button
             onClick={closeModal}
             type="button"
@@ -187,5 +184,5 @@ export default function CreateWorkspaceForm() {
         </button>
       </div>
     </form>
-  )
+  );
 }

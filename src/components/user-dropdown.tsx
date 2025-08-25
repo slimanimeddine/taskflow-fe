@@ -1,22 +1,19 @@
-'use client'
-import SignOutButton from '@/components/auth/sign-out'
-import { useGetAuthenticatedUser } from '@/hooks/endpoints/users'
-import { authHeader, getFirstLetter, matchQueryStatus } from '@/lib/utils'
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import LoadingUI from '@/components/loading-ui'
-import ErrorUI from '@/components/error-ui'
-import { useSession } from '@/hooks/use-session'
+"use client";
+import SignOutButton from "@/components/auth/sign-out";
+import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
+import { authHeader, getFirstLetter, matchQueryStatus } from "@/lib/utils";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
+import { ChevronDownIcon } from "@heroicons/react/20/solid";
+import LoadingUI from "@/components/loading-ui";
+import ErrorUI from "@/components/error-ui";
+import { useSession } from "@/hooks/use-session";
 
 export default function UserDropdown() {
-  const { token } = useSession()
-  const getAuthenticatedUserQuery = useGetAuthenticatedUser(authHeader(token))
+  const { token } = useSession();
+  const getAuthenticatedUserQuery = useGetAuthenticatedUser(authHeader(token));
 
   return (
-    <Menu
-      as="div"
-      className="relative"
-    >
+    <Menu as="div" className="relative">
       {matchQueryStatus(getAuthenticatedUserQuery, {
         Loading: <LoadingUI />,
         Errored: <ErrorUI message="Something went wrong!" />,
@@ -54,5 +51,5 @@ export default function UserDropdown() {
         </MenuItem>
       </MenuItems>
     </Menu>
-  )
+  );
 }

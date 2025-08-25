@@ -1,32 +1,32 @@
-'use client'
-import ErrorUI from '@/components/error-ui'
-import LoadingUI from '@/components/loading-ui'
-import { useShowWorkspace } from '@/hooks/endpoints/workspaces'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { authHeader, matchQueryStatus } from '@/lib/utils'
-import { DocumentDuplicateIcon, CheckIcon } from '@heroicons/react/24/outline'
-import { useCopyToClipboard } from '@uidotdev/usehooks'
-import { useState } from 'react'
-import toast from 'react-hot-toast'
-import ResetInviteCode from './reset-invite-code'
+"use client";
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useShowWorkspace } from "@/hooks/endpoints/workspaces";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { authHeader, matchQueryStatus } from "@/lib/utils";
+import { DocumentDuplicateIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { useCopyToClipboard } from "@uidotdev/usehooks";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import ResetInviteCode from "./reset-invite-code";
 
 export default function InviteMembers() {
-  const { token } = useSession()
-  const workspaceId = useWorkspaceId()
-  const showWorkspaceQuery = useShowWorkspace(workspaceId, authHeader(token))
-  const [, copyToClipboard] = useCopyToClipboard()
-  const [hasCopiedText, setHasCopiedText] = useState(false)
+  const { token } = useSession();
+  const workspaceId = useWorkspaceId();
+  const showWorkspaceQuery = useShowWorkspace(workspaceId, authHeader(token));
+  const [, copyToClipboard] = useCopyToClipboard();
+  const [hasCopiedText, setHasCopiedText] = useState(false);
 
   function handleCopy(inviteLink: string) {
-    copyToClipboard(inviteLink)
-    toast.success('Invite link copied to clipboard!', {
+    void copyToClipboard(inviteLink);
+    toast.success("Invite link copied to clipboard!", {
       duration: 2000,
-    })
-    setHasCopiedText(true)
+    });
+    setHasCopiedText(true);
     setTimeout(() => {
-      setHasCopiedText(false)
-    }, 2000)
+      setHasCopiedText(false);
+    }, 2000);
   }
 
   return matchQueryStatus(showWorkspaceQuery, {
@@ -34,10 +34,10 @@ export default function InviteMembers() {
     Errored: <ErrorUI message="Something went wrong!" />,
     Empty: <></>,
     Success: ({ data }) => {
-      const workspace = data.data
-      const inviteLink = `${window.location.origin}/workspaces/${workspace.id}/join/${workspace.invite_code}`
+      const workspace = data.data;
+      const inviteLink = `${window.location.origin}/workspaces/${workspace.id}/join/${workspace.invite_code}`;
       return (
-        <div className="space-y-6 bg-gray-50 p-6 rounded-lg shadow-sm">
+        <div className="space-y-6 rounded-lg bg-gray-50 p-6 shadow-sm">
           <div>
             <h2 className="text-xl leading-7 font-semibold text-gray-900">
               Invite Members
@@ -62,7 +62,7 @@ export default function InviteMembers() {
                   {/* The invite link displayed as a non-editable span */}
                   <span
                     id="invite-link-display"
-                    className="block w-full rounded-l-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 truncate bg-white"
+                    className="block w-full truncate rounded-l-md border-0 bg-white py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
                   >
                     {inviteLink}
                   </span>
@@ -72,7 +72,7 @@ export default function InviteMembers() {
                   disabled={hasCopiedText}
                   type="button"
                   onClick={() => handleCopy(inviteLink)}
-                  className="bg-white cursor-pointer relative -ml-px inline-flex items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  className="relative -ml-px inline-flex cursor-pointer items-center gap-x-1.5 rounded-r-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
                 >
                   {hasCopiedText ? (
                     <CheckIcon
@@ -97,7 +97,7 @@ export default function InviteMembers() {
             <ResetInviteCode />
           </div>
         </div>
-      )
+      );
     },
-  })
+  });
 }

@@ -1,54 +1,51 @@
-'use client'
-import { deleteSession } from '@/actions/session'
-import ErrorUI from '@/components/error-ui'
-import LoadingUI from '@/components/loading-ui'
-import Logo from '@/components/logo'
-import UserDropdown from '@/components/user-dropdown'
-import { useSignOut } from '@/hooks/endpoints/authentication'
-import { useGetAuthenticatedUser } from '@/hooks/endpoints/users'
-import { useSession } from '@/hooks/use-session'
-import { authHeader, matchQueryStatus, onError } from '@/lib/utils'
+"use client";
+import { deleteSession } from "@/actions/session";
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import Logo from "@/components/logo";
+import UserDropdown from "@/components/user-dropdown";
+import { useSignOut } from "@/hooks/endpoints/authentication";
+import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
+import { useSession } from "@/hooks/use-session";
+import { authHeader, matchQueryStatus, onError } from "@/lib/utils";
 import {
   Disclosure,
   DisclosureButton,
   DisclosurePanel,
-} from '@headlessui/react'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import toast from 'react-hot-toast'
+} from "@headlessui/react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
-export default function Layout({
-  children,
-}: Readonly<{
-  children: React.ReactNode
-}>) {
-  const { token } = useSession()
-  const authConfig = authHeader(token)
-  const getAuthenticatedUserQuery = useGetAuthenticatedUser(authConfig)
-  const signOutMutation = useSignOut(authConfig)
+type Props = Readonly<{
+  children: React.ReactNode;
+}>;
 
-  const router = useRouter()
+export default function Layout({ children }: Props) {
+  const { token } = useSession();
+  const authConfig = authHeader(token);
+  const getAuthenticatedUserQuery = useGetAuthenticatedUser(authConfig);
+  const { mutate, isPending } = useSignOut(authConfig);
+
+  const router = useRouter();
 
   function onSignOut() {
-    signOutMutation.mutate(undefined, {
+    mutate(undefined, {
       onError,
-      onSuccess: async () => {
-        await deleteSession()
-        toast.success('You have been signed out')
-        router.push('/sign-in')
+      onSuccess: () => {
+        void deleteSession();
+        toast.success("You have been signed out");
+        router.push("/sign-in");
       },
-    })
+    });
   }
 
-  const isDisabled = signOutMutation.isPending
+  const isDisabled = isPending;
 
   return (
     <div>
-      <Disclosure
-        as="nav"
-        className="bg-white shadow"
-      >
+      <Disclosure as="nav" className="bg-white shadow">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 justify-between">
             <div className="flex">
@@ -64,7 +61,7 @@ export default function Layout({
             </div>
             <div className="-mr-2 flex items-center sm:hidden">
               {/* Mobile menu button */}
-              <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+              <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none focus:ring-inset">
                 <span className="absolute -inset-0.5" />
                 <span className="sr-only">Open main menu</span>
                 <Bars3Icon
@@ -81,7 +78,7 @@ export default function Layout({
         </div>
 
         <DisclosurePanel className="sm:hidden">
-          <div className="border-t border-gray-200 pb-3 pt-4">
+          <div className="border-t border-gray-200 pt-4 pb-3">
             <div className="flex items-center px-4">
               {matchQueryStatus(getAuthenticatedUserQuery, {
                 Loading: <LoadingUI />,
@@ -103,7 +100,7 @@ export default function Layout({
               <DisclosureButton
                 onClick={onSignOut}
                 disabled={isDisabled}
-                className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                className="block w-full px-4 py-2 text-left text-base font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800"
               >
                 Sign out
               </DisclosureButton>
@@ -117,5 +114,5 @@ export default function Layout({
         </div>
       </main>
     </div>
-  )
+  );
 }

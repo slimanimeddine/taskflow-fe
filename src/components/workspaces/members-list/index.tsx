@@ -1,22 +1,22 @@
-'use client'
+"use client";
 
-import ErrorUI from '@/components/error-ui'
-import LoadingUI from '@/components/loading-ui'
-import { useListWorkspaceMembers } from '@/hooks/endpoints/users'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { authHeader, getFirstLetter, matchQueryStatus } from '@/lib/utils'
-import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/react'
-import DeleteMember from './delete-member'
-import PromoteMember from './promote-member'
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { authHeader, getFirstLetter, matchQueryStatus } from "@/lib/utils";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
+import DeleteMember from "./delete-member";
+import PromoteMember from "./promote-member";
 
 export default function MembersList() {
-  const workspaceId = useWorkspaceId()
-  const { id, token } = useSession()
+  const workspaceId = useWorkspaceId();
+  const { id, token } = useSession();
   const listWorkspaceMembersQuery = useListWorkspaceMembers(
     workspaceId,
-    authHeader(token)
-  )
+    authHeader(token),
+  );
   return (
     <div>
       {matchQueryStatus(listWorkspaceMembersQuery, {
@@ -24,13 +24,10 @@ export default function MembersList() {
         Errored: <ErrorUI message="Something went wrong!" />,
         Empty: <></>,
         Success: ({ data }) => {
-          const members = data.data
+          const members = data.data;
 
           return (
-            <ul
-              role="list"
-              className="divide-y divide-gray-100"
-            >
+            <ul role="list" className="divide-y divide-gray-100">
               {members.map((member) => (
                 <li
                   key={member.email}
@@ -44,7 +41,7 @@ export default function MembersList() {
                     </span>
 
                     <div className="min-w-0 flex-auto">
-                      <p className="text-sm font-semibold leading-6 text-gray-900">
+                      <p className="text-sm leading-6 font-semibold text-gray-900">
                         {member.name}
                       </p>
                       <p className="mt-1 truncate text-xs leading-5 text-gray-500">
@@ -52,19 +49,16 @@ export default function MembersList() {
                       </p>
                     </div>
                   </div>
-                  <Menu
-                    as="div"
-                    className="relative flex-none"
-                  >
+                  <Menu as="div" className="relative flex-none">
                     <MenuButton className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
                       <span className="sr-only">Open options</span>
-                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50">
+                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
                         Actions
                       </span>
                     </MenuButton>
                     <MenuItems
                       transition
-                      className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                      className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
                     >
                       <MenuItem>
                         <PromoteMember userId={member.id} />
@@ -80,9 +74,9 @@ export default function MembersList() {
                 </li>
               ))}
             </ul>
-          )
+          );
         },
       })}
     </div>
-  )
+  );
 }

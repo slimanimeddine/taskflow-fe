@@ -1,21 +1,21 @@
-'use client'
+"use client";
 
-import { useTasksPage } from '@/hooks/filtering/use-tasks-page'
-import { classNames } from '@/lib/utils'
-import { LinksField, MetaField } from '@/types/api-responses'
-import Link from 'next/link'
+import { useTasksPage } from "@/hooks/filtering/use-tasks-page";
+import { classNames } from "@/lib/utils";
+import { type LinksField, type MetaField } from "@/types/api-responses";
+import Link from "next/link";
 interface PaginationProps {
-  links: LinksField
-  meta: MetaField
+  links: LinksField;
+  meta: MetaField;
 }
 
 export default function Pagination({ links, meta }: PaginationProps) {
-  const { setPage } = useTasksPage()
+  const { setPage } = useTasksPage();
   const handlePageChange = (newPage: number) => {
     if (newPage >= 1 && newPage <= (meta?.last_page || 1)) {
-      setPage(newPage)
+      void setPage(newPage);
     }
-  }
+  };
 
   return (
     <nav
@@ -27,7 +27,7 @@ export default function Pagination({ links, meta }: PaginationProps) {
           <Link
             href={`?page=${(meta?.current_page ?? 1) - 1}`}
             onClick={() => handlePageChange((meta?.current_page ?? 1) - 1)}
-            className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 hover:bg-gray-100 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-25 focus:ring-offset-1 focus:ring-offset-indigo-600"
+            className="focus:ring-opacity-25 inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 hover:bg-gray-100 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:outline-none"
           >
             Previous
           </Link>
@@ -37,7 +37,8 @@ export default function Pagination({ links, meta }: PaginationProps) {
         {meta?.links
           ?.filter(
             (link) =>
-              link.label !== 'Next &raquo;' && link.label !== '&laquo; Previous'
+              link.label !== "Next &raquo;" &&
+              link.label !== "&laquo; Previous",
           )
           ?.map((link, index) =>
             link.url ? (
@@ -46,12 +47,12 @@ export default function Pagination({ links, meta }: PaginationProps) {
                 href={`?page=${link.label}`}
                 onClick={() => handlePageChange(Number(link.label))}
                 className={classNames(
-                  'inline-flex h-10 items-center rounded-md border px-4 hover:bg-gray-100 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-25 focus:ring-offset-1 focus:ring-offset-indigo-600',
+                  "focus:ring-opacity-25 inline-flex h-10 items-center rounded-md border px-4 hover:bg-gray-100 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:outline-none",
                   link.active
-                    ? 'border-indigo-600 ring-1 ring-indigo-600'
-                    : 'border-gray-300'
+                    ? "border-indigo-600 ring-1 ring-indigo-600"
+                    : "border-gray-300",
                 )}
-                aria-current={link.active ? 'page' : undefined}
+                aria-current={link.active ? "page" : undefined}
               >
                 {link.label}
               </Link>
@@ -62,7 +63,7 @@ export default function Pagination({ links, meta }: PaginationProps) {
               >
                 {link.label}
               </span>
-            )
+            ),
           )}
       </div>
       <div className="flex min-w-0 flex-1 justify-end">
@@ -70,12 +71,12 @@ export default function Pagination({ links, meta }: PaginationProps) {
           <Link
             href={`?page=${(meta?.current_page ?? 1) + 1}`}
             onClick={() => handlePageChange((meta?.current_page ?? 1) + 1)}
-            className="inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 hover:bg-gray-100 focus:border-indigo-600 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-opacity-25 focus:ring-offset-1 focus:ring-offset-indigo-600"
+            className="focus:ring-opacity-25 inline-flex h-10 items-center rounded-md border border-gray-300 bg-white px-4 hover:bg-gray-100 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-600 focus:ring-offset-1 focus:ring-offset-indigo-600 focus:outline-none"
           >
             Next
           </Link>
         )}
       </div>
     </nav>
-  )
+  );
 }

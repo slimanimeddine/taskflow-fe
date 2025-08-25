@@ -1,27 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { QueryResult } from '@/types/misc'
-import { type UseQueryResult } from '@tanstack/react-query'
-import axios, { isAxiosError } from 'axios'
-import { notFound } from 'next/navigation'
-import { JSX } from 'react'
-import toast from 'react-hot-toast'
+import { type QueryResult } from "@/types/misc";
+import { type UseQueryResult } from "@tanstack/react-query";
+import axios, { isAxiosError } from "axios";
+import { notFound } from "next/navigation";
+import { type JSX } from "react";
+import toast from "react-hot-toast";
+import type z from "zod/v4";
 
 export function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
 export function onError(error: Error) {
   if (axios.isAxiosError(error) && error.response) {
-    toast.error(`${error.response.data.message || 'Something went wrong'}`)
+    toast.error(`${error.response.data.message ?? "Something went wrong"}`);
   } else {
-    toast.error(`${error.message}`)
+    toast.error(`${error.message}`);
   }
 }
 
 export function fileUrl(url: string | null | undefined) {
-  if (!url) return undefined
-  const modifiedUrl = url.replace('public', '')
-  return `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${modifiedUrl}`
+  if (!url) return undefined;
+  const modifiedUrl = url.replace("public", "");
+  return `${process.env.NEXT_PUBLIC_BACKEND_URL}/storage/${modifiedUrl}`;
 }
 
 export function authHeader(token: string) {
@@ -31,30 +32,30 @@ export function authHeader(token: string) {
         Authorization: `Bearer ${token}`,
       },
     },
-  }
+  };
 }
 
 export function matchQueryStatus<T extends QueryResult<unknown>>(
   query: UseQueryResult<T>,
   options: {
-    Loading: JSX.Element
-    Errored: JSX.Element | ((error: unknown) => JSX.Element)
-    Empty: JSX.Element
+    Loading: JSX.Element;
+    Errored: JSX.Element | ((error: unknown) => JSX.Element);
+    Empty: JSX.Element;
     Success: (
       data: UseQueryResult<T> & {
-        data: NonNullable<UseQueryResult<T>['data']>
-      }
-    ) => JSX.Element
-  }
-): JSX.Element
+        data: NonNullable<UseQueryResult<T>["data"]>;
+      },
+    ) => JSX.Element;
+  },
+): JSX.Element;
 export function matchQueryStatus<T extends QueryResult<unknown>>(
   query: UseQueryResult<T>,
   options: {
-    Loading: JSX.Element
-    Errored: JSX.Element | ((error: unknown) => JSX.Element)
-    Success: (data: UseQueryResult<T>) => JSX.Element
-  }
-): JSX.Element
+    Loading: JSX.Element;
+    Errored: JSX.Element | ((error: unknown) => JSX.Element);
+    Success: (data: UseQueryResult<T>) => JSX.Element;
+  },
+): JSX.Element;
 export function matchQueryStatus<T extends QueryResult<unknown>>(
   query: UseQueryResult<T>,
   {
@@ -63,93 +64,97 @@ export function matchQueryStatus<T extends QueryResult<unknown>>(
     Empty,
     Success,
   }: {
-    Loading: JSX.Element
-    Errored: JSX.Element | ((error: unknown) => JSX.Element)
-    Empty?: JSX.Element
-    Success: (data: UseQueryResult<T>) => JSX.Element
-  }
+    Loading: JSX.Element;
+    Errored: JSX.Element | ((error: unknown) => JSX.Element);
+    Empty?: JSX.Element;
+    Success: (data: UseQueryResult<T>) => JSX.Element;
+  },
 ): JSX.Element {
   if (query.isLoading) {
-    return Loading
+    return Loading;
   }
 
   if (query.isError) {
     if (isAxiosError(query.error) && query.error.response?.status === 404) {
-      notFound()
+      notFound();
     }
 
-    if (typeof Errored === 'function') {
-      return Errored(query.error)
+    if (typeof Errored === "function") {
+      return Errored(query.error);
     }
-    return Errored
+    return Errored;
   }
 
   const isEmpty =
     query.data === undefined ||
     query.data === null ||
-    (Array.isArray(query.data?.data) && query.data?.data.length === 0)
+    (Array.isArray(query.data?.data) && query.data?.data.length === 0);
 
   if (isEmpty && Empty) {
-    return Empty
+    return Empty;
   }
 
-  return Success(query)
+  return Success(query);
 }
 
 export type DirtyFieldsType =
   | boolean
   | null
   | {
-      [key: string]: DirtyFieldsType
+      [key: string]: DirtyFieldsType;
     }
-  | DirtyFieldsType[]
+  | DirtyFieldsType[];
 
 export function getDirtyValues<T extends Record<string, any>>(
   dirtyFields: Partial<Record<keyof T, DirtyFieldsType>>,
-  values: T
+  values: T,
 ): Partial<T> {
   const dirtyValues = Object.keys(dirtyFields).reduce((prev, key) => {
-    const value = dirtyFields[key]
+    const value = dirtyFields[key];
     if (!value) {
-      return prev
+      return prev;
     }
-    const isObject = typeof value === 'object'
-    const isArray = Array.isArray(value)
+    const isObject = typeof value === "object";
+    const isArray = Array.isArray(value);
     const nestedValue =
       isObject && !isArray
         ? getDirtyValues(value as Record<string, any>, values[key])
-        : values[key]
-    return { ...prev, [key]: isArray ? values[key] : nestedValue }
-  }, {} as Partial<T>)
-  return dirtyValues
+        : values[key];
+    return { ...prev, [key]: isArray ? values[key] : nestedValue };
+  }, {} as Partial<T>);
+  return dirtyValues;
 }
 
 export function getFirstLetter(str: string) {
-  return str.charAt(0).toUpperCase()
+  return str.charAt(0).toUpperCase();
 }
 
 export function startsWithAny(mainString: string, prefixes: string[]): boolean {
   for (const prefix of prefixes) {
     if (mainString.startsWith(prefix)) {
-      return true
+      return true;
     }
   }
-  return false
+  return false;
 }
 
 export function statusLabel(status: string | null) {
   switch (status) {
-    case 'todo':
-      return 'To Do'
-    case 'backlog':
-      return 'Backlog'
-    case 'in_progress':
-      return 'In Progress'
-    case 'done':
-      return 'Done'
-    case 'in_review':
-      return 'In Review'
+    case "todo":
+      return "To Do";
+    case "backlog":
+      return "Backlog";
+    case "in_progress":
+      return "In Progress";
+    case "done":
+      return "Done";
+    case "in_review":
+      return "In Review";
     default:
-      return 'All'
+      return "All";
   }
+}
+
+export function parseParams<T extends z.ZodType>(data: unknown, schema: T) {
+  return schema.safeParse(data);
 }

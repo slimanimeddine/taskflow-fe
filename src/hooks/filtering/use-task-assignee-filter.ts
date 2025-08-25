@@ -1,20 +1,20 @@
-import { useQueryState } from 'nuqs'
-import { parseAsJson } from 'nuqs'
-import { z } from 'zod'
+import { useQueryState } from "nuqs";
+import { parseAsJson } from "nuqs";
+import { z } from "zod/v4";
 
 const assigneeSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   name: z.string(),
-})
+});
 
 export function useTaskAssigneeFilter() {
   const [assignee, setAssignee] = useQueryState(
-    'assignee',
-    parseAsJson(assigneeSchema.parse)
-  )
+    "assignee",
+    parseAsJson(assigneeSchema.parse),
+  );
 
   return {
     assignee,
     setAssignee,
-  }
+  };
 }

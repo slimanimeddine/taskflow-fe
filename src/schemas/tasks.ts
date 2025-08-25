@@ -1,44 +1,44 @@
-import { z as zod } from 'zod'
+import { z } from "zod/v4";
 
 /**
  * Create a new task in a project within a workspace.
  * @summary Create task
  */
-export const createTaskBody = zod.object({
-  name: zod.string(),
-  description: zod.string().nullable(),
-  due_date: zod.string().date(),
-  status: zod.enum(['backlog', 'todo', 'in_progress', 'in_review', 'done']),
-  workspace_id: zod.string().uuid(),
-  project_id: zod.string().uuid(),
-  assignee_id: zod.string().uuid(),
-})
+export const createTaskBody = z.object({
+  name: z.string(),
+  description: z.string().nullable(),
+  due_date: z.date(),
+  status: z.enum(["backlog", "todo", "in_progress", "in_review", "done"]),
+  workspace_id: z.uuid(),
+  project_id: z.uuid(),
+  assignee_id: z.uuid(),
+});
 
 /**
  * Edit the specified task.
  * @summary Edit task
  */
-export const editTaskBody = zod.object({
-  name: zod.string().optional(),
-  description: zod.string().nullable().optional(),
-  due_date: zod.string().date().optional(),
-  position: zod.number().int().min(1).optional(),
-  status: zod
-    .enum(['backlog', 'todo', 'in_progress', 'in_review', 'done'])
+export const editTaskBody = z.object({
+  name: z.string().optional(),
+  description: z.string().nullable().optional(),
+  due_date: z.date().optional(),
+  position: z.number().int().min(1).optional(),
+  status: z
+    .enum(["backlog", "todo", "in_progress", "in_review", "done"])
     .optional(),
-  project_id: zod.string().uuid().optional(),
-  assignee_id: zod.string().uuid().optional(),
-})
+  project_id: z.uuid().optional(),
+  assignee_id: z.uuid().optional(),
+});
 
 /**
  * Bulk edit tasks positions in a workspace.
  * @summary Bulk edit tasks positions
  */
-export const bulkEditTasksPositionsBody = zod.object({
-  tasks: zod
+export const bulkEditTasksPositionsBody = z.object({
+  tasks: z
     .object({
-      id: zod.string().uuid(),
-      position: zod.number().int().min(1),
+      id: z.uuid(),
+      position: z.number().int().min(1),
     })
     .array(),
-})
+});

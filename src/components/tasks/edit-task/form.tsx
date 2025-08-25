@@ -1,65 +1,65 @@
-'use client'
-import toast from 'react-hot-toast'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import { authHeader, matchQueryStatus, onError } from '@/lib/utils'
-import { useQueryClient } from '@tanstack/react-query'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { EditTaskBody, useEditTask } from '@/hooks/endpoints/tasks'
-import { editTaskBody } from '@/schemas/tasks'
-import { useListWorkspaceMembers } from '@/hooks/endpoints/users'
-import ErrorUI from '@/components/error-ui'
-import LoadingUI from '@/components/loading-ui'
-import { useListWorkspaceProjects } from '@/hooks/endpoints/projects'
-import { useOpenModal } from '@/hooks/use-open-modal'
+"use client";
+import toast from "react-hot-toast";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { authHeader, matchQueryStatus, onError } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { type EditTaskBody, useEditTask } from "@/hooks/endpoints/tasks";
+import { editTaskBody } from "@/schemas/tasks";
+import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useListWorkspaceProjects } from "@/hooks/endpoints/projects";
+import { useOpenModal } from "@/hooks/use-open-modal";
 
 type DefaultValues = {
-  name: string
-  status: 'backlog' | 'todo' | 'in_progress' | 'in_review' | 'done'
-  description: string | null
-  due_date: string
-  project_id: string
-  assignee_id: string
-}
+  name?: string;
+  status?: "backlog" | "todo" | "in_progress" | "in_review" | "done";
+  description?: string | null;
+  due_date?: Date;
+  project_id?: string;
+  assignee_id?: string;
+};
 
 type EditTaskFormProps = {
-  taskId: string
-  defaultValues: DefaultValues
-}
+  taskId: string;
+  defaultValues: DefaultValues;
+};
 
 export default function EditTaskForm({
   taskId,
   defaultValues,
 }: EditTaskFormProps) {
-  const workspaceId = useWorkspaceId()
+  const workspaceId = useWorkspaceId();
 
   const { handleSubmit, register, formState, reset } = useForm<EditTaskBody>({
     resolver: zodResolver(editTaskBody),
     defaultValues,
-  })
+  });
 
-  const { closeModal } = useOpenModal()
+  const { closeModal } = useOpenModal();
 
-  const { token } = useSession()
-  const authConfig = authHeader(token)
+  const { token } = useSession();
+  const authConfig = authHeader(token);
 
   const listWorkspaceMembersQuery = useListWorkspaceMembers(
     workspaceId,
-    authConfig
-  )
+    authConfig,
+  );
 
   const listWorkspaceProjectsQuery = useListWorkspaceProjects(
     workspaceId,
-    authConfig
-  )
+    authConfig,
+  );
 
-  const editTaskMutation = useEditTask(authConfig)
+  const { mutate, isPending } = useEditTask(authConfig);
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   function onSubmit(data: EditTaskBody) {
-    editTaskMutation.mutate(
+    mutate(
       {
         taskId,
         data,
@@ -67,27 +67,24 @@ export default function EditTaskForm({
       {
         onError,
         onSuccess: () => {
-          reset()
-          queryClient.invalidateQueries({
-            queryKey: ['/api/v1/tasks'],
-          })
-          queryClient.invalidateQueries({
+          reset();
+          void queryClient.invalidateQueries({
+            queryKey: ["/api/v1/tasks"],
+          });
+          void queryClient.invalidateQueries({
             queryKey: [`/api/v1/tasks/${taskId}`],
-          })
-          closeModal()
-          toast.success('Task edit successfully!')
+          });
+          closeModal();
+          toast.success("Task edit successfully!");
         },
-      }
-    )
+      },
+    );
   }
 
-  const isDisabled = formState.isSubmitting || editTaskMutation.isPending
+  const isDisabled = formState.isSubmitting || isPending;
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <h2 className="text-xl leading-7 font-semibold text-gray-900">
           Edit task
@@ -109,7 +106,7 @@ export default function EditTaskForm({
               type="text"
               placeholder="Enter task name"
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
-              {...register('name')}
+              {...register("name")}
             />
             {formState.errors.name && (
               <p className="mt-2 text-sm text-red-600">
@@ -131,7 +128,7 @@ export default function EditTaskForm({
               id="description"
               placeholder="Enter task description"
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
-              {...register('description')}
+              {...register("description")}
             ></textarea>
             {formState.errors.description && (
               <p className="mt-2 text-sm text-red-600">
@@ -154,7 +151,7 @@ export default function EditTaskForm({
               type="date"
               placeholder="Enter task due-date"
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
-              {...register('due_date')}
+              {...register("due_date")}
             />
             {formState.errors.due_date && (
               <p className="mt-2 text-sm text-red-600">
@@ -174,8 +171,8 @@ export default function EditTaskForm({
           <div className="mt-2">
             <select
               id="status"
-              className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              {...register('status')}
+              className="mt-2 block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              {...register("status")}
             >
               <option value="backlog">Backlog</option>
               <option value="todo">To Do</option>
@@ -204,24 +201,21 @@ export default function EditTaskForm({
               Errored: <ErrorUI message="Something went wrong!" />,
               Empty: <></>,
               Success: ({ data }) => {
-                const members = data.data
+                const members = data.data;
 
                 return (
                   <select
                     id="assignee"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    {...register('assignee_id')}
+                    className="mt-2 block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    {...register("assignee_id")}
                   >
                     {members.map((member) => (
-                      <option
-                        key={member.id}
-                        value={member.id}
-                      >
+                      <option key={member.id} value={member.id}>
                         {member.name}
                       </option>
                     ))}
                   </select>
-                )
+                );
               },
             })}
 
@@ -246,24 +240,21 @@ export default function EditTaskForm({
               Errored: <ErrorUI message="Something went wrong!" />,
               Empty: <></>,
               Success: ({ data }) => {
-                const projects = data.data
+                const projects = data.data;
 
                 return (
                   <select
                     id="project"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    {...register('project_id')}
+                    className="mt-2 block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                    {...register("project_id")}
                   >
                     {projects.map((project) => (
-                      <option
-                        key={project.id}
-                        value={project.id}
-                      >
+                      <option key={project.id} value={project.id}>
                         {project.name}
                       </option>
                     ))}
                   </select>
-                )
+                );
               },
             })}
 
@@ -295,5 +286,5 @@ export default function EditTaskForm({
         </button>
       </div>
     </form>
-  )
+  );
 }

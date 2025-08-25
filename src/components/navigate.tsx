@@ -1,23 +1,23 @@
-'use client'
+"use client";
 
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface RedirectProps {
-  to: string
-  replace?: boolean
+  to: string;
+  replace?: boolean;
 }
 
 export default function Navigate({ to, replace = true }: RedirectProps) {
-  const router = useRouter()
+  const router = useRouter();
 
   useEffect(() => {
     if (replace) {
-      router.replace(to)
+      router.replace(to);
     } else {
-      router.push(to)
+      router.push(to);
     }
-  }, [to, replace, router])
+  }, [to, replace, router]);
 
-  return null
+  return null;
 }

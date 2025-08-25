@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query'
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -12,44 +12,43 @@ import type {
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult,
-} from '@tanstack/react-query'
-
-export type CreateMember200 = ApiResource<Member>
-export type CreateMember400 = ErrorApiResponse
-export type CreateMember401 = UnauthenticatedApiResponse
-export type CreateMember404 = NotFoundApiResponse
-export type CreateMemberBody = z.infer<typeof createMemberBody>
-
-export type DeleteMember200 = SuccessNoDataApiResponse
-export type DeleteMember400 = ErrorApiResponse
-export type DeleteMember403 = UnauthorizedApiResponse
-export type DeleteMember401 = UnauthenticatedApiResponse
-export type DeleteMember404 = NotFoundApiResponse
-
-export type ShowAuthenticatedUserMember200 = ApiResource<Member>
-export type ShowAuthenticatedUserMember404 = NotFoundApiResponse
-export type ShowAuthenticatedUserMember401 = UnauthenticatedApiResponse
-
-export type PromoteMember200 = ApiResource<Member>
-export type PromoteMember403 = UnauthorizedApiResponse
-export type PromoteMember401 = UnauthenticatedApiResponse
-export type PromoteMember404 = NotFoundApiResponse
-
-import { customInstance } from '@/lib/axios'
-import type { ErrorType, BodyType } from '@/lib/axios'
+} from "@tanstack/react-query";
+import { customInstance } from "@/lib/axios";
+import type { ErrorType, BodyType } from "@/lib/axios";
 import {
-  ApiResource,
-  ErrorApiResponse,
-  NotFoundApiResponse,
-  SuccessNoDataApiResponse,
-  UnauthenticatedApiResponse,
-  UnauthorizedApiResponse,
-} from '@/types/api-responses'
-import { Member } from '@/types/models'
-import { z } from 'zod'
-import { createMemberBody } from '@/schemas/members'
+  type ApiResource,
+  type ErrorApiResponse,
+  type NotFoundApiResponse,
+  type SuccessNoDataApiResponse,
+  type UnauthenticatedApiResponse,
+  type UnauthorizedApiResponse,
+} from "@/types/api-responses";
+import { type Member } from "@/types/models";
+import { type z } from "zod/v4";
+import { type createMemberBody } from "@/schemas/members";
 
-type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1]
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
+
+export type CreateMember200 = ApiResource<Member>;
+export type CreateMember400 = ErrorApiResponse;
+export type CreateMember401 = UnauthenticatedApiResponse;
+export type CreateMember404 = NotFoundApiResponse;
+export type CreateMemberBody = z.infer<typeof createMemberBody>;
+
+export type DeleteMember200 = SuccessNoDataApiResponse;
+export type DeleteMember400 = ErrorApiResponse;
+export type DeleteMember403 = UnauthorizedApiResponse;
+export type DeleteMember401 = UnauthenticatedApiResponse;
+export type DeleteMember404 = NotFoundApiResponse;
+
+export type ShowAuthenticatedUserMember200 = ApiResource<Member>;
+export type ShowAuthenticatedUserMember404 = NotFoundApiResponse;
+export type ShowAuthenticatedUserMember401 = UnauthenticatedApiResponse;
+
+export type PromoteMember200 = ApiResource<Member>;
+export type PromoteMember403 = UnauthorizedApiResponse;
+export type PromoteMember401 = UnauthenticatedApiResponse;
+export type PromoteMember404 = NotFoundApiResponse;
 
 /**
  * Create a new member in a workspace.
@@ -59,19 +58,19 @@ export const createMember = (
   workspaceId: string,
   createMemberBody: BodyType<CreateMemberBody>,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<CreateMember200>(
     {
       url: `/api/v1/workspaces/${workspaceId}/members`,
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       data: createMemberBody,
       signal,
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getCreateMemberMutationOptions = <
   TError = ErrorType<CreateMember400 | CreateMember401 | CreateMember404>,
@@ -82,42 +81,42 @@ export const getCreateMemberMutationOptions = <
     TError,
     { workspaceId: string; data: BodyType<CreateMemberBody> },
     TContext
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof createMember>>,
   TError,
   { workspaceId: string; data: BodyType<CreateMemberBody> },
   TContext
 > => {
-  const mutationKey = ['createMember']
+  const mutationKey = ["createMember"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
-      'mutationKey' in options.mutation &&
+      "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof createMember>>,
     { workspaceId: string; data: BodyType<CreateMemberBody> }
   > = (props) => {
-    const { workspaceId, data } = props ?? {}
+    const { workspaceId, data } = props ?? {};
 
-    return createMember(workspaceId, data, requestOptions)
-  }
+    return createMember(workspaceId, data, requestOptions);
+  };
 
-  return { mutationFn, ...mutationOptions }
-}
+  return { mutationFn, ...mutationOptions };
+};
 
 export type CreateMemberMutationResult = NonNullable<
   Awaited<ReturnType<typeof createMember>>
->
-export type CreateMemberMutationBody = BodyType<CreateMemberBody>
+>;
+export type CreateMemberMutationBody = BodyType<CreateMemberBody>;
 export type CreateMemberMutationError = ErrorType<
   CreateMember400 | CreateMember401 | CreateMember404
->
+>;
 
 /**
  * @summary Create member
@@ -132,20 +131,20 @@ export const useCreateMember = <
       TError,
       { workspaceId: string; data: BodyType<CreateMemberBody> },
       TContext
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseMutationResult<
   Awaited<ReturnType<typeof createMember>>,
   TError,
   { workspaceId: string; data: BodyType<CreateMemberBody> },
   TContext
 > => {
-  const mutationOptions = getCreateMemberMutationOptions(options)
+  const mutationOptions = getCreateMemberMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient)
-}
+  return useMutation(mutationOptions, queryClient);
+};
 
 /**
  * Delete a member from a workspace.
@@ -154,16 +153,16 @@ export const useCreateMember = <
 export const deleteMember = (
   workspaceId: string,
   userId: string,
-  options?: SecondParameter<typeof customInstance>
+  options?: SecondParameter<typeof customInstance>,
 ) => {
   return customInstance<DeleteMember200>(
     {
       url: `/api/v1/workspaces/${workspaceId}/users/${userId}/members`,
-      method: 'DELETE',
+      method: "DELETE",
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getDeleteMemberMutationOptions = <
   TError = ErrorType<
@@ -176,42 +175,42 @@ export const getDeleteMemberMutationOptions = <
     TError,
     { workspaceId: string; userId: string },
     TContext
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof deleteMember>>,
   TError,
   { workspaceId: string; userId: string },
   TContext
 > => {
-  const mutationKey = ['deleteMember']
+  const mutationKey = ["deleteMember"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
-      'mutationKey' in options.mutation &&
+      "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof deleteMember>>,
     { workspaceId: string; userId: string }
   > = (props) => {
-    const { workspaceId, userId } = props ?? {}
+    const { workspaceId, userId } = props ?? {};
 
-    return deleteMember(workspaceId, userId, requestOptions)
-  }
+    return deleteMember(workspaceId, userId, requestOptions);
+  };
 
-  return { mutationFn, ...mutationOptions }
-}
+  return { mutationFn, ...mutationOptions };
+};
 
 export type DeleteMemberMutationResult = NonNullable<
   Awaited<ReturnType<typeof deleteMember>>
->
+>;
 
 export type DeleteMemberMutationError = ErrorType<
   DeleteMember400 | DeleteMember401 | DeleteMember403 | DeleteMember404
->
+>;
 
 /**
  * @summary Delete member
@@ -228,20 +227,20 @@ export const useDeleteMember = <
       TError,
       { workspaceId: string; userId: string },
       TContext
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseMutationResult<
   Awaited<ReturnType<typeof deleteMember>>,
   TError,
   { workspaceId: string; userId: string },
   TContext
 > => {
-  const mutationOptions = getDeleteMemberMutationOptions(options)
+  const mutationOptions = getDeleteMemberMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient)
-}
+  return useMutation(mutationOptions, queryClient);
+};
 
 /**
  * Retrieve the member details of the authenticated user in a specific workspace.
@@ -250,21 +249,21 @@ export const useDeleteMember = <
 export const showAuthenticatedUserMember = (
   workspaceId: string,
   options?: SecondParameter<typeof customInstance>,
-  signal?: AbortSignal
+  signal?: AbortSignal,
 ) => {
   return customInstance<ShowAuthenticatedUserMember200>(
     {
       url: `/api/v1/workspaces/${workspaceId}/users/me/members`,
-      method: 'GET',
+      method: "GET",
       signal,
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getShowAuthenticatedUserMemberQueryKey = (workspaceId: string) => {
-  return [`/api/v1/workspaces/${workspaceId}/users/me/members`] as const
-}
+  return [`/api/v1/workspaces/${workspaceId}/users/me/members`] as const;
+};
 
 export const getShowAuthenticatedUserMemberQueryOptions = <
   TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
@@ -280,20 +279,20 @@ export const getShowAuthenticatedUserMemberQueryOptions = <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ) => {
-  const { query: queryOptions, request: requestOptions } = options ?? {}
+  const { query: queryOptions, request: requestOptions } = options ?? {};
 
   const queryKey =
     queryOptions?.queryKey ??
-    getShowAuthenticatedUserMemberQueryKey(workspaceId)
+    getShowAuthenticatedUserMemberQueryKey(workspaceId);
 
   const queryFn: QueryFunction<
     Awaited<ReturnType<typeof showAuthenticatedUserMember>>
   > = ({ signal }) =>
-    showAuthenticatedUserMember(workspaceId, requestOptions, signal)
+    showAuthenticatedUserMember(workspaceId, requestOptions, signal);
 
   return {
     queryKey,
@@ -304,15 +303,15 @@ export const getShowAuthenticatedUserMemberQueryOptions = <
     Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
     TError,
     TData
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
-}
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
 export type ShowAuthenticatedUserMemberQueryResult = NonNullable<
   Awaited<ReturnType<typeof showAuthenticatedUserMember>>
->
+>;
 export type ShowAuthenticatedUserMemberQueryError = ErrorType<
   ShowAuthenticatedUserMember401 | ShowAuthenticatedUserMember404
->
+>;
 
 export function useShowAuthenticatedUserMember<
   TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
@@ -335,14 +334,14 @@ export function useShowAuthenticatedUserMember<
           TError,
           Awaited<ReturnType<typeof showAuthenticatedUserMember>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): DefinedUseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useShowAuthenticatedUserMember<
   TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
   TError = ErrorType<
@@ -364,14 +363,14 @@ export function useShowAuthenticatedUserMember<
           TError,
           Awaited<ReturnType<typeof showAuthenticatedUserMember>>
         >,
-        'initialData'
-      >
-    request?: SecondParameter<typeof customInstance>
+        "initialData"
+      >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 export function useShowAuthenticatedUserMember<
   TData = Awaited<ReturnType<typeof showAuthenticatedUserMember>>,
   TError = ErrorType<
@@ -386,13 +385,13 @@ export function useShowAuthenticatedUserMember<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
-}
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 /**
  * @summary Show authenticated user member
  */
@@ -411,26 +410,26 @@ export function useShowAuthenticatedUserMember<
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseQueryResult<TData, TError> & {
-  queryKey: DataTag<QueryKey, TData, TError>
+  queryKey: DataTag<QueryKey, TData, TError>;
 } {
   const queryOptions = getShowAuthenticatedUserMemberQueryOptions(
     workspaceId,
-    options
-  )
+    options,
+  );
 
   const query = useQuery(queryOptions, queryClient) as UseQueryResult<
     TData,
     TError
-  > & { queryKey: DataTag<QueryKey, TData, TError> }
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  query.queryKey = queryOptions.queryKey
+  query.queryKey = queryOptions.queryKey;
 
-  return query
+  return query;
 }
 
 /**
@@ -451,19 +450,19 @@ export const prefetchShowAuthenticatedUserMember = async <
         TError,
         TData
       >
-    >
-    request?: SecondParameter<typeof customInstance>
-  }
+    >;
+    request?: SecondParameter<typeof customInstance>;
+  },
 ): Promise<QueryClient> => {
   const queryOptions = getShowAuthenticatedUserMemberQueryOptions(
     workspaceId,
-    options
-  )
+    options,
+  );
 
-  await queryClient.prefetchQuery(queryOptions)
+  await queryClient.prefetchQuery(queryOptions);
 
-  return queryClient
-}
+  return queryClient;
+};
 
 /**
  * Promote a member to admin in a workspace.
@@ -472,16 +471,16 @@ export const prefetchShowAuthenticatedUserMember = async <
 export const promoteMember = (
   workspaceId: string,
   userId: string,
-  options?: SecondParameter<typeof customInstance>
+  options?: SecondParameter<typeof customInstance>,
 ) => {
   return customInstance<PromoteMember200>(
     {
       url: `/api/v1/workspaces/${workspaceId}/users/${userId}/members`,
-      method: 'PATCH',
+      method: "PATCH",
     },
-    options
-  )
-}
+    options,
+  );
+};
 
 export const getPromoteMemberMutationOptions = <
   TError = ErrorType<PromoteMember401 | PromoteMember403 | PromoteMember404>,
@@ -492,42 +491,42 @@ export const getPromoteMemberMutationOptions = <
     TError,
     { workspaceId: string; userId: string },
     TContext
-  >
-  request?: SecondParameter<typeof customInstance>
+  >;
+  request?: SecondParameter<typeof customInstance>;
 }): UseMutationOptions<
   Awaited<ReturnType<typeof promoteMember>>,
   TError,
   { workspaceId: string; userId: string },
   TContext
 > => {
-  const mutationKey = ['promoteMember']
+  const mutationKey = ["promoteMember"];
   const { mutation: mutationOptions, request: requestOptions } = options
     ? options.mutation &&
-      'mutationKey' in options.mutation &&
+      "mutationKey" in options.mutation &&
       options.mutation.mutationKey
       ? options
       : { ...options, mutation: { ...options.mutation, mutationKey } }
-    : { mutation: { mutationKey }, request: undefined }
+    : { mutation: { mutationKey }, request: undefined };
 
   const mutationFn: MutationFunction<
     Awaited<ReturnType<typeof promoteMember>>,
     { workspaceId: string; userId: string }
   > = (props) => {
-    const { workspaceId, userId } = props ?? {}
+    const { workspaceId, userId } = props ?? {};
 
-    return promoteMember(workspaceId, userId, requestOptions)
-  }
+    return promoteMember(workspaceId, userId, requestOptions);
+  };
 
-  return { mutationFn, ...mutationOptions }
-}
+  return { mutationFn, ...mutationOptions };
+};
 
 export type PromoteMemberMutationResult = NonNullable<
   Awaited<ReturnType<typeof promoteMember>>
->
+>;
 
 export type PromoteMemberMutationError = ErrorType<
   PromoteMember401 | PromoteMember403 | PromoteMember404
->
+>;
 
 /**
  * @summary Promote member
@@ -542,17 +541,17 @@ export const usePromoteMember = <
       TError,
       { workspaceId: string; userId: string },
       TContext
-    >
-    request?: SecondParameter<typeof customInstance>
+    >;
+    request?: SecondParameter<typeof customInstance>;
   },
-  queryClient?: QueryClient
+  queryClient?: QueryClient,
 ): UseMutationResult<
   Awaited<ReturnType<typeof promoteMember>>,
   TError,
   { workspaceId: string; userId: string },
   TContext
 > => {
-  const mutationOptions = getPromoteMemberMutationOptions(options)
+  const mutationOptions = getPromoteMemberMutationOptions(options);
 
-  return useMutation(mutationOptions, queryClient)
-}
+  return useMutation(mutationOptions, queryClient);
+};

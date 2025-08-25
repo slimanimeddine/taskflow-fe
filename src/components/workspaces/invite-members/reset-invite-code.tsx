@@ -1,44 +1,42 @@
-'use client'
+"use client";
 
-import { useResetWorkspaceInviteCode } from '@/hooks/endpoints/workspaces'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { authHeader, onError } from '@/lib/utils'
-import { useQueryClient } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
+import { useResetWorkspaceInviteCode } from "@/hooks/endpoints/workspaces";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { authHeader, onError } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 
 export default function ResetInviteCode() {
-  const workspaceId = useWorkspaceId()
+  const workspaceId = useWorkspaceId();
 
-  const { token } = useSession()
+  const { token } = useSession();
 
-  const resetWorkspaceInviteCodeMutation = useResetWorkspaceInviteCode(
-    authHeader(token)
-  )
+  const { mutate, isPending } = useResetWorkspaceInviteCode(authHeader(token));
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   function onSubmit() {
-    resetWorkspaceInviteCodeMutation.mutate(
+    mutate(
       {
         workspaceId,
       },
       {
         onError,
         onSuccess: () => {
-          queryClient.invalidateQueries({
+          void queryClient.invalidateQueries({
             queryKey: [`/api/v1/workspaces/${workspaceId}`],
-          })
-          queryClient.invalidateQueries({
-            queryKey: ['/api/v1/users/me/workspaces'],
-          })
-          toast.success('Invite code reset successfully!')
+          });
+          void queryClient.invalidateQueries({
+            queryKey: ["/api/v1/users/me/workspaces"],
+          });
+          toast.success("Invite code reset successfully!");
         },
-      }
-    )
+      },
+    );
   }
 
-  const isDisabled = resetWorkspaceInviteCodeMutation.isPending
+  const isDisabled = isPending;
 
   return (
     <button
@@ -49,5 +47,5 @@ export default function ResetInviteCode() {
     >
       Reset Invite Code
     </button>
-  )
+  );
 }

@@ -1,6 +1,6 @@
-'use client'
+"use client";
 
-import { Task } from '@/types/models'
+import { type Task } from "@/types/models";
 import {
   format,
   getDay,
@@ -8,20 +8,20 @@ import {
   startOfWeek,
   addMonths,
   subMonths,
-} from 'date-fns'
+} from "date-fns";
 
-import { enUS } from 'date-fns/locale'
-import { useState } from 'react'
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
+import { enUS } from "date-fns/locale";
+import { useState } from "react";
+import { Calendar, dateFnsLocalizer } from "react-big-calendar";
 
-import 'react-big-calendar/lib/css/react-big-calendar.css'
-import './calendar-view.css'
-import EventCard from './event-card'
-import CustomToolbar from './custom-toolbar'
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./calendar-view.css";
+import EventCard from "./event-card";
+import CustomToolbar from "./custom-toolbar";
 
 const locales = {
-  'en-US': enUS,
-}
+  "en-US": enUS,
+};
 
 const localizer = dateFnsLocalizer({
   format,
@@ -29,17 +29,17 @@ const localizer = dateFnsLocalizer({
   startOfWeek,
   getDay,
   locales,
-})
+});
 
 type CalendarViewProps = {
-  tasks: Task[]
-}
+  tasks: Task[];
+};
 
 export default function CalendarView({ tasks }: CalendarViewProps) {
-  const [view, setView] = useState<'month' | 'week' | 'day'>('month')
+  const [view, setView] = useState<"month" | "week" | "day">("month");
   const [value, setValue] = useState(
-    tasks.length > 0 ? tasks[0].due_date : new Date()
-  )
+    tasks.length > 0 ? tasks[0].due_date : new Date(),
+  );
 
   const events = tasks.map((task) => ({
     id: task.id,
@@ -49,23 +49,23 @@ export default function CalendarView({ tasks }: CalendarViewProps) {
     end: new Date(task.due_date),
     project: task.project,
     assignee: task.assignee,
-  }))
+  }));
 
-  const handleNavigate = (action: 'prev' | 'next' | 'today') => {
-    if (action === 'prev') {
-      setValue(subMonths(value, 1))
-    } else if (action === 'next') {
-      setValue(addMonths(value, 1))
-    } else if (action === 'today') {
-      setValue(new Date())
+  const handleNavigate = (action: "prev" | "next" | "today") => {
+    if (action === "prev") {
+      setValue(subMonths(value, 1));
+    } else if (action === "next") {
+      setValue(addMonths(value, 1));
+    } else if (action === "today") {
+      setValue(new Date());
     }
-  }
+  };
 
-  const handleViewChange = (newView: 'month' | 'week' | 'day') => {
-    setView(newView)
-  }
+  const handleViewChange = (newView: "month" | "week" | "day") => {
+    setView(newView);
+  };
 
-  const max = new Date(new Date().setFullYear(new Date().getFullYear() + 1))
+  const max = new Date(new Date().setFullYear(new Date().getFullYear() + 1));
   return (
     <Calendar
       localizer={localizer}
@@ -79,7 +79,7 @@ export default function CalendarView({ tasks }: CalendarViewProps) {
       className="h-full"
       formats={{
         weekdayFormat: (date, culture, localizer) =>
-          localizer?.format(date, 'EEE', culture) ?? '',
+          localizer?.format(date, "EEE", culture) ?? "",
       }}
       components={{
         eventWrapper: ({ event }) => (
@@ -101,5 +101,5 @@ export default function CalendarView({ tasks }: CalendarViewProps) {
         ),
       }}
     />
-  )
+  );
 }

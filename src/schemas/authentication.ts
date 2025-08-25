@@ -1,85 +1,93 @@
-import { z as zod } from 'zod'
+import { z } from "zod/v4";
+
+/**
+ * Create a session cookie
+ */
+export const sessionCookieSchema = z.object({
+  id: z.uuid(),
+  token: z.string().regex(/^\d\|[A-Za-z0-9]{48}$/),
+});
 
 /**
  * Register a new user
  * @summary Sign Up
  */
-export const signUpBody = zod.object({
-  name: zod.string().min(1, {
-    message: 'Name is required',
+export const signUpBody = z.object({
+  name: z.string().min(1, {
+    message: "Name is required",
   }),
-  email: zod.string().email(),
-  password: zod.string().min(8, {
-    message: 'Password must be at least 8 characters long',
+  email: z.email(),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
   }),
-})
+});
 
 /**
  * Sign in a user
  * @summary Sign In
  */
-export const signInBody = zod.object({
-  email: zod.string().email(),
-  password: zod.string().min(8, {
-    message: 'Password must be at least 8 characters long',
+export const signInBody = z.object({
+  email: z.email(),
+  password: z.string().min(8, {
+    message: "Password must be at least 8 characters long",
   }),
-})
+});
 
 /**
  * Changes the password of the authenticated user
  * @summary Change Password
  */
-export const changePasswordBody = zod
+export const changePasswordBody = z
   .object({
-    current_password: zod.string().min(8, {
-      message: 'Password must be at least 8 characters long',
+    current_password: z.string().min(8, {
+      message: "Password must be at least 8 characters long",
     }),
-    new_password: zod.string().min(8, {
-      message: 'Password must be at least 8 characters long',
+    new_password: z.string().min(8, {
+      message: "Password must be at least 8 characters long",
     }),
-    new_password_confirmation: zod.string().min(8, {
-      message: 'Password must be at least 8 characters long',
+    new_password_confirmation: z.string().min(8, {
+      message: "Password must be at least 8 characters long",
     }),
   })
   .refine(
     (value) => {
-      return value.new_password === value.new_password_confirmation
+      return value.new_password === value.new_password_confirmation;
     },
     {
-      message: 'Passwords does not match.',
-      path: ['new_password_confirmation'],
-    }
-  )
+      message: "Passwords does not match.",
+      path: ["new_password_confirmation"],
+    },
+  );
 
 /**
  * Sends a password reset link to the user's email
  * @summary Send Password Reset Link
  */
-export const sendPasswordResetLinkBody = zod.object({
-  email: zod.string().email(),
-})
+export const sendPasswordResetLinkBody = z.object({
+  email: z.email(),
+});
 
 /**
  * Resets the password of the user
  * @summary Reset Password
  */
-export const resetPasswordBody = zod
+export const resetPasswordBody = z
   .object({
-    token: zod.string(),
-    email: zod.string().email(),
-    password: zod.string().min(8, {
-      message: 'Password must be at least 8 characters long',
+    token: z.string(),
+    email: z.email(),
+    password: z.string().min(8, {
+      message: "Password must be at least 8 characters long",
     }),
-    password_confirmation: zod.string().min(8, {
-      message: 'Password must be at least 8 characters long',
+    password_confirmation: z.string().min(8, {
+      message: "Password must be at least 8 characters long",
     }),
   })
   .refine(
     (value) => {
-      return value.password === value.password_confirmation
+      return value.password === value.password_confirmation;
     },
     {
-      message: 'Passwords does not match.',
-      path: ['password_confirmation'],
-    }
-  )
+      message: "Passwords does not match.",
+      path: ["password_confirmation"],
+    },
+  );

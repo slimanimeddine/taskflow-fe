@@ -1,33 +1,25 @@
-'use client'
+"use client";
 
-import { useVerifyEmail } from '@/hooks/endpoints/authentication'
-import { authHeader } from '@/lib/utils'
-import { useQueryClient } from '@tanstack/react-query'
-import toast from 'react-hot-toast'
-import { useEffect, useState } from 'react'
-import { isAxiosError } from 'axios'
-import LoadingUI from '../loading-ui'
-import { useSession } from '@/hooks/use-session'
+import { authHeader } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useEffect, useState } from "react";
+import LoadingUI from "@/components/loading-ui";
+import { useSession } from "@/hooks/use-session";
+import { useVerifyEmail } from "@/hooks/endpoints/authentication";
+import { useParams } from "next/navigation";
 
 type VerifyEmailProps = {
-  slug: string[]
-  expires: string
-  signature: string
-}
+  expires: string;
+  signature: string;
+};
 
-export default function VerifyEmail({
-  slug,
-  expires,
-  signature,
-}: VerifyEmailProps) {
-  const [message, setMessage] = useState('')
-  const id = slug[0]
-  const hash = slug[1]
+export default function VerifyEmail({ expires, signature }: VerifyEmailProps) {
+  const [message, setMessage] = useState("");
+  const { token } = useSession();
 
-  const queryClient = useQueryClient()
-
-  const { token } = useSession()
-
+  const queryClient = useQueryClient();
+  const { id, hash } = useParams<{ id: string; hash: string }>();
   const { isLoading, isError, isSuccess, error } = useVerifyEmail(
     id,
     hash,
@@ -35,36 +27,36 @@ export default function VerifyEmail({
       expires,
       signature,
     },
-    authHeader(token)
-  )
+    authHeader(token),
+  );
 
   useEffect(() => {
     if (isSuccess) {
-      toast.success('Email verified successfully')
-      setMessage('Email verified successfully')
-      queryClient.invalidateQueries({
-        queryKey: ['/api/v1/users/me'],
-      })
+      toast.success("Email verified successfully");
+      setMessage("Email verified successfully");
+      void queryClient.invalidateQueries({
+        queryKey: ["/api/v1/users/me"],
+      });
     }
-  }, [isSuccess, queryClient])
+  }, [isSuccess, queryClient]);
 
   useEffect(() => {
     if (isError) {
-      if (isAxiosError(error) && error.response) {
-        setMessage(error.response.data.message)
+      if (error.isAxiosError && error.response) {
+        setMessage(error.response.data.message);
       } else {
-        setMessage('An error occurred while verifying your email')
+        setMessage("An error occurred while verifying your email");
       }
     }
-  }, [error, isError])
+  }, [error, isError]);
 
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <LoadingUI />
       </div>
-    )
+    );
   }
 
-  return <>{message}</>
+  return <>{message}</>;
 }

@@ -1,75 +1,81 @@
-'use client'
-import { PhotoIcon } from '@heroicons/react/24/solid'
-import React, { useState } from 'react'
-import toast from 'react-hot-toast'
-import Image from 'next/image'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Controller, useForm } from 'react-hook-form'
-import { CreateProjectBody, useCreateProject } from '@/hooks/endpoints/projects'
-import { createProjectBody } from '@/schemas/projects'
-import { authHeader, onError } from '@/lib/utils'
-import { useQueryClient } from '@tanstack/react-query'
-import { useSession } from '@/hooks/use-session'
-import { useWorkspaceId } from '@/hooks/params/use-workspace-id'
-import { useOpenModal } from '@/hooks/use-open-modal'
+"use client";
+import { PhotoIcon } from "@heroicons/react/24/solid";
+import React, { useState } from "react";
+import toast from "react-hot-toast";
+import Image from "next/image";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import {
+  type CreateProjectBody,
+  useCreateProject,
+} from "@/hooks/endpoints/projects";
+import { createProjectBody } from "@/schemas/projects";
+import { authHeader } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/hooks/use-session";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useOpenModal } from "@/hooks/use-open-modal";
 
 export default function CreateProjectForm() {
   const { handleSubmit, register, formState, reset, control } =
     useForm<CreateProjectBody>({
       resolver: zodResolver(createProjectBody),
-    })
+    });
 
-  const { closeModal } = useOpenModal()
+  const { closeModal } = useOpenModal();
 
-  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  const { token } = useSession()
-  const workspaceId = useWorkspaceId()
-  const createProjectMutation = useCreateProject(authHeader(token))
+  const { token } = useSession();
+  const workspaceId = useWorkspaceId();
+  const { mutate, isPending } = useCreateProject(authHeader(token));
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   function onSubmit(data: CreateProjectBody) {
-    createProjectMutation.mutate(
+    mutate(
       {
         workspaceId,
         data,
       },
       {
-        onError,
-        onSuccess: () => {
-          reset()
-          setImagePreview(null)
-          queryClient.invalidateQueries({
-            queryKey: [`/api/v1/workspaces/${workspaceId}/projects`],
-          })
-          closeModal()
-          toast.success('Project created successfully!')
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
         },
-      }
-    )
+        onSuccess: () => {
+          reset();
+          setImagePreview(null);
+          void queryClient.invalidateQueries({
+            queryKey: [`/api/v1/workspaces/${workspaceId}/projects`],
+          });
+          closeModal();
+          toast.success("Project created successfully!");
+        },
+      },
+    );
   }
 
-  const isDisabled = formState.isSubmitting || createProjectMutation.isPending
+  const isDisabled = formState.isSubmitting || isPending;
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string)
-      }
-      reader.readAsDataURL(file)
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     } else {
-      setImagePreview(null)
+      setImagePreview(null);
     }
-  }
+  };
 
   return (
-    <form
-      onSubmit={handleSubmit(onSubmit)}
-      className="space-y-6"
-    >
+    <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <div>
         <h2 className="text-xl leading-7 font-semibold text-gray-900">
           Create project
@@ -91,7 +97,7 @@ export default function CreateProjectForm() {
               type="text"
               placeholder="Enter project name"
               className="block w-full rounded-md border-0 px-3 py-1.5 text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-indigo-600 focus:ring-inset sm:text-sm sm:leading-6"
-              {...register('name')}
+              {...register("name")}
             />
             {formState.errors.name && (
               <p className="mt-2 text-sm text-red-600">
@@ -135,8 +141,8 @@ export default function CreateProjectForm() {
                   name={name}
                   onBlur={onBlur}
                   onChange={(e) => {
-                    onChange(e.target.files?.[0])
-                    handleImageChange(e)
+                    onChange(e.target.files?.[0]);
+                    handleImageChange(e);
                   }}
                   className="sr-only"
                 />
@@ -176,5 +182,5 @@ export default function CreateProjectForm() {
         </button>
       </div>
     </form>
-  )
+  );
 }

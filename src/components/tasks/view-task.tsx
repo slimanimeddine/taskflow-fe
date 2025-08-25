@@ -1,17 +1,17 @@
-'use client'
+"use client";
 
-import { useShowTask } from '@/hooks/endpoints/tasks'
-import { useTaskId } from '@/hooks/params/use-task-id'
-import { useSession } from '@/hooks/use-session'
+import { useShowTask } from "@/hooks/endpoints/tasks";
+import { useTaskId } from "@/hooks/params/use-task-id";
+import { useSession } from "@/hooks/use-session";
 import {
   authHeader,
   classNames,
   getFirstLetter,
   matchQueryStatus,
   statusLabel,
-} from '@/lib/utils'
-import ErrorUI from '../error-ui'
-import LoadingUI from '../loading-ui'
+} from "@/lib/utils";
+import ErrorUI from "../error-ui";
+import LoadingUI from "../loading-ui";
 
 import {
   UserCircleIcon,
@@ -19,65 +19,65 @@ import {
   CalendarIcon,
   CheckCircleIcon,
   PencilIcon,
-} from '@heroicons/react/24/solid'
-import Link from 'next/link'
-import { Task } from '@/types/models'
-import { useOpenModal } from '@/hooks/use-open-modal'
-import EditTaskModal from './edit-task/modal'
-import { TrashIcon } from '@heroicons/react/24/outline'
-import { useRemoveTask } from '@/hooks/use-remove-task'
-import { useRouter } from 'next/navigation'
+} from "@heroicons/react/24/solid";
+import Link from "next/link";
+import { type Task } from "@/types/models";
+import { useOpenModal } from "@/hooks/use-open-modal";
+import EditTaskModal from "./edit-task/modal";
+import { TrashIcon } from "@heroicons/react/24/outline";
+import { useRemoveTask } from "@/hooks/use-remove-task";
+import { useRouter } from "next/navigation";
 
 const formatDate = (dateString: string | null) => {
-  if (!dateString) return 'N/A'
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-}
+  if (!dateString) return "N/A";
+  return new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
 
-const STATUS_COLORS: Record<Task['status'], string> = {
-  backlog: 'bg-gray-50 text-gray-700 ring-gray-600/20',
-  todo: 'bg-blue-50 text-blue-700 ring-blue-600/20',
-  in_progress: 'bg-yellow-50 text-yellow-700 ring-yellow-600/20',
-  in_review: 'bg-purple-50 text-purple-700 ring-purple-600/20',
-  done: 'bg-green-50 text-green-700 ring-green-600/20',
-}
+const STATUS_COLORS: Record<Task["status"], string> = {
+  backlog: "bg-gray-50 text-gray-700 ring-gray-600/20",
+  todo: "bg-blue-50 text-blue-700 ring-blue-600/20",
+  in_progress: "bg-yellow-50 text-yellow-700 ring-yellow-600/20",
+  in_review: "bg-purple-50 text-purple-700 ring-purple-600/20",
+  done: "bg-green-50 text-green-700 ring-green-600/20",
+};
 
 export default function ViewTask() {
-  const { token } = useSession()
-  const taskId = useTaskId()
-  const { openModal } = useOpenModal()
-  const { removeTask, isDisabled } = useRemoveTask(taskId)
-  const router = useRouter()
+  const { token } = useSession();
+  const taskId = useTaskId();
+  const { openModal } = useOpenModal();
+  const { removeTask, isDisabled } = useRemoveTask(taskId);
+  const router = useRouter();
   function deleteTask() {
-    removeTask()
-    router.back()
+    removeTask();
+    router.back();
   }
 
-  const showTaskQuery = useShowTask(taskId, authHeader(token))
+  const showTaskQuery = useShowTask(taskId, authHeader(token));
   return matchQueryStatus(showTaskQuery, {
     Loading: <LoadingUI />,
     Errored: <ErrorUI message="Something went wrong!" />,
     Empty: <></>,
     Success: ({ data }) => {
-      const task = data.data
+      const task = data.data;
       return (
         <>
           <EditTaskModal taskId={taskId} />
 
-          <div className="bg-gray-100/70 mt-8 rounded-lg">
+          <div className="mt-8 rounded-lg bg-gray-100/70">
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-5xl">
                 {/* Header */}
                 <div className="mb-6 md:flex md:items-center md:justify-between">
                   <div className="min-w-0 flex-1">
-                    <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900 sm:truncate">
+                    <h1 className="text-3xl leading-tight font-bold tracking-tight text-gray-900 sm:truncate">
                       {task.name}
                     </h1>
                     <div className="mt-2 flex items-center text-sm text-gray-500">
-                      In project{' '}
+                      In project{" "}
                       <Link
                         href={`/workspaces/${task.workspace_id}/projects/${task.project_id}`}
                         className="ml-1 font-medium text-indigo-600 hover:text-indigo-500"
@@ -86,7 +86,7 @@ export default function ViewTask() {
                       </Link>
                     </div>
                   </div>
-                  <div className="mt-4 flex gap-x-2 flex-shrink-0 md:ml-4 md:mt-0">
+                  <div className="mt-4 flex flex-shrink-0 gap-x-2 md:mt-0 md:ml-4">
                     <button
                       type="button"
                       disabled={isDisabled}
@@ -94,7 +94,7 @@ export default function ViewTask() {
                       className="inline-flex items-center gap-x-1.5 rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600"
                     >
                       <TrashIcon
-                        className="-ml-0.5 h-5 w-5 text-white-500"
+                        className="text-white-500 -ml-0.5 h-5 w-5"
                         aria-hidden="true"
                       />
                       Delete Task
@@ -102,8 +102,8 @@ export default function ViewTask() {
 
                     <button
                       type="button"
-                      onClick={() => openModal('edit-task', taskId)}
-                      className="inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      onClick={() => openModal("edit-task", taskId)}
+                      className="inline-flex items-center gap-x-1.5 rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
                     >
                       <PencilIcon
                         className="-ml-0.5 h-5 w-5 text-gray-500"
@@ -124,7 +124,7 @@ export default function ViewTask() {
                         Description
                       </h2>
                       <div className="prose prose-sm mt-4 max-w-none text-gray-600">
-                        {task.description || 'No description was provided'}
+                        {task.description ?? "No description was provided"}
                       </div>
                     </div>
                   </div>
@@ -143,8 +143,8 @@ export default function ViewTask() {
                           <dd className="text-sm text-gray-900">
                             <span
                               className={classNames(
-                                'inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset',
-                                STATUS_COLORS[task.status]
+                                "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset",
+                                STATUS_COLORS[task.status],
                               )}
                             >
                               {statusLabel(task.status)}
@@ -222,7 +222,7 @@ export default function ViewTask() {
             </div>
           </div>
         </>
-      )
+      );
     },
-  })
+  });
 }

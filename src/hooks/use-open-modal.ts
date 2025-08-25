@@ -1,39 +1,39 @@
-import { parseAsUuid } from '@/lib/uuid-parser'
-import { useQueryState, parseAsStringLiteral } from 'nuqs'
+import { parseAsUuid } from "@/lib/uuid-parser";
+import { useQueryState, parseAsStringLiteral } from "nuqs";
 
 const modals = [
-  'create-project',
-  'create-task',
-  'create-workspace',
-  'edit-task',
-] as const
+  "create-project",
+  "create-task",
+  "create-workspace",
+  "edit-task",
+] as const;
 
-type Modal = (typeof modals)[number]
+type Modal = (typeof modals)[number];
 
 export function useOpenModal() {
   const [modal, setModal] = useQueryState(
-    'modal',
-    parseAsStringLiteral<Modal>(modals)
-  )
+    "modal",
+    parseAsStringLiteral<Modal>(modals),
+  );
 
-  const [taskId, setTaskId] = useQueryState('task-id', parseAsUuid)
+  const [taskId, setTaskId] = useQueryState("task-id", parseAsUuid);
 
   function openModal(modal: Modal, taskId?: string) {
-    if (modal !== 'edit-task') {
-      setModal(modal)
+    if (modal !== "edit-task") {
+      void setModal(modal);
     } else {
       if (!taskId) {
-        setModal(null)
+        void setModal(null);
       } else {
-        setModal(modal)
-        setTaskId(taskId)
+        void setModal(modal);
+        void setTaskId(taskId);
       }
     }
   }
 
   function closeModal() {
-    setModal(null)
-    setTaskId(null)
+    void setModal(null);
+    void setTaskId(null);
   }
 
   return {
@@ -41,5 +41,5 @@ export function useOpenModal() {
     taskId,
     openModal,
     closeModal,
-  }
+  };
 }

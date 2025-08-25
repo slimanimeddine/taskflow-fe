@@ -1,61 +1,61 @@
-import { MAX_IMAGE_SIZE } from '@/lib/constants'
-import { z as zod } from 'zod'
+import { MAX_IMAGE_SIZE } from "@/lib/constants";
+import { z } from "zod/v4";
 
 /**
  * Create a new workspace for the authenticated user.
  * @summary Create workspace
  */
-export const createWorkspaceBody = zod.object({
-  name: zod
+export const createWorkspaceBody = z.object({
+  name: z
     .string()
-    .min(1, 'Name must be at least 1 character.')
-    .max(50, 'Name must not be greater than 50 characters.'),
-  image: zod
+    .min(1, "Name must be at least 1 character.")
+    .max(50, "Name must not be greater than 50 characters."),
+  image: z
     .instanceof(File)
     .refine(
       (f) => f.size < MAX_IMAGE_SIZE,
-      'Image must not be greater than 5mb.'
+      "Image must not be greater than 5mb.",
     )
     .refine(
       (file) =>
         [
-          'image/jpeg',
-          'image/png',
-          'image/webp',
-          'image/svg',
-          'image/jpg',
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/svg",
+          "image/jpg",
         ].includes(file.type),
-      'Only .jpg, .jpeg, .png, .svg and .webp formats are supported.'
+      "Only .jpg, .jpeg, .png, .svg and .webp formats are supported.",
     )
     .optional(),
-})
+});
 
 /**
  * Edit the specified workspace.
  * @summary Edit workspace
  */
-export const editWorkspaceBody = zod.object({
-  name: zod
+export const editWorkspaceBody = z.object({
+  name: z
     .string()
-    .min(1, 'Name must be at least 1 character.')
-    .max(50, 'Name must not be greater than 50 characters.')
+    .min(1, "Name must be at least 1 character.")
+    .max(50, "Name must not be greater than 50 characters.")
     .optional(),
-  image: zod
+  image: z
     .instanceof(File)
     .refine(
       (f) => f.size < MAX_IMAGE_SIZE,
-      'Image must not be greater than 5mb.'
+      "Image must not be greater than 5mb.",
     )
     .refine(
       (file) =>
         [
-          'image/jpeg',
-          'image/png',
-          'image/webp',
-          'image/svg',
-          'image/jpg',
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+          "image/svg",
+          "image/jpg",
         ].includes(file.type),
-      'Only .jpg, .jpeg, .png, .svg and .webp formats are supported.'
+      "Only .jpg, .jpeg, .png, .svg and .webp formats are supported.",
     )
     .optional(),
-})
+});

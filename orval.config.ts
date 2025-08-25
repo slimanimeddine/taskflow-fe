@@ -1,22 +1,22 @@
-import { defineConfig } from 'orval'
+import { defineConfig } from "orval";
 
 export default defineConfig({
   App: {
     input: {
-      target: 'http://localhost:8000/docs.openapi',
+      target: "http://localhost:8000/docs.openapi",
     },
     output: {
-      namingConvention: 'kebab-case',
-      mode: 'tags-split',
-      target: 'src/__codegen/endpoints',
-      schemas: 'src/__codegen/models',
-      client: 'react-query',
+      namingConvention: "kebab-case",
+      mode: "tags-split",
+      target: "src/__codegen/endpoints",
+      schemas: "src/__codegen/models",
+      client: "react-query",
       indexFiles: false,
       override: {
         header: false,
         mutator: {
-          path: 'src/lib/axios.ts',
-          name: 'customInstance',
+          path: "src/lib/axios.ts",
+          name: "customInstance",
         },
         query: {
           useQuery: true,
@@ -25,17 +25,17 @@ export default defineConfig({
       },
     },
     hooks: {
-      afterAllFilesWrite: 'npx prettier --write',
+      afterAllFilesWrite: "npx prettier --write",
     },
   },
   AppZod: {
     input: {
-      target: 'http://localhost:8000/docs.openapi',
+      target: "http://localhost:8000/docs.openapi",
     },
     output: {
-      namingConvention: 'kebab-case',
-      mode: 'tags-split',
-      client: 'zod',
+      namingConvention: "kebab-case",
+      mode: "tags-split",
+      client: "zod",
       override: {
         header: false,
         zod: {
@@ -49,10 +49,10 @@ export default defineConfig({
         },
       },
       indexFiles: false,
-      target: 'src/__codegen/zod',
+      target: "src/__codegen/zod",
     },
     hooks: {
-      afterAllFilesWrite: 'npx prettier --write',
+      afterAllFilesWrite: "npx prettier --write",
     },
   },
-})
+});

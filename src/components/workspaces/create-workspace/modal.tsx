@@ -1,20 +1,20 @@
-'use client'
+"use client";
 
-import { Dialog, DialogBackdrop, DialogPanel } from '@headlessui/react'
-import { PlusCircleIcon } from '@heroicons/react/20/solid'
-import CreateWorkspaceForm from './form'
-import { useOpenModal } from '@/hooks/use-open-modal'
+import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
+import { PlusCircleIcon } from "@heroicons/react/20/solid";
+import CreateWorkspaceForm from "./form";
+import { useOpenModal } from "@/hooks/use-open-modal";
 
 export default function CreateWorkspaceModal() {
-  const { modal, openModal, closeModal } = useOpenModal()
+  const { modal, openModal, closeModal } = useOpenModal();
   return (
     <>
-      <button onClick={() => openModal('create-workspace')}>
+      <button onClick={() => openModal("create-workspace")}>
         <PlusCircleIcon className="h-5 w-5 flex-none text-gray-400" />
       </button>
 
       <Dialog
-        open={modal === 'create-workspace'}
+        open={modal === "create-workspace"}
         onClose={closeModal}
         className="relative z-50"
       >
@@ -27,7 +27,7 @@ export default function CreateWorkspaceModal() {
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
             <DialogPanel
               transition
-              className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 w-full max-w-lg data-closed:sm:translate-y-0 data-closed:sm:scale-95"
+              className="relative w-full max-w-lg transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-closed:translate-y-4 data-closed:opacity-0 data-enter:duration-300 data-enter:ease-out data-leave:duration-200 data-leave:ease-in sm:my-8 data-closed:sm:translate-y-0 data-closed:sm:scale-95"
             >
               <div className="bg-white px-4 py-4">
                 <CreateWorkspaceForm />
@@ -37,5 +37,5 @@ export default function CreateWorkspaceModal() {
         </div>
       </Dialog>
     </>
-  )
+  );
 }

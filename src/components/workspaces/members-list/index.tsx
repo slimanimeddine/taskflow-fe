@@ -26,7 +26,7 @@ export default function MembersList() {
     return <ErrorUI message={error.message ?? "Something went wrong!"} />;
   }
 
-  if (!data || !data.data || data.data.length === 0) {
+  if (!data?.data || data.data.length === 0) {
     return <></>;
   }
 

@@ -52,9 +52,7 @@ function UserInformation() {
 
 export default function Layout({ children }: Props) {
   const { token } = useSession();
-  const authConfig = authHeader(token);
-  const getAuthenticatedUserQuery = useGetAuthenticatedUser(authConfig);
-  const { mutate, isPending } = useSignOut(authConfig);
+  const { mutate, isPending } = useSignOut(authHeader(token));
 
   const router = useRouter();
 

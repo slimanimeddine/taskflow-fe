@@ -718,6 +718,12 @@ export const prefetchShowTask = async <
  * Bulk edit tasks positions in a workspace.
  * @summary Bulk edit tasks positions
  */
+
+type TaskMin = {
+  id: string;
+  position: string;
+};
+
 export const bulkEditTasksPositions = (
   bulkEditTasksPositionsBody: BodyType<BulkEditTasksPositionsBody>,
   options?: SecondParameter<typeof customInstance>,
@@ -728,18 +734,21 @@ export const bulkEditTasksPositions = (
     data.append(`tasks[${index}][position]`, `${value.position}`);
   });
 
-  const reconstructedTasks: { id: string; position: string }[] = [];
+  const reconstructedTasks: TaskMin[] = [];
   for (const [key, value] of data.entries()) {
     const match = /tasks\[(\d+)\]\[(id|position)\]/.exec(key);
     if (match) {
       const index = parseInt(match[1]);
-      const property = match[2];
+      const property = match[2] as keyof TaskMin;
 
       if (!reconstructedTasks[index]) {
-        reconstructedTasks[index] = {} as { id: string; position: string };
+        reconstructedTasks[index] = {} as TaskMin;
       }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (reconstructedTasks[index] as any)[property] = value;
+      if (typeof value === "string") {
+        reconstructedTasks[index][property] = value;
+      } else {
+        throw new Error("Unexpected File in FormData, expected only strings");
+      }
     }
   }
   return customInstance<BulkEditTasksPositions200>(

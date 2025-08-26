@@ -10,7 +10,7 @@ import {
   useEditProject,
 } from "@/hooks/endpoints/projects";
 import { editProjectBody } from "@/schemas/projects";
-import { authHeader, fileUrl, getDirtyValues } from "@/lib/utils";
+import { authHeader, fileUrl } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/hooks/use-session";
 import { useRouter } from "next/navigation";
@@ -49,12 +49,10 @@ export default function EditProjectForm({
   const router = useRouter();
 
   function onSubmit(data: EditProjectBody) {
-    const dirtyValues = getDirtyValues(formState.dirtyFields, data);
-
     mutate(
       {
         projectId,
-        data: dirtyValues,
+        data,
       },
       {
         onError: (error) => {

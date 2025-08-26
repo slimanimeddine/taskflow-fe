@@ -25,7 +25,10 @@ import {
 } from "@/types/api-responses";
 import { type Project } from "@/types/models";
 import { type z } from "zod/v4";
-import { type createProjectBody, type editProjectBody } from "@/schemas/projects";
+import {
+  type createProjectBody,
+  type editProjectBody,
+} from "@/schemas/projects";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

@@ -10,7 +10,7 @@ import {
   useEditWorkspace,
 } from "@/hooks/endpoints/workspaces";
 import { editWorkspaceBody } from "@/schemas/workspaces";
-import { authHeader, fileUrl, getDirtyValues } from "@/lib/utils";
+import { authHeader, fileUrl } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/hooks/use-session";
 import { useRouter } from "next/navigation";
@@ -47,12 +47,10 @@ export default function EditWorkspaceForm({
   const router = useRouter();
 
   function onSubmit(data: EditWorkspaceBody) {
-    const dirtyValues = getDirtyValues(formState.dirtyFields, data);
-
     mutate(
       {
         workspaceId,
-        data: dirtyValues,
+        data,
       },
       {
         onError: (error) => {

@@ -9,6 +9,7 @@ import ErrorUI from "../error-ui";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
+import type { Route } from "next";
 
 export default function ListProjects() {
   const { token } = useSession();
@@ -39,7 +40,7 @@ export default function ListProjects() {
           return (
             <li key={project.name}>
               <Link
-                href={link}
+                href={link as Route}
                 aria-current={pathname === link ? "page" : undefined}
                 className={classNames(
                   pathname === link

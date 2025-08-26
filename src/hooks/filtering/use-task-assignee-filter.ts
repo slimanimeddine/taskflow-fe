@@ -10,7 +10,7 @@ const assigneeSchema = z.object({
 export function useTaskAssigneeFilter() {
   const [assignee, setAssignee] = useQueryState(
     "assignee",
-    parseAsJson(assigneeSchema.parse),
+    parseAsJson((value) => assigneeSchema.parse(value)),
   );
 
   return {

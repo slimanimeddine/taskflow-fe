@@ -22,7 +22,7 @@ export default function EditProjectWrapper() {
   }
 
   if (isError) {
-    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+    return <ErrorUI message={error.message} />;
   }
 
   if (!data) {

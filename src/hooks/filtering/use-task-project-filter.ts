@@ -10,7 +10,7 @@ const projectSchema = z.object({
 export function useTaskProjectFilter() {
   const [project, setProject] = useQueryState(
     "project",
-    parseAsJson(projectSchema.parse),
+    parseAsJson((value) => projectSchema.parse(value)),
   );
 
   return {

@@ -20,7 +20,7 @@ export default function ProjectStats() {
   }
 
   if (isError) {
-    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+    return <ErrorUI message={error.message} />;
   }
 
   if (!data) {

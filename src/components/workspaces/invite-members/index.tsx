@@ -37,7 +37,7 @@ export default function InviteMembers() {
   }
 
   if (isError) {
-    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+    return <ErrorUI message={error.message} />;
   }
 
   if (!data) {

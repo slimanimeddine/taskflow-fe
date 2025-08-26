@@ -6,7 +6,7 @@ import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import { Ref } from "react";
+import { type Ref } from "react";
 
 type Props = {
   name: string;
@@ -38,7 +38,7 @@ export default function TaskAssigneeSelectInput({
     return <ErrorUI message={error.message} />;
   }
 
-  if (!data || !data.data || data.data.length === 0) {
+  if (!data?.data || data.data.length === 0) {
     return <></>;
   }
 

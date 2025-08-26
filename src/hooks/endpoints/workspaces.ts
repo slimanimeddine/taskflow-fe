@@ -25,7 +25,10 @@ import {
 } from "@/types/api-responses";
 import { type Workspace } from "@/types/models";
 import { type z } from "zod/v4";
-import { type createWorkspaceBody, type editWorkspaceBody } from "@/schemas/workspaces";
+import {
+  type createWorkspaceBody,
+  type editWorkspaceBody,
+} from "@/schemas/workspaces";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

@@ -38,10 +38,10 @@ export default function ProjectFilter() {
   }
 
   if (isError) {
-    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+    return <ErrorUI message={error.message} />;
   }
 
-  if (!data || !data.data || data.data.length === 0) {
+  if (!data?.data || data.data.length === 0) {
     return <></>;
   }
   const projects = data.data.map((project) => ({

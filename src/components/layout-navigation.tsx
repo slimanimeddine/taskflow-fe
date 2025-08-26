@@ -9,12 +9,13 @@ import {
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import type { Route } from "next";
 
 export default function LayoutNavigation() {
   const pathname = usePathname();
   const workspaceId = useWorkspaceId();
 
-  const navigation = [
+  const navigationLinks = [
     { name: "Home", href: "/", icon: HomeIcon },
     {
       name: "My Tasks",
@@ -35,10 +36,10 @@ export default function LayoutNavigation() {
 
   return (
     <ul role="list" className="-mx-2 space-y-1">
-      {navigation.map((item) => (
+      {navigationLinks.map((item) => (
         <li key={item.name}>
           <Link
-            href={item.href}
+            href={item.href as Route}
             aria-current={pathname === item.href ? "page" : undefined}
             className={classNames(
               pathname === item.href

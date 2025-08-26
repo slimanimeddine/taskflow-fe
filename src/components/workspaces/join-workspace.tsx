@@ -4,7 +4,7 @@ import { useCreateMember } from "@/hooks/endpoints/members";
 import { useInviteCode } from "@/hooks/params/use-invite-code";
 import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
@@ -23,7 +23,13 @@ export default function JoinWorkspace() {
         data: { invite_code: inviteCode },
       },
       {
-        onError,
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
+        },
         onSuccess: () => {
           router.push(`/workspaces/${workspaceId}`);
           toast.success("Workspace edited successfully!");

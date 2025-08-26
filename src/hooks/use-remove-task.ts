@@ -1,6 +1,6 @@
 import { useSession } from "@/hooks/use-session";
 import { useDeleteTask } from "@/hooks/endpoints/tasks";
-import { authHeader, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -21,7 +21,15 @@ export function useRemoveTask(taskId: string) {
           taskId,
         },
         {
-          onError,
+          onError: (error) => {
+            if (error.isAxiosError) {
+              toast.error(
+                error.response?.data.message ?? "Something went wrong",
+              );
+            } else {
+              toast.error(error.message);
+            }
+          },
           onSuccess: () => {
             void queryClient.invalidateQueries({
               queryKey: ["/api/v1/tasks"],

@@ -1,6 +1,6 @@
 "use client";
 
-import { authHeader, matchQueryStatus } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { type Task } from "@/types/models";
 import { type ApiResource } from "@/types/api-responses";
 import ErrorUI from "@/components/error-ui";
@@ -32,7 +32,7 @@ export default function KanbanViewWrapper({
   const { sort } = useTaskSort();
   const { dueDate } = useTaskDueDateFilter();
 
-  const listTasksQuery = useListTasks<ApiResource<Task[]>>(
+  const { isPending, isError, data, error } = useListTasks<ApiResource<Task[]>>(
     {
       "filter[workspace]": workspaceId,
       ...(status && { "filter[status]": status }),
@@ -48,14 +48,20 @@ export default function KanbanViewWrapper({
     },
     authHeader(token),
   );
-  return matchQueryStatus(listTasksQuery, {
-    Loading: <LoadingUI />,
-    Errored: <ErrorUI message="Something went wrong!" />,
-    Empty: <></>,
-    Success: ({ data }) => {
-      const tasks = data.data;
 
-      return <KanbanView tasks={tasks} />;
-    },
-  });
+  if (isPending) {
+    return <LoadingUI />;
+  }
+
+  if (isError) {
+    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+  }
+
+  if (!data || !data.data || data.data.length === 0) {
+    return <></>;
+  }
+
+  const tasks = data.data;
+
+  return <KanbanView tasks={tasks} />;
 }

@@ -3,7 +3,7 @@
 import { useDeleteMember } from "@/hooks/endpoints/members";
 import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -26,7 +26,13 @@ export default function DeleteMember({ userId, isSelf }: DeleteMemberProps) {
         userId,
       },
       {
-        onError,
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
+        },
         onSuccess: () => {
           void queryClient.invalidateQueries({
             queryKey: [`/api/v1/workspaces/${workspaceId}/users`],

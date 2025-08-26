@@ -10,7 +10,7 @@ import {
   useEditWorkspace,
 } from "@/hooks/endpoints/workspaces";
 import { editWorkspaceBody } from "@/schemas/workspaces";
-import { authHeader, fileUrl, getDirtyValues, onError } from "@/lib/utils";
+import { authHeader, fileUrl, getDirtyValues } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/hooks/use-session";
 import { useRouter } from "next/navigation";
@@ -55,7 +55,13 @@ export default function EditWorkspaceForm({
         data: dirtyValues,
       },
       {
-        onError,
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
+        },
         onSuccess: () => {
           reset();
           setImagePreview(null);

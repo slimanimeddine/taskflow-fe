@@ -5,7 +5,7 @@ import LoadingUI from "@/components/loading-ui";
 import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
 import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader, getFirstLetter, matchQueryStatus } from "@/lib/utils";
+import { authHeader, getFirstLetter } from "@/lib/utils";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import DeleteMember from "./delete-member";
 import PromoteMember from "./promote-member";
@@ -13,70 +13,69 @@ import PromoteMember from "./promote-member";
 export default function MembersList() {
   const workspaceId = useWorkspaceId();
   const { id, token } = useSession();
-  const listWorkspaceMembersQuery = useListWorkspaceMembers(
+  const { isPending, isError, data, error } = useListWorkspaceMembers(
     workspaceId,
     authHeader(token),
   );
+
+  if (isPending) {
+    return <LoadingUI />;
+  }
+
+  if (isError) {
+    return <ErrorUI message={error.message ?? "Something went wrong!"} />;
+  }
+
+  if (!data || !data.data || data.data.length === 0) {
+    return <></>;
+  }
+
+  const members = data.data;
+
   return (
-    <div>
-      {matchQueryStatus(listWorkspaceMembersQuery, {
-        Loading: <LoadingUI />,
-        Errored: <ErrorUI message="Something went wrong!" />,
-        Empty: <></>,
-        Success: ({ data }) => {
-          const members = data.data;
+    <ul role="list" className="divide-y divide-gray-100">
+      {members.map((member) => (
+        <li
+          key={member.email}
+          className="flex items-center justify-between gap-x-6 py-5"
+        >
+          <div className="flex min-w-0 gap-x-4">
+            <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-500">
+              <span className="text-xs leading-none font-medium text-white">
+                {getFirstLetter(member.name)}
+              </span>
+            </span>
 
-          return (
-            <ul role="list" className="divide-y divide-gray-100">
-              {members.map((member) => (
-                <li
-                  key={member.email}
-                  className="flex items-center justify-between gap-x-6 py-5"
-                >
-                  <div className="flex min-w-0 gap-x-4">
-                    <span className="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gray-500">
-                      <span className="text-xs leading-none font-medium text-white">
-                        {getFirstLetter(member.name)}
-                      </span>
-                    </span>
-
-                    <div className="min-w-0 flex-auto">
-                      <p className="text-sm leading-6 font-semibold text-gray-900">
-                        {member.name}
-                      </p>
-                      <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                        {member.email}
-                      </p>
-                    </div>
-                  </div>
-                  <Menu as="div" className="relative flex-none">
-                    <MenuButton className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
-                      <span className="sr-only">Open options</span>
-                      <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
-                        Actions
-                      </span>
-                    </MenuButton>
-                    <MenuItems
-                      transition
-                      className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
-                    >
-                      <MenuItem>
-                        <PromoteMember userId={member.id} />
-                      </MenuItem>
-                      <MenuItem>
-                        <DeleteMember
-                          userId={member.id}
-                          isSelf={member.id === id}
-                        />
-                      </MenuItem>
-                    </MenuItems>
-                  </Menu>
-                </li>
-              ))}
-            </ul>
-          );
-        },
-      })}
-    </div>
+            <div className="min-w-0 flex-auto">
+              <p className="text-sm leading-6 font-semibold text-gray-900">
+                {member.name}
+              </p>
+              <p className="mt-1 truncate text-xs leading-5 text-gray-500">
+                {member.email}
+              </p>
+            </div>
+          </div>
+          <Menu as="div" className="relative flex-none">
+            <MenuButton className="-m-2.5 block p-2.5 text-gray-500 hover:text-gray-900">
+              <span className="sr-only">Open options</span>
+              <span className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-gray-300 ring-inset hover:bg-gray-50">
+                Actions
+              </span>
+            </MenuButton>
+            <MenuItems
+              transition
+              className="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
+            >
+              <MenuItem>
+                <PromoteMember userId={member.id} />
+              </MenuItem>
+              <MenuItem>
+                <DeleteMember userId={member.id} isSelf={member.id === id} />
+              </MenuItem>
+            </MenuItems>
+          </Menu>
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -2,7 +2,7 @@
 import { useShowWorkspace } from "@/hooks/endpoints/workspaces";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
-import { authHeader, matchQueryStatus } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import LoadingUI from "../../loading-ui";
 import ErrorUI from "../../error-ui";
 import TasksCard from "./tasks-card";
@@ -14,41 +14,48 @@ export default function ViewWorkspace() {
   const { token } = useSession();
   const workspaceId = useWorkspaceId();
 
-  const showWorkspaceQuery = useShowWorkspace(workspaceId, authHeader(token));
+  const { isPending, isError, data, error } = useShowWorkspace(
+    workspaceId,
+    authHeader(token),
+  );
 
-  return matchQueryStatus(showWorkspaceQuery, {
-    Loading: <LoadingUI />,
-    Errored: <ErrorUI message="Something went wrong!" />,
-    Empty: <></>,
-    Success: ({ data }) => {
-      const workspace = data.data;
+  if (isPending) {
+    return <LoadingUI />;
+  }
 
-      return (
-        <div className="min-h-screen bg-white">
-          <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <header className="mb-8">
-              <h1 className="text-3xl leading-tight font-bold tracking-tight text-gray-900">
-                Welcome to{" "}
-                <span className="text-indigo-600">{workspace.name}</span>
-              </h1>
-              <p className="mt-2 text-lg text-gray-600">
-                Here&apos;s a snapshot of your workspace activity.
-              </p>
-            </header>
+  if (isError) {
+    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+  }
 
-            {/* Stats Section */}
-            <WorkspaceStats />
-            <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
-              <TasksCard />
+  if (!data) {
+    return <></>;
+  }
 
-              <div className="space-y-12">
-                <ProjectsSection />
-                <MembersSection />
-              </div>
-            </div>
+  const workspace = data.data;
+
+  return (
+    <div className="min-h-screen bg-white">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <header className="mb-8">
+          <h1 className="text-3xl leading-tight font-bold tracking-tight text-gray-900">
+            Welcome to <span className="text-indigo-600">{workspace.name}</span>
+          </h1>
+          <p className="mt-2 text-lg text-gray-600">
+            Here&apos;s a snapshot of your workspace activity.
+          </p>
+        </header>
+
+        {/* Stats Section */}
+        <WorkspaceStats />
+        <div className="mt-12 grid grid-cols-1 gap-12 lg:grid-cols-3">
+          <TasksCard />
+
+          <div className="space-y-12">
+            <ProjectsSection />
+            <MembersSection />
           </div>
         </div>
-      );
-    },
-  });
+      </div>
+    </div>
+  );
 }

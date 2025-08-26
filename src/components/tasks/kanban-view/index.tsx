@@ -4,11 +4,12 @@ import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
 import { type Task } from "@/types/models";
 import { useEditTask } from "@/hooks/endpoints/tasks";
 import { useSession } from "@/hooks/use-session";
-import { authHeader, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import AddTask from "./add-task";
 import KanbanCard from "./kanban-card";
+import toast from "react-hot-toast";
 
 type KanbanViewProps = {
   tasks: Task[];
@@ -74,7 +75,13 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
       },
 
       {
-        onError,
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
+        },
         onSuccess: () => {
           void queryClient.invalidateQueries({
             queryKey: ["/api/v1/tasks"],

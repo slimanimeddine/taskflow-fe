@@ -10,7 +10,7 @@ import {
   useCreateWorkspace,
 } from "@/hooks/endpoints/workspaces";
 import { createWorkspaceBody } from "@/schemas/workspaces";
-import { authHeader, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/hooks/use-session";
 import { usePathname, useRouter } from "next/navigation";
@@ -41,7 +41,13 @@ export default function CreateWorkspaceForm() {
         data,
       },
       {
-        onError,
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
+        },
         onSuccess: () => {
           reset();
           setImagePreview(null);

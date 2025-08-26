@@ -5,12 +5,7 @@ import LoadingUI from "@/components/loading-ui";
 import { useListTasks } from "@/hooks/endpoints/tasks";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
-import {
-  authHeader,
-  classNames,
-  matchQueryStatus,
-  statusLabel,
-} from "@/lib/utils";
+import { authHeader, classNames, statusLabel } from "@/lib/utils";
 import { type PaginatedApiResponse } from "@/types/api-responses";
 import { type Task } from "@/types/models";
 import { ChevronRightIcon, ClockIcon } from "@heroicons/react/24/solid";
@@ -28,7 +23,9 @@ export default function TasksCard() {
   const { token, id } = useSession();
   const workspaceId = useWorkspaceId();
 
-  const listTasksQuery = useListTasks<PaginatedApiResponse<Task>>(
+  const { isPending, isError, data, error } = useListTasks<
+    PaginatedApiResponse<Task>
+  >(
     {
       "filter[workspace]": workspaceId,
       "filter[assignee]": id,
@@ -37,82 +34,88 @@ export default function TasksCard() {
     },
     authHeader(token),
   );
-  return matchQueryStatus(listTasksQuery, {
-    Loading: <LoadingUI />,
-    Errored: <ErrorUI message="Something went wrong!" />,
-    Empty: <></>,
-    Success: ({ data }) => {
-      const tasks = data.data.slice(0, 5);
-      return (
-        <section className="rounded-lg bg-gray-50 p-6 shadow lg:col-span-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-xl font-bold text-gray-900">Assigned to You</h2>
-            <Link
-              href={`/workspaces/${workspaceId}/tasks`}
-              className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
-            >
-              Show all <span aria-hidden="true">&rarr;</span>
-            </Link>
-          </div>
-          <div className="mt-4 overflow-hidden bg-white shadow sm:rounded-md">
-            <ul role="list" className="divide-y divide-gray-200">
-              {tasks.slice(0, 5).map((task) => (
-                <li key={task.id}>
-                  <Link
-                    href={`/workspaces/${workspaceId}/tasks/${task.id}`}
-                    className="block hover:bg-gray-50"
-                  >
-                    <div className="flex items-center px-4 py-4 sm:px-6">
-                      <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
-                        <div className="truncate">
-                          <div className="flex text-sm">
-                            <p className="truncate font-medium text-indigo-600">
-                              {task.name}
-                            </p>
-                            <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
-                              in {task.project.name}
-                            </p>
-                          </div>
-                          <div className="mt-2 flex">
-                            <div className="flex items-center text-sm text-gray-500">
-                              <ClockIcon
-                                className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
-                                aria-hidden="true"
-                              />
-                              <p>
-                                Due on{" "}
-                                <time dateTime={task.due_date}>
-                                  {new Date(task.due_date).toLocaleDateString()}
-                                </time>
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
-                          <span
-                            className={classNames(
-                              "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-                              STATUS_COLORS[task.status],
-                            )}
-                          >
-                            {statusLabel(task.status)}
-                          </span>
-                        </div>
+
+  if (isPending) {
+    return <LoadingUI />;
+  }
+
+  if (isError) {
+    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+  }
+
+  if (!data || !data.data || data.data.length === 0) {
+    return <></>;
+  }
+
+  const tasks = data.data.slice(0, 5);
+  return (
+    <section className="rounded-lg bg-gray-50 p-6 shadow lg:col-span-2">
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-gray-900">Assigned to You</h2>
+        <Link
+          href={`/workspaces/${workspaceId}/tasks`}
+          className="text-sm font-semibold text-indigo-600 hover:text-indigo-500"
+        >
+          Show all <span aria-hidden="true">&rarr;</span>
+        </Link>
+      </div>
+      <div className="mt-4 overflow-hidden bg-white shadow sm:rounded-md">
+        <ul role="list" className="divide-y divide-gray-200">
+          {tasks.slice(0, 5).map((task) => (
+            <li key={task.id}>
+              <Link
+                href={`/workspaces/${workspaceId}/tasks/${task.id}`}
+                className="block hover:bg-gray-50"
+              >
+                <div className="flex items-center px-4 py-4 sm:px-6">
+                  <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
+                    <div className="truncate">
+                      <div className="flex text-sm">
+                        <p className="truncate font-medium text-indigo-600">
+                          {task.name}
+                        </p>
+                        <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
+                          in {task.project.name}
+                        </p>
                       </div>
-                      <div className="ml-5 flex-shrink-0">
-                        <ChevronRightIcon
-                          className="h-5 w-5 text-gray-400"
-                          aria-hidden="true"
-                        />
+                      <div className="mt-2 flex">
+                        <div className="flex items-center text-sm text-gray-500">
+                          <ClockIcon
+                            className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                            aria-hidden="true"
+                          />
+                          <p>
+                            Due on{" "}
+                            <time dateTime={task.due_date}>
+                              {new Date(task.due_date).toLocaleDateString()}
+                            </time>
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </section>
-      );
-    },
-  });
+                    <div className="mt-4 flex-shrink-0 sm:mt-0 sm:ml-5">
+                      <span
+                        className={classNames(
+                          "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+                          STATUS_COLORS[task.status],
+                        )}
+                      >
+                        {statusLabel(task.status)}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="ml-5 flex-shrink-0">
+                    <ChevronRightIcon
+                      className="h-5 w-5 text-gray-400"
+                      aria-hidden="true"
+                    />
+                  </div>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
 }

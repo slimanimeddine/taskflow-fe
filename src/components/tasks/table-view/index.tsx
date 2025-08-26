@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  authHeader,
-  classNames,
-  matchQueryStatus,
-  statusLabel,
-} from "@/lib/utils";
+import { authHeader, classNames, statusLabel } from "@/lib/utils";
 import Pagination from "./pagination";
 import RowDropdown from "../row-dropdown";
 import FieldSort from "./sorting/field-sort";
@@ -49,7 +44,9 @@ export default function TasksTableView({
   const { dueDate } = useTaskDueDateFilter();
   const { page } = useTasksPage();
 
-  const listTasksQuery = useListTasks<PaginatedApiResponse<Task>>(
+  const { isPending, isError, data, error } = useListTasks<
+    PaginatedApiResponse<Task>
+  >(
     {
       "filter[workspace]": workspaceId,
       ...(status && { "filter[status]": status }),
@@ -66,122 +63,122 @@ export default function TasksTableView({
     },
     authHeader(token),
   );
-  return matchQueryStatus(listTasksQuery, {
-    Loading: <LoadingUI />,
-    Errored: <ErrorUI message="Something went wrong!" />,
-    Empty: <></>,
-    Success: ({ data }) => {
-      const tasks = data.data;
-      const links = data.links;
-      const meta = data.meta;
 
-      return (
-        <div className="flow-root min-h-screen">
-          <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead>
-                  <tr>
-                    <th
-                      scope="col"
-                      className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                    >
-                      <span className="inline-flex items-center gap-x-1">
-                        Name
-                        <FieldSort field="name" />
-                      </span>
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      <span className="inline-flex items-center gap-x-1">
-                        Project
-                        <FieldSort field="project" />
-                      </span>
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      <span className="inline-flex items-center gap-x-1">
-                        Assignee
-                        <FieldSort field="assignee" />
-                      </span>
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      <span className="inline-flex items-center gap-x-1">
-                        Due Date
-                        <FieldSort field="due_date" />
-                      </span>
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                      <span className="inline-flex items-center gap-x-1">
-                        Status
-                        <FieldSort field="status" />
-                      </span>
-                    </th>
+  if (isPending) {
+    return <LoadingUI />;
+  }
 
-                    <th
-                      scope="col"
-                      className="relative py-3.5 pr-4 pl-3 sm:pr-0"
+  if (isError) {
+    return <ErrorUI message={error?.message ?? "Something went wrong!"} />;
+  }
+
+  if (!data || !data.data || data.data.length === 0) {
+    return <></>;
+  }
+
+  const tasks = data.data;
+  const links = data.links;
+  const meta = data.meta;
+
+  return (
+    <div className="flow-root min-h-screen">
+      <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+        <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+          <table className="min-w-full divide-y divide-gray-300">
+            <thead>
+              <tr>
+                <th
+                  scope="col"
+                  className="py-3.5 pr-3 pl-4 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                >
+                  <span className="inline-flex items-center gap-x-1">
+                    Name
+                    <FieldSort field="name" />
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  <span className="inline-flex items-center gap-x-1">
+                    Project
+                    <FieldSort field="project" />
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  <span className="inline-flex items-center gap-x-1">
+                    Assignee
+                    <FieldSort field="assignee" />
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  <span className="inline-flex items-center gap-x-1">
+                    Due Date
+                    <FieldSort field="due_date" />
+                  </span>
+                </th>
+                <th
+                  scope="col"
+                  className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                >
+                  <span className="inline-flex items-center gap-x-1">
+                    Status
+                    <FieldSort field="status" />
+                  </span>
+                </th>
+
+                <th scope="col" className="relative py-3.5 pr-4 pl-3 sm:pr-0">
+                  <span className="sr-only">Edit</span>
+                </th>
+              </tr>
+            </thead>
+
+            <tbody className="divide-y divide-gray-200">
+              {tasks.map((task) => (
+                <tr key={task.id} className="bg-white">
+                  <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">
+                    {task.name}
+                  </td>
+                  <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+                    {task.project.name}
+                  </td>
+                  <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+                    {task.assignee.name}
+                  </td>
+                  <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+                    {task.due_date
+                      ? new Date(task.due_date).toDateString()
+                      : "No due date"}
+                  </td>
+                  <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
+                    <span
+                      className={classNames(
+                        "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset",
+                        STATUS_COLORS[task.status],
+                      )}
                     >
-                      <span className="sr-only">Edit</span>
-                    </th>
-                  </tr>
-                </thead>
+                      {statusLabel(task.status)}
+                    </span>
+                  </td>
 
-                <tbody className="divide-y divide-gray-200">
-                  {tasks.map((task) => (
-                    <tr key={task.id} className="bg-white">
-                      <td className="py-4 pr-3 pl-4 text-sm font-medium whitespace-nowrap text-gray-900 sm:pl-0">
-                        {task.name}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {task.project.name}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {task.assignee.name}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        {task.due_date
-                          ? new Date(task.due_date).toDateString()
-                          : "No due date"}
-                      </td>
-                      <td className="px-3 py-4 text-sm whitespace-nowrap text-gray-500">
-                        <span
-                          className={classNames(
-                            "inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ring-1 ring-inset",
-                            STATUS_COLORS[task.status],
-                          )}
-                        >
-                          {statusLabel(task.status)}
-                        </span>
-                      </td>
+                  <td className="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
+                    <RowDropdown taskId={task.id} projectId={task.project_id} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-                      <td className="relative py-4 pr-4 pl-3 text-right text-sm font-medium whitespace-nowrap sm:pr-0">
-                        <RowDropdown
-                          taskId={task.id}
-                          projectId={task.project_id}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-
-              {/* pagination */}
-              {meta.total > 10 && <Pagination links={links} meta={meta} />}
-            </div>
-          </div>
+          {/* pagination */}
+          {meta.total > 10 && <Pagination links={links} meta={meta} />}
         </div>
-      );
-    },
-  });
+      </div>
+    </div>
+  );
 }

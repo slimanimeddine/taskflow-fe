@@ -2,7 +2,7 @@
 import { useDeleteWorkspace } from "@/hooks/endpoints/workspaces";
 import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
@@ -24,7 +24,15 @@ export default function DeleteWorkspace() {
           workspaceId,
         },
         {
-          onError,
+          onError: (error) => {
+            if (error.isAxiosError) {
+              toast.error(
+                error.response?.data.message ?? "Something went wrong",
+              );
+            } else {
+              toast.error(error.message);
+            }
+          },
           onSuccess: () => {
             toast.success("Workspace deleted successfully");
             router.push("/");

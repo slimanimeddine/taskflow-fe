@@ -7,7 +7,7 @@ import UserDropdown from "@/components/user-dropdown";
 import { useSignOut } from "@/hooks/endpoints/authentication";
 import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
 import { useSession } from "@/hooks/use-session";
-import { authHeader, matchQueryStatus, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import {
   Disclosure,
   DisclosureButton,
@@ -22,6 +22,34 @@ type Props = Readonly<{
   children: React.ReactNode;
 }>;
 
+function UserInformation() {
+  const { token } = useSession();
+  const { isPending, isError, data, error } = useGetAuthenticatedUser(
+    authHeader(token),
+  );
+
+  if (isPending) {
+    return <LoadingUI />;
+  }
+
+  if (isError) {
+    return <ErrorUI message={error.message} />;
+  }
+
+  if (!data) {
+    return <></>;
+  }
+
+  return (
+    <div>
+      <div className="text-base font-medium text-gray-800">
+        {data.data.name}
+      </div>
+      <div className="text-sm font-medium text-gray-500">{data.data.email}</div>
+    </div>
+  );
+}
+
 export default function Layout({ children }: Props) {
   const { token } = useSession();
   const authConfig = authHeader(token);
@@ -32,7 +60,13 @@ export default function Layout({ children }: Props) {
 
   function onSignOut() {
     mutate(undefined, {
-      onError,
+      onError: (error) => {
+        if (error.isAxiosError) {
+          toast.error(error.response?.data.message ?? "Something went wrong");
+        } else {
+          toast.error(error.message);
+        }
+      },
       onSuccess: () => {
         void deleteSession();
         toast.success("You have been signed out");
@@ -80,21 +114,7 @@ export default function Layout({ children }: Props) {
         <DisclosurePanel className="sm:hidden">
           <div className="border-t border-gray-200 pt-4 pb-3">
             <div className="flex items-center px-4">
-              {matchQueryStatus(getAuthenticatedUserQuery, {
-                Loading: <LoadingUI />,
-                Errored: <ErrorUI message="Something went wrong!" />,
-                Empty: <></>,
-                Success: ({ data }) => (
-                  <div>
-                    <div className="text-base font-medium text-gray-800">
-                      {data.data.name}
-                    </div>
-                    <div className="text-sm font-medium text-gray-500">
-                      {data.data.email}
-                    </div>
-                  </div>
-                ),
-              })}
+              <UserInformation />
             </div>
             <div className="mt-3 space-y-1">
               <DisclosureButton

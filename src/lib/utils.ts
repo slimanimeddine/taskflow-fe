@@ -1,22 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { type QueryResult } from "@/types/misc";
-import { type UseQueryResult } from "@tanstack/react-query";
-import axios, { isAxiosError } from "axios";
-import { notFound } from "next/navigation";
-import { type JSX } from "react";
-import toast from "react-hot-toast";
 import type z from "zod/v4";
 
 export function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
-}
-
-export function onError(error: Error) {
-  if (axios.isAxiosError(error) && error.response) {
-    toast.error(`${error.response.data.message ?? "Something went wrong"}`);
-  } else {
-    toast.error(`${error.message}`);
-  }
 }
 
 export function fileUrl(url: string | null | undefined) {
@@ -33,68 +19,6 @@ export function authHeader(token: string) {
       },
     },
   };
-}
-
-export function matchQueryStatus<T extends QueryResult<unknown>>(
-  query: UseQueryResult<T>,
-  options: {
-    Loading: JSX.Element;
-    Errored: JSX.Element | ((error: unknown) => JSX.Element);
-    Empty: JSX.Element;
-    Success: (
-      data: UseQueryResult<T> & {
-        data: NonNullable<UseQueryResult<T>["data"]>;
-      },
-    ) => JSX.Element;
-  },
-): JSX.Element;
-export function matchQueryStatus<T extends QueryResult<unknown>>(
-  query: UseQueryResult<T>,
-  options: {
-    Loading: JSX.Element;
-    Errored: JSX.Element | ((error: unknown) => JSX.Element);
-    Success: (data: UseQueryResult<T>) => JSX.Element;
-  },
-): JSX.Element;
-export function matchQueryStatus<T extends QueryResult<unknown>>(
-  query: UseQueryResult<T>,
-  {
-    Loading,
-    Errored,
-    Empty,
-    Success,
-  }: {
-    Loading: JSX.Element;
-    Errored: JSX.Element | ((error: unknown) => JSX.Element);
-    Empty?: JSX.Element;
-    Success: (data: UseQueryResult<T>) => JSX.Element;
-  },
-): JSX.Element {
-  if (query.isLoading) {
-    return Loading;
-  }
-
-  if (query.isError) {
-    if (isAxiosError(query.error) && query.error.response?.status === 404) {
-      notFound();
-    }
-
-    if (typeof Errored === "function") {
-      return Errored(query.error);
-    }
-    return Errored;
-  }
-
-  const isEmpty =
-    query.data === undefined ||
-    query.data === null ||
-    (Array.isArray(query.data?.data) && query.data?.data.length === 0);
-
-  if (isEmpty && Empty) {
-    return Empty;
-  }
-
-  return Success(query);
 }
 
 export type DirtyFieldsType =

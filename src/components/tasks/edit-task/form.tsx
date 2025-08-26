@@ -1,18 +1,16 @@
 "use client";
+
 import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { authHeader, matchQueryStatus, onError } from "@/lib/utils";
+import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { type EditTaskBody, useEditTask } from "@/hooks/endpoints/tasks";
 import { editTaskBody } from "@/schemas/tasks";
-import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
-import ErrorUI from "@/components/error-ui";
-import LoadingUI from "@/components/loading-ui";
-import { useListWorkspaceProjects } from "@/hooks/endpoints/projects";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import TaskAssigneeSelectInput from "./task-assignee-select-input";
+import ProjectSelectInput from "./project-select-input";
 
 type DefaultValues = {
   name?: string;
@@ -32,8 +30,6 @@ export default function EditTaskForm({
   taskId,
   defaultValues,
 }: EditTaskFormProps) {
-  const workspaceId = useWorkspaceId();
-
   const { handleSubmit, register, formState, reset } = useForm<EditTaskBody>({
     resolver: zodResolver(editTaskBody),
     defaultValues,
@@ -42,19 +38,8 @@ export default function EditTaskForm({
   const { closeModal } = useOpenModal();
 
   const { token } = useSession();
-  const authConfig = authHeader(token);
 
-  const listWorkspaceMembersQuery = useListWorkspaceMembers(
-    workspaceId,
-    authConfig,
-  );
-
-  const listWorkspaceProjectsQuery = useListWorkspaceProjects(
-    workspaceId,
-    authConfig,
-  );
-
-  const { mutate, isPending } = useEditTask(authConfig);
+  const { mutate, isPending } = useEditTask(authHeader(token));
 
   const queryClient = useQueryClient();
 
@@ -65,7 +50,13 @@ export default function EditTaskForm({
         data,
       },
       {
-        onError,
+        onError: (error) => {
+          if (error.isAxiosError) {
+            toast.error(error.response?.data.message ?? "Something went wrong");
+          } else {
+            toast.error(error.message);
+          }
+        },
         onSuccess: () => {
           reset();
           void queryClient.invalidateQueries({
@@ -196,28 +187,7 @@ export default function EditTaskForm({
             Task assignee
           </label>
           <div className="mt-2">
-            {matchQueryStatus(listWorkspaceMembersQuery, {
-              Loading: <LoadingUI />,
-              Errored: <ErrorUI message="Something went wrong!" />,
-              Empty: <></>,
-              Success: ({ data }) => {
-                const members = data.data;
-
-                return (
-                  <select
-                    id="assignee"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    {...register("assignee_id")}
-                  >
-                    {members.map((member) => (
-                      <option key={member.id} value={member.id}>
-                        {member.name}
-                      </option>
-                    ))}
-                  </select>
-                );
-              },
-            })}
+            <TaskAssigneeSelectInput {...register("assignee_id")} />
 
             {formState.errors.assignee_id && (
               <p className="mt-2 text-sm text-red-600">
@@ -235,28 +205,7 @@ export default function EditTaskForm({
             Task project
           </label>
           <div className="mt-2">
-            {matchQueryStatus(listWorkspaceProjectsQuery, {
-              Loading: <LoadingUI />,
-              Errored: <ErrorUI message="Something went wrong!" />,
-              Empty: <></>,
-              Success: ({ data }) => {
-                const projects = data.data;
-
-                return (
-                  <select
-                    id="project"
-                    className="mt-2 block w-full rounded-md border-0 py-1.5 pr-10 pl-3 text-gray-900 ring-1 ring-gray-300 ring-inset focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                    {...register("project_id")}
-                  >
-                    {projects.map((project) => (
-                      <option key={project.id} value={project.id}>
-                        {project.name}
-                      </option>
-                    ))}
-                  </select>
-                );
-              },
-            })}
+            <ProjectSelectInput {...register("project_id")} />
 
             {formState.errors.project_id && (
               <p className="mt-2 text-sm text-red-600">

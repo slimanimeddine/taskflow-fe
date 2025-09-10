@@ -4,7 +4,7 @@ import { verifyAuth } from "@/lib/dal";
 import seo from "@/lib/seo";
 import { parseParams } from "@/lib/utils";
 import { type Metadata } from "next";
-import z from "zod";
+import z from "zod/v4";
 
 export const metadata: Metadata = seo(
   "Verify Email",

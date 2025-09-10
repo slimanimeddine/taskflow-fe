@@ -3,7 +3,7 @@ import Logo from "@/components/logo";
 import ResetPasswordForm from "@/components/auth/reset-password-form";
 import { parseParams } from "@/lib/utils";
 import Link from "next/link";
-import z from "zod";
+import z from "zod/v4";
 
 const searchParamsSchema = z.object({
   token: z

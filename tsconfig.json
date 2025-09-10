@@ -29,7 +29,8 @@
     ".next/types/**/*.ts",
     "eslint.config.js",
     "postcss.config.mjs",
-    "prettier.config.js"
+    "prettier.config.js",
+    "next.config.js"
   ],
   "exclude": ["node_modules"]
 }

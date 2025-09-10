@@ -1,5 +1,5 @@
 import { createParser } from "nuqs";
-import { z } from "zod";
+import { z } from "zod/v4";
 
 const uuidSchema = z.string().uuid();
 

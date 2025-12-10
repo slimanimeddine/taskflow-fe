@@ -25,13 +25,14 @@ export default function InvalidParams({
             {" "}
             {/* Ensures flex child can shrink properly */}
             <h2 className="text-base font-semibold text-yellow-800">{title}</h2>
-            <ul className="mt-1 max-w-full list-disc space-y-1 pl-5 text-sm break-words text-yellow-700">
-              {errors.map((err, idx) => (
-                <li key={idx}>{err}</li>
+            <ul className="mt-1 max-w-full list-disc space-y-1 pl-5 text-sm wrap-break-word text-yellow-700">
+              {errors.map((err) => (
+                <li key={err}>{err}</li>
               ))}
             </ul>
             {showBackButton && (
               <button
+                type="button"
                 onClick={() => router.back()}
                 className="mt-4 inline-flex items-center text-sm text-yellow-800 underline transition hover:text-yellow-900"
               >

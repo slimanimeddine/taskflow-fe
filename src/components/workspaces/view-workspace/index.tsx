@@ -3,12 +3,12 @@ import { useShowWorkspace } from "@/hooks/endpoints/workspaces";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import LoadingUI from "../../loading-ui";
 import ErrorUI from "../../error-ui";
-import TasksCard from "./tasks-card";
-import ProjectsSection from "./projects-section";
+import LoadingUI from "../../loading-ui";
 import MembersSection from "./members-section";
+import ProjectsSection from "./projects-section";
 import WorkspaceStats from "./stats";
+import TasksCard from "./tasks-card";
 
 export default function ViewWorkspace() {
   const { token } = useSession();
@@ -28,7 +28,7 @@ export default function ViewWorkspace() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   const workspace = data.data;

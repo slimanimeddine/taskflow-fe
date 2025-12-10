@@ -1,17 +1,17 @@
 "use client";
-import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { type CreateTaskBody, useCreateTask } from "@/hooks/endpoints/tasks";
-import { createTaskBody } from "@/schemas/tasks";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import { useSession } from "@/hooks/use-session";
 import { useSetTaskStatusOnCreate } from "@/hooks/use-set-task-status-on-create";
-import TaskAssigneeSelectInput from "./task-assignee-select-input";
+import { authHeader } from "@/lib/utils";
+import { createTaskBody } from "@/schemas/tasks";
 import ProjectSelectInput from "./project-select-input";
+import TaskAssigneeSelectInput from "./task-assignee-select-input";
 
 type CreateTaskFormProps = {
   defaultAssigneeId?: string;

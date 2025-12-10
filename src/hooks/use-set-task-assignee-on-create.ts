@@ -1,5 +1,5 @@
-import { parseAsUuid } from "@/lib/uuid-parser";
 import { useQueryState } from "nuqs";
+import { parseAsUuid } from "@/lib/uuid-parser";
 
 export function useSetTaskAssigneeOnCreate() {
   const [taskAssignee, setTaskAssignee] = useQueryState(

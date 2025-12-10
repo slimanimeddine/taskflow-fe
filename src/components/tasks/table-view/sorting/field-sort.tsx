@@ -1,10 +1,10 @@
 "use client";
-import { useTaskSort } from "@/hooks/sorting/use-task-sort";
 import {
   ChevronDownIcon,
-  ChevronUpIcon,
   ChevronUpDownIcon,
+  ChevronUpIcon,
 } from "@heroicons/react/20/solid";
+import { useTaskSort } from "@/hooks/sorting/use-task-sort";
 
 type FieldSortProps = {
   field: "name" | "due_date" | "status" | "project" | "assignee";
@@ -38,7 +38,8 @@ export default function FieldSort({ field }: FieldSortProps) {
   };
 
   return (
-    <span
+    <button
+      type="button"
       className="flex-none cursor-pointer rounded bg-gray-100 p-0.5 hover:bg-gray-200"
       onClick={handleClick}
     >
@@ -58,6 +59,6 @@ export default function FieldSort({ field }: FieldSortProps) {
           className="h-4 w-4 text-gray-400 transition-transform duration-200"
         />
       )}
-    </span>
+    </button>
   );
 }

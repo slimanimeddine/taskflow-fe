@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -13,22 +12,20 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { customInstance } from "@/lib/axios";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { z } from "zod/v4";
 import type { BodyType, ErrorType } from "@/lib/axios";
-import {
-  type ApiResource,
-  type NotFoundApiResponse,
-  type SuccessApiResponse,
-  type SuccessNoDataApiResponse,
-  type UnauthenticatedApiResponse,
-  type UnauthorizedApiResponse,
+import { customInstance } from "@/lib/axios";
+import type { createProjectBody, editProjectBody } from "@/schemas/projects";
+import type {
+  ApiResource,
+  NotFoundApiResponse,
+  SuccessApiResponse,
+  SuccessNoDataApiResponse,
+  UnauthenticatedApiResponse,
+  UnauthorizedApiResponse,
 } from "@/types/api-responses";
-import { type Project } from "@/types/models";
-import { type z } from "zod/v4";
-import {
-  type createProjectBody,
-  type editProjectBody,
-} from "@/schemas/projects";
+import type { Project } from "@/types/models";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

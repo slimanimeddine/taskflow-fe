@@ -1,5 +1,4 @@
 "use client";
-import Logo from "@/components/logo";
 import {
   Dialog,
   DialogBackdrop,
@@ -9,12 +8,13 @@ import {
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useState } from "react";
-import WorkspaceSwitcherWrapper from "@/components/workspaces/workspace-switcher/wrapper";
-import CreateWorkspaceModal from "@/components/workspaces/create-workspace/modal";
-import UserDropdown from "@/components/user-dropdown";
-import ListProjects from "@/components/projects/list-projects";
 import LayoutNavigation from "@/components/layout-navigation";
+import Logo from "@/components/logo";
 import CreateProjectModal from "@/components/projects/create-project/modal";
+import ListProjects from "@/components/projects/list-projects";
+import UserDropdown from "@/components/user-dropdown";
+import CreateWorkspaceModal from "@/components/workspaces/create-workspace/modal";
+import WorkspaceSwitcherWrapper from "@/components/workspaces/workspace-switcher/wrapper";
 
 type Props = Readonly<{
   children: React.ReactNode;
@@ -32,16 +32,16 @@ export default function Layout({ children }: Props) {
       >
         <DialogBackdrop
           transition
-          className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-[closed]:opacity-0"
+          className="fixed inset-0 bg-gray-900/80 transition-opacity duration-300 ease-linear data-closed:opacity-0"
         />
 
         <div className="fixed inset-0 flex">
           <DialogPanel
             transition
-            className="relative mr-16 flex w-full max-w-xs flex-1 transform transition duration-300 ease-in-out data-[closed]:-translate-x-full"
+            className="relative mr-16 flex w-full max-w-xs flex-1 transform transition duration-300 ease-in-out data-closed:-translate-x-full"
           >
             <TransitionChild>
-              <div className="absolute top-0 left-full flex w-16 justify-center pt-5 duration-300 ease-in-out data-[closed]:opacity-0">
+              <div className="absolute top-0 left-full flex w-16 justify-center pt-5 duration-300 ease-in-out data-closed:opacity-0">
                 <button
                   type="button"
                   onClick={() => setSidebarOpen(false)}
@@ -63,7 +63,7 @@ export default function Layout({ children }: Props) {
                 </Link>
               </div>
               <nav className="flex flex-1 flex-col">
-                <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                <ul className="flex flex-1 flex-col gap-y-7">
                   <li>
                     <LayoutNavigation />
                   </li>
@@ -105,7 +105,7 @@ export default function Layout({ children }: Props) {
             </Link>
           </div>
           <nav className="flex flex-1 flex-col">
-            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+            <ul className="flex flex-1 flex-col gap-y-7">
               <li>
                 <LayoutNavigation />
               </li>

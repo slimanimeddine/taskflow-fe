@@ -1,11 +1,11 @@
 "use client";
+import { XCircleIcon } from "@heroicons/react/20/solid";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { useDeleteProject } from "@/hooks/endpoints/projects";
 import { useProjectId } from "@/hooks/params/use-project-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import { XCircleIcon } from "@heroicons/react/20/solid";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 
 export default function DeleteProject() {
   const { token } = useSession();
@@ -47,7 +47,7 @@ export default function DeleteProject() {
   return (
     <div className="rounded-md bg-red-50 p-4">
       <div className="flex">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
         </div>
         <div className="ml-3">

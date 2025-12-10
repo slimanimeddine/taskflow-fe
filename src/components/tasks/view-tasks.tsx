@@ -1,8 +1,6 @@
 "use client";
 
-import TasksTableView from "./table-view";
 import { useChangeTasksView } from "@/hooks/use-change-tasks-view";
-import KanbanViewWrapper from "./kanban-view/wrapper";
 import CalendarViewWrapper from "./calendar-view/wrapper";
 import ChangeTasksView from "./change-tasks-view";
 import CreateTaskModal from "./create-task/modal";
@@ -10,6 +8,8 @@ import AssigneeFilter from "./filtering/assignee-filter";
 import DueDateFilter from "./filtering/due-date-filter";
 import ProjectFilter from "./filtering/project-filter";
 import StatusFilter from "./filtering/status-filter";
+import KanbanViewWrapper from "./kanban-view/wrapper";
+import TasksTableView from "./table-view";
 
 type ViewTasksProps = {
   defaultProjectId?: string;

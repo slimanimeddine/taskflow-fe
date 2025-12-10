@@ -1,11 +1,11 @@
 "use client";
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
-import { useRemoveTask } from "@/hooks/use-remove-task";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import Link from "next/link";
-import EditTaskModal from "./edit-task/modal";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import { useRemoveTask } from "@/hooks/use-remove-task";
+import EditTaskModal from "./edit-task/modal";
 
 type RowDropdownProps = {
   taskId: string;
@@ -30,13 +30,13 @@ export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
 
         <MenuItems
           transition
-          className="ring-opacity-5 absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
+          className="ring-opacity-5 absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black transition focus:outline-none data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
         >
           <div className="py-1">
             <MenuItem>
               <Link
                 href={`/workspaces/${workspaceId}/tasks/${taskId}`}
-                className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900"
               >
                 Task Details
               </Link>
@@ -45,7 +45,7 @@ export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
             <MenuItem>
               <Link
                 href={`/workspaces/${workspaceId}/projects/${projectId}`}
-                className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900"
               >
                 Project Details
               </Link>
@@ -55,7 +55,7 @@ export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
               <button
                 type="button"
                 onClick={() => openModal("edit-task", taskId)}
-                className="block w-full cursor-pointer px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                className="block w-full cursor-pointer px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 data-focus:bg-gray-100 data-focus:text-gray-900"
               >
                 Edit Task
               </button>
@@ -63,9 +63,10 @@ export default function RowDropdown({ taskId, projectId }: RowDropdownProps) {
 
             <MenuItem>
               <button
+                type="button"
                 disabled={isDisabled}
                 onClick={removeTask}
-                className="block w-full cursor-pointer px-4 py-2 text-left text-sm text-gray-700 data-[focus]:bg-gray-100 data-[focus]:text-gray-900"
+                className="block w-full cursor-pointer px-4 py-2 text-left text-sm text-gray-700 data-focus:bg-gray-100 data-focus:text-gray-900"
               >
                 Delete Task
               </button>

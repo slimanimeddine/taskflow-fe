@@ -50,19 +50,19 @@ export default function StatusFilter() {
 
         <ListboxOptions
           transition
-          className="ring-opacity-5 absolute z-10 mt-1 max-h-60 min-w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black focus:outline-none data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in data-[closed]:data-[leave]:opacity-0 sm:text-sm"
+          className="ring-opacity-5 absolute z-10 mt-1 max-h-60 min-w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black focus:outline-none data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
         >
           {statuses.map((status) => (
             <ListboxOption
               key={status}
               value={status}
-              className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-[focus]:bg-indigo-600 data-[focus]:text-white"
+              className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white"
             >
-              <span className="block truncate font-normal group-data-[selected]:font-semibold">
+              <span className="block truncate font-normal group-data-selected:font-semibold">
                 {statusLabel(status)}
               </span>
 
-              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-[focus]:text-white [.group:not([data-selected])_&]:hidden">
+              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-focus:text-white [.group:not([data-selected])_&]:hidden">
                 <CheckIcon aria-hidden="true" className="h-5 w-5" />
               </span>
             </ListboxOption>

@@ -1,9 +1,10 @@
 "use client";
 
+import Link from "next/link";
 import { useTasksPage } from "@/hooks/filtering/use-tasks-page";
 import { classNames } from "@/lib/utils";
-import { type LinksField, type MetaField } from "@/types/api-responses";
-import Link from "next/link";
+import type { LinksField, MetaField } from "@/types/api-responses";
+
 interface PaginationProps {
   links: LinksField;
   meta: MetaField;

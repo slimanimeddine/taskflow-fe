@@ -2,14 +2,14 @@
 
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import CreateWorkspaceForm from "./form";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import CreateWorkspaceForm from "./form";
 
 export default function CreateWorkspaceModal() {
   const { modal, openModal, closeModal } = useOpenModal();
   return (
     <>
-      <button onClick={() => openModal("create-workspace")}>
+      <button type="button" onClick={() => openModal("create-workspace")}>
         <PlusCircleIcon className="h-5 w-5 flex-none text-gray-400" />
       </button>
 

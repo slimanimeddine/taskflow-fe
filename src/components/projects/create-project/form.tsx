@@ -1,20 +1,21 @@
 "use client";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import type React from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import {
   type CreateProjectBody,
   useCreateProject,
 } from "@/hooks/endpoints/projects";
-import { createProjectBody } from "@/schemas/projects";
-import { authHeader } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
+import { createProjectBody } from "@/schemas/projects";
 
 export default function CreateProjectForm() {
   const { handleSubmit, register, formState, reset, control } =

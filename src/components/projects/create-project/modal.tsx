@@ -2,15 +2,15 @@
 
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PlusCircleIcon } from "@heroicons/react/20/solid";
-import CreateProjectForm from "./form";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import CreateProjectForm from "./form";
 
 export default function CreateProjectModal() {
   const { modal, openModal, closeModal } = useOpenModal();
 
   return (
     <>
-      <button onClick={() => openModal("create-project")}>
+      <button type="button" onClick={() => openModal("create-project")}>
         <PlusCircleIcon className="h-5 w-5 flex-none text-gray-400" />
       </button>
 

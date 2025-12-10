@@ -1,9 +1,9 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 import Navigate from "@/components/navigate";
 import { listAuthenticatedUserWorkspaces } from "@/hooks/endpoints/workspaces";
 import { verifyAuth } from "@/lib/dal";
 import seo from "@/lib/seo";
-import { type Metadata } from "next";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   ...seo("Dashboard", "Your Dashboard"),

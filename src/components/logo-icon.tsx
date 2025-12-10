@@ -9,6 +9,7 @@ export default function LogoIcon() {
       xmlns="http://www.w3.org/2000/svg"
     >
       {" "}
+      <title>Logo Icon</title>
       <path
         d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
         className="ccompli1"

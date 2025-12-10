@@ -1,11 +1,11 @@
 "use client";
 
-import { useChangeTasksView } from "@/hooks/use-change-tasks-view";
 import {
-  Squares2X2Icon,
   CalendarDaysIcon,
+  Squares2X2Icon,
   TableCellsIcon,
 } from "@heroicons/react/24/outline";
+import { useChangeTasksView } from "@/hooks/use-change-tasks-view";
 
 type View = "table" | "kanban" | "calendar";
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { fileUrl, getFirstLetter } from "@/lib/utils";
 import {
   Listbox,
   ListboxButton,
@@ -9,11 +8,12 @@ import {
 } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/16/solid";
 import { CheckIcon } from "@heroicons/react/20/solid";
-import { useState } from "react";
-import { type Workspace } from "@/types/models";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { fileUrl, getFirstLetter } from "@/lib/utils";
+import type { Workspace } from "@/types/models";
 
 type WorkspaceSwitcherProps = {
   workspaces: Workspace[];
@@ -40,7 +40,7 @@ export default function WorkspaceSwitcher({
             {selected.image_path ? (
               <Image
                 alt=""
-                src={fileUrl(selected.image_path)!}
+                src={fileUrl(selected.image_path) as string}
                 className="size-5 shrink-0 rounded-full"
                 width={20}
                 height={20}
@@ -77,7 +77,7 @@ export default function WorkspaceSwitcher({
                 {workspace.image_path ? (
                   <Image
                     alt=""
-                    src={fileUrl(workspace.image_path)!}
+                    src={fileUrl(workspace.image_path) as string}
                     className="size-5 shrink-0 rounded-full"
                     width={20}
                     height={20}

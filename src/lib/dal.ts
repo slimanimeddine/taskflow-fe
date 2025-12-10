@@ -1,10 +1,10 @@
 import "server-only";
 
-import { getSession } from "@/actions/session";
+import { isAxiosError } from "axios";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import { getSession } from "@/actions/session";
 import { showAuthenticatedUserMember } from "@/hooks/endpoints/members";
-import { isAxiosError } from "axios";
 
 export const verifyAuth = cache(async () => {
   const session = await getSession();

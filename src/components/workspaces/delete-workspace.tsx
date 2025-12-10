@@ -1,11 +1,11 @@
 "use client";
-import { useDeleteWorkspace } from "@/hooks/endpoints/workspaces";
-import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader } from "@/lib/utils";
 import { XCircleIcon } from "@heroicons/react/20/solid";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useDeleteWorkspace } from "@/hooks/endpoints/workspaces";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 
 export default function DeleteWorkspace() {
   const { token } = useSession();

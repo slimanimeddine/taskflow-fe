@@ -1,5 +1,4 @@
-import { useQueryState } from "nuqs";
-import { parseAsJson } from "nuqs";
+import { parseAsJson, useQueryState } from "nuqs";
 import { z } from "zod/v4";
 
 const assigneeSchema = z.object({

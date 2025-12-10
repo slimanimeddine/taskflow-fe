@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -13,25 +12,26 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { z } from "zod/v4";
+import type { BodyType, ErrorType } from "@/lib/axios";
 import { customInstance } from "@/lib/axios";
-import type { ErrorType, BodyType } from "@/lib/axios";
-import {
-  type ErrorApiResponse,
-  type SuccessNoDataApiResponse,
-  type NotFoundApiResponse,
-  type SuccessApiResponse,
-  type TooManyRequestsApiResponse,
-  type UnauthenticatedApiResponse,
-  type UnauthorizedApiResponse,
-} from "@/types/api-responses";
-import { type z } from "zod/v4";
-import {
-  type changePasswordBody,
-  type resetPasswordBody,
-  type sendPasswordResetLinkBody,
-  type signInBody,
-  type signUpBody,
+import type {
+  changePasswordBody,
+  resetPasswordBody,
+  sendPasswordResetLinkBody,
+  signInBody,
+  signUpBody,
 } from "@/schemas/authentication";
+import type {
+  ErrorApiResponse,
+  NotFoundApiResponse,
+  SuccessApiResponse,
+  SuccessNoDataApiResponse,
+  TooManyRequestsApiResponse,
+  UnauthenticatedApiResponse,
+  UnauthorizedApiResponse,
+} from "@/types/api-responses";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

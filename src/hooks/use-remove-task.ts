@@ -1,8 +1,8 @@
-import { useSession } from "@/hooks/use-session";
-import { useDeleteTask } from "@/hooks/endpoints/tasks";
-import { authHeader } from "@/lib/utils";
-import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import { useDeleteTask } from "@/hooks/endpoints/tasks";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 
 export function useRemoveTask(taskId: string) {
   const { token } = useSession();

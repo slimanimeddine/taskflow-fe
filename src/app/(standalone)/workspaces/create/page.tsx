@@ -1,7 +1,7 @@
+import type { Metadata } from "next";
 import CreateWorkspaceForm from "@/components/workspaces/create-workspace/form";
 import { verifyAuth } from "@/lib/dal";
 import seo from "@/lib/seo";
-import { type Metadata } from "next";
 
 export const metadata: Metadata = {
   ...seo(

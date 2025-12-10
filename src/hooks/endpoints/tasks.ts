@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -13,24 +12,25 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { z } from "zod/v4";
+import type { BodyType, ErrorType } from "@/lib/axios";
 import { customInstance } from "@/lib/axios";
-import type { ErrorType, BodyType } from "@/lib/axios";
-import {
-  type ApiResource,
-  type ErrorApiResponse,
-  type NotFoundApiResponse,
-  type PaginatedApiResponse,
-  type SuccessNoDataApiResponse,
-  type UnauthenticatedApiResponse,
-  type UnauthorizedApiResponse,
-} from "@/types/api-responses";
-import { type Task } from "@/types/models";
-import { type z } from "zod/v4";
-import {
-  type bulkEditTasksPositionsBody,
-  type createTaskBody,
-  type editTaskBody,
+import type {
+  bulkEditTasksPositionsBody,
+  createTaskBody,
+  editTaskBody,
 } from "@/schemas/tasks";
+import type {
+  ApiResource,
+  ErrorApiResponse,
+  NotFoundApiResponse,
+  PaginatedApiResponse,
+  SuccessNoDataApiResponse,
+  UnauthenticatedApiResponse,
+  UnauthorizedApiResponse,
+} from "@/types/api-responses";
+import type { Task } from "@/types/models";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
@@ -738,7 +738,7 @@ export const bulkEditTasksPositions = (
   for (const [key, value] of data.entries()) {
     const match = /tasks\[(\d+)\]\[(id|position)\]/.exec(key);
     if (match) {
-      const index = parseInt(match[1]);
+      const index = parseInt(match[1], 10);
       const property = match[2] as keyof TaskMin;
 
       if (!reconstructedTasks[index]) {

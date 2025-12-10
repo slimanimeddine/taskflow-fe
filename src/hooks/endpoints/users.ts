@@ -1,4 +1,3 @@
-import { useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -10,15 +9,16 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
-import { customInstance } from "@/lib/axios";
+import { useQuery } from "@tanstack/react-query";
 import type { ErrorType } from "@/lib/axios";
-import {
-  type ApiResource,
-  type NotFoundApiResponse,
-  type UnauthenticatedApiResponse,
-  type UnauthorizedApiResponse,
+import { customInstance } from "@/lib/axios";
+import type {
+  ApiResource,
+  NotFoundApiResponse,
+  UnauthenticatedApiResponse,
+  UnauthorizedApiResponse,
 } from "@/types/api-responses";
-import { type User } from "@/types/models";
+import type { User } from "@/types/models";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

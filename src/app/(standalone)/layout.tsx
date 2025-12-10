@@ -1,13 +1,4 @@
 "use client";
-import { deleteSession } from "@/actions/session";
-import ErrorUI from "@/components/error-ui";
-import LoadingUI from "@/components/loading-ui";
-import Logo from "@/components/logo";
-import UserDropdown from "@/components/user-dropdown";
-import { useSignOut } from "@/hooks/endpoints/authentication";
-import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
-import { useSession } from "@/hooks/use-session";
-import { authHeader } from "@/lib/utils";
 import {
   Disclosure,
   DisclosureButton,
@@ -17,6 +8,15 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { deleteSession } from "@/actions/session";
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import Logo from "@/components/logo";
+import UserDropdown from "@/components/user-dropdown";
+import { useSignOut } from "@/hooks/endpoints/authentication";
+import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 
 type Props = Readonly<{
   children: React.ReactNode;
@@ -37,7 +37,7 @@ function UserInformation() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   return (
@@ -81,7 +81,7 @@ export default function Layout({ children }: Props) {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 justify-between">
             <div className="flex">
-              <div className="flex flex-shrink-0 items-center">
+              <div className="flex shrink-0 items-center">
                 <Link href="/">
                   <Logo />
                 </Link>
@@ -98,11 +98,11 @@ export default function Layout({ children }: Props) {
                 <span className="sr-only">Open main menu</span>
                 <Bars3Icon
                   aria-hidden="true"
-                  className="block h-6 w-6 group-data-[open]:hidden"
+                  className="block h-6 w-6 group-data-open:hidden"
                 />
                 <XMarkIcon
                   aria-hidden="true"
-                  className="hidden h-6 w-6 group-data-[open]:block"
+                  className="hidden h-6 w-6 group-data-open:block"
                 />
               </DisclosureButton>
             </div>

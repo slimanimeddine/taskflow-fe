@@ -1,15 +1,15 @@
 "use client";
 
-import { useShowProject } from "@/hooks/endpoints/projects";
-import { useProjectId } from "@/hooks/params/use-project-id";
-import { useSession } from "@/hooks/use-session";
-import { authHeader, fileUrl, getFirstLetter } from "@/lib/utils";
-import LoadingUI from "../../loading-ui";
-import ErrorUI from "../../error-ui";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
+import { useShowProject } from "@/hooks/endpoints/projects";
+import { useProjectId } from "@/hooks/params/use-project-id";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader, fileUrl, getFirstLetter } from "@/lib/utils";
+import ErrorUI from "../../error-ui";
+import LoadingUI from "../../loading-ui";
 import ViewTasks from "../../tasks/view-tasks";
 import ProjectStats from "./stats";
 
@@ -32,7 +32,7 @@ export default function ViewProject() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   const project = data.data;
@@ -47,7 +47,7 @@ export default function ViewProject() {
               {project.image_path ? (
                 <Image
                   alt=""
-                  src={fileUrl(project.image_path)!}
+                  src={fileUrl(project.image_path) as string}
                   className="size-8 shrink-0 rounded-lg"
                   width={32}
                   height={32}

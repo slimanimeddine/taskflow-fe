@@ -1,9 +1,9 @@
+import { redirect } from "next/navigation";
+import z from "zod/v4";
 import InvalidParams from "@/components/invalid-params";
 import MembersList from "@/components/workspaces/members-list";
 import { verifyAuth, verifyMember } from "@/lib/dal";
 import { parseParams } from "@/lib/utils";
-import { redirect } from "next/navigation";
-import z from "zod/v4";
 
 const paramsSchema = z.object({
   workspaceId: z.uuid(),

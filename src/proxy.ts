@@ -1,6 +1,6 @@
-import { NextResponse, type NextRequest } from "next/server";
-import { startsWithAny } from "./lib/utils";
+import { type NextRequest, NextResponse } from "next/server";
 import { getSession } from "./actions/session";
+import { startsWithAny } from "./lib/utils";
 
 const protectedStaticRoutes = ["/", "/workspaces/create"];
 const protectedDynamicRoutes = ["/workspaces"];

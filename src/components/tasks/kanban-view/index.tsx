@@ -1,15 +1,15 @@
 "use client";
 
 import { DragDropContext, Droppable, type DropResult } from "@hello-pangea/dnd";
-import { type Task } from "@/types/models";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useEditTask } from "@/hooks/endpoints/tasks";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import type { Task } from "@/types/models";
 import AddTask from "./add-task";
 import KanbanCard from "./kanban-card";
-import toast from "react-hot-toast";
 
 type KanbanViewProps = {
   tasks: Task[];
@@ -190,7 +190,7 @@ export default function KanbanView({ tasks: initialTasks }: KanbanViewProps) {
                   <div
                     ref={provided.innerRef}
                     {...provided.droppableProps}
-                    className={`flex min-h-[300px] w-full flex-shrink-0 flex-col rounded-xl border border-gray-200 p-4 shadow-sm ring-1 md:w-80 ${COLUMN_COLORS[status]} ${snapshot.isDraggingOver ? "bg-opacity-80" : ""} `}
+                    className={`flex min-h-[300px] w-full shrink-0 flex-col rounded-xl border border-gray-200 p-4 shadow-sm ring-1 md:w-80 ${COLUMN_COLORS[status]} ${snapshot.isDraggingOver ? "bg-opacity-80" : ""} `}
                   >
                     <h2 className="mb-4 text-lg font-semibold text-gray-800">
                       {COLUMN_TITLES[status]} ({groupedTasks[status].length})

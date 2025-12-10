@@ -1,7 +1,7 @@
-import { SignJWT, jwtVerify } from "jose";
+import { jwtVerify, SignJWT } from "jose";
 import "server-only";
-import { type SessionPayload } from "../types/misc";
 import { env } from "@/env/server";
+import type { SessionPayload } from "../types/misc";
 
 const encodedKey = new TextEncoder().encode(env.SESSION_SECRET);
 
@@ -19,8 +19,7 @@ export async function decrypt(session: string | undefined = "") {
       algorithms: ["HS256"],
     });
     return payload;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (error) {
+  } catch (_error) {
     console.log("Failed to verify session");
   }
 }

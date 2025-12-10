@@ -1,12 +1,12 @@
 "use client";
 
+import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
-import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
 import { authHeader, getFirstLetter } from "@/lib/utils";
-import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/react";
 import DeleteMember from "./delete-member";
 import PromoteMember from "./promote-member";
 
@@ -27,13 +27,13 @@ export default function MembersList() {
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const members = data.data;
 
   return (
-    <ul role="list" className="divide-y divide-gray-100">
+    <ul className="divide-y divide-gray-100">
       {members.map((member) => (
         <li
           key={member.email}

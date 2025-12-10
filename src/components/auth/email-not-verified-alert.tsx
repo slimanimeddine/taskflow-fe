@@ -1,13 +1,13 @@
 "use client";
 import { InformationCircleIcon } from "@heroicons/react/20/solid";
-import { authHeader } from "@/lib/utils";
-import { useResendEmailVerification } from "@/hooks/endpoints/authentication";
 import toast from "react-hot-toast";
-import { useSession } from "@/hooks/use-session";
+import { useResendEmailVerification } from "@/hooks/endpoints/authentication";
 import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
-import LoadingUI from "../loading-ui";
-import ErrorUI from "../error-ui";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 import EmptyUI from "../empty-ui";
+import ErrorUI from "../error-ui";
+import LoadingUI from "../loading-ui";
 
 export default function EmailNotVerifiedAlert() {
   const { token } = useSession();
@@ -58,7 +58,7 @@ export default function EmailNotVerifiedAlert() {
   return (
     <div className="rounded-md bg-blue-50 p-4">
       <div className="flex">
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <InformationCircleIcon
             aria-hidden="true"
             className="h-5 w-5 text-blue-400"

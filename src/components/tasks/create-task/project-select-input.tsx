@@ -1,12 +1,12 @@
 "use client";
 
+import type { Ref } from "react";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListWorkspaceProjects } from "@/hooks/endpoints/projects";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import { type Ref } from "react";
 
 type Props = {
   defaultProjectId?: string;
@@ -41,7 +41,7 @@ export default function ProjectSelectInput({
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const projects = data.data;

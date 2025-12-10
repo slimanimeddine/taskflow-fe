@@ -1,7 +1,19 @@
 "use client";
 
+import { TrashIcon } from "@heroicons/react/24/outline";
+import {
+  BriefcaseIcon,
+  CalendarIcon,
+  CheckCircleIcon,
+  PencilIcon,
+  UserCircleIcon,
+} from "@heroicons/react/24/solid";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useShowTask } from "@/hooks/endpoints/tasks";
 import { useTaskId } from "@/hooks/params/use-task-id";
+import { useOpenModal } from "@/hooks/use-open-modal";
+import { useRemoveTask } from "@/hooks/use-remove-task";
 import { useSession } from "@/hooks/use-session";
 import {
   authHeader,
@@ -9,23 +21,10 @@ import {
   getFirstLetter,
   statusLabel,
 } from "@/lib/utils";
+import type { Task } from "@/types/models";
 import ErrorUI from "../error-ui";
 import LoadingUI from "../loading-ui";
-
-import {
-  UserCircleIcon,
-  BriefcaseIcon,
-  CalendarIcon,
-  CheckCircleIcon,
-  PencilIcon,
-} from "@heroicons/react/24/solid";
-import Link from "next/link";
-import { type Task } from "@/types/models";
-import { useOpenModal } from "@/hooks/use-open-modal";
 import EditTaskModal from "./edit-task/modal";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { useRemoveTask } from "@/hooks/use-remove-task";
-import { useRouter } from "next/navigation";
 
 const formatDate = (dateString: string | null) => {
   if (!dateString) return "N/A";
@@ -69,7 +68,7 @@ export default function ViewTask() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   const task = data.data;
@@ -96,7 +95,7 @@ export default function ViewTask() {
                   </Link>
                 </div>
               </div>
-              <div className="mt-4 flex flex-shrink-0 gap-x-2 md:mt-0 md:ml-4">
+              <div className="mt-4 flex shrink-0 gap-x-2 md:mt-0 md:ml-4">
                 <button
                   type="button"
                   disabled={isDisabled}

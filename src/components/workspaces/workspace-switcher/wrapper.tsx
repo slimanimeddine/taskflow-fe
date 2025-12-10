@@ -1,11 +1,11 @@
 "use client";
 
 import { useListAuthenticatedUserWorkspaces } from "@/hooks/endpoints/workspaces";
-import { authHeader } from "@/lib/utils";
-import LoadingUI from "../../loading-ui";
-import ErrorUI from "../../error-ui";
-import WorkspaceSwitcher from ".";
 import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
+import ErrorUI from "../../error-ui";
+import LoadingUI from "../../loading-ui";
+import WorkspaceSwitcher from ".";
 
 export default function WorkspaceSwitcherWrapper() {
   const { token } = useSession();
@@ -22,7 +22,7 @@ export default function WorkspaceSwitcherWrapper() {
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   return <WorkspaceSwitcher workspaces={data.data} />;

@@ -2,8 +2,8 @@
 
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import CreateTaskForm from "./form";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import CreateTaskForm from "./form";
 
 type CreateTaskModalProps = {
   defaultProjectId?: string;

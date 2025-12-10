@@ -1,15 +1,15 @@
 "use client";
-import { classNames } from "@/lib/utils";
 import {
   ClipboardDocumentListIcon,
   Cog6ToothIcon,
   HomeIcon,
   UsersIcon,
 } from "@heroicons/react/24/outline";
+import type { Route } from "next";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import type { Route } from "next";
+import { classNames } from "@/lib/utils";
 
 export default function LayoutNavigation() {
   const pathname = usePathname();
@@ -35,7 +35,7 @@ export default function LayoutNavigation() {
   ];
 
   return (
-    <ul role="list" className="-mx-2 space-y-1">
+    <ul className="-mx-2 space-y-1">
       {navigationLinks.map((item) => (
         <li key={item.name}>
           <Link

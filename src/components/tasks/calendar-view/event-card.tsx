@@ -1,10 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import type { MouseEvent } from "react";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { classNames } from "@/lib/utils";
-import { type Project, type Task, type User } from "@/types/models";
-import { useRouter } from "next/navigation";
-import { type MouseEvent } from "react";
+import type { Project, Task, User } from "@/types/models";
 
 type EventCardProps = {
   id: string;
@@ -41,13 +41,14 @@ export default function EventCard({
   const workspaceId = useWorkspaceId();
   const router = useRouter();
 
-  function handleClick(e: MouseEvent<HTMLDivElement>) {
+  function handleClick(e: MouseEvent<HTMLButtonElement>) {
     e.stopPropagation();
     router.push(`/workspaces/${workspaceId}/tasks/${id}`);
   }
   return (
     <div className="h-full w-full px-2 py-1">
-      <div
+      <button
+        type="button"
         onClick={handleClick}
         className={classNames(
           "flex h-full cursor-pointer flex-col gap-y-1 overflow-hidden rounded border border-l-4 bg-white p-1.5 text-xs text-gray-800 shadow-sm transition-opacity duration-200 hover:opacity-90",
@@ -92,7 +93,7 @@ export default function EventCard({
             {STATUS_LABELS[status]}
           </span>
         </div>
-      </div>
+      </button>
     </div>
   );
 }

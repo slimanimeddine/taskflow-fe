@@ -1,7 +1,8 @@
 "use client";
 
-import { type Session } from "@/types/misc";
-import React, { createContext } from "react";
+import type React from "react";
+import { createContext } from "react";
+import type { Session } from "@/types/misc";
 
 export const SessionContext = createContext<Session | undefined>(undefined);
 

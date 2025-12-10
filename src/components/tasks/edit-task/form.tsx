@@ -1,16 +1,16 @@
 "use client";
 
-import toast from "react-hot-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@/hooks/use-session";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { type EditTaskBody, useEditTask } from "@/hooks/endpoints/tasks";
-import { editTaskBody } from "@/schemas/tasks";
 import { useOpenModal } from "@/hooks/use-open-modal";
-import TaskAssigneeSelectInput from "./task-assignee-select-input";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
+import { editTaskBody } from "@/schemas/tasks";
 import ProjectSelectInput from "./project-select-input";
+import TaskAssigneeSelectInput from "./task-assignee-select-input";
 
 type DefaultValues = {
   name?: string;

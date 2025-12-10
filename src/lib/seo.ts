@@ -1,4 +1,4 @@
-import { type Metadata } from "next";
+import type { Metadata } from "next";
 
 export default function seo(title: string, description: string): Metadata {
   return {

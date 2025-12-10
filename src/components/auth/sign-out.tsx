@@ -1,10 +1,10 @@
 "use client";
+import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { deleteSession } from "@/actions/session";
 import { useSignOut } from "@/hooks/endpoints/authentication";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
 
 export default function SignOut() {
   const { token } = useSession();

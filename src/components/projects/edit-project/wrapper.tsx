@@ -2,10 +2,10 @@
 
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
+import { useShowProject } from "@/hooks/endpoints/projects";
+import { useProjectId } from "@/hooks/params/use-project-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader } from "@/lib/utils";
-import { useProjectId } from "@/hooks/params/use-project-id";
-import { useShowProject } from "@/hooks/endpoints/projects";
 import EditProjectForm from "./form";
 
 export default function EditProjectWrapper() {
@@ -26,7 +26,7 @@ export default function EditProjectWrapper() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   return (

@@ -1,15 +1,15 @@
 "use client";
 
+import { ChevronRightIcon, ClockIcon } from "@heroicons/react/24/solid";
+import Link from "next/link";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListTasks } from "@/hooks/endpoints/tasks";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader, classNames, statusLabel } from "@/lib/utils";
-import { type PaginatedApiResponse } from "@/types/api-responses";
-import { type Task } from "@/types/models";
-import { ChevronRightIcon, ClockIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
+import type { PaginatedApiResponse } from "@/types/api-responses";
+import type { Task } from "@/types/models";
 
 const STATUS_COLORS: Record<Task["status"], string> = {
   backlog: "bg-gray-100 text-gray-800",
@@ -44,7 +44,7 @@ export default function TasksCard() {
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const tasks = data.data.slice(0, 5);
@@ -60,7 +60,7 @@ export default function TasksCard() {
         </Link>
       </div>
       <div className="mt-4 overflow-hidden bg-white shadow sm:rounded-md">
-        <ul role="list" className="divide-y divide-gray-200">
+        <ul className="divide-y divide-gray-200">
           {tasks.slice(0, 5).map((task) => (
             <li key={task.id}>
               <Link

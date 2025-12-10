@@ -24,7 +24,7 @@ export default function WorkspaceStats() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   const stats = data.data;

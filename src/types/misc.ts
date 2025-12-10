@@ -1,8 +1,8 @@
-import { type JWTPayload } from "jose";
-import {
-  type ApiResource,
-  type PaginatedApiResponse,
-  type SuccessApiResponse,
+import type { JWTPayload } from "jose";
+import type {
+  ApiResource,
+  PaginatedApiResponse,
+  SuccessApiResponse,
 } from "./api-responses";
 
 export type SessionPayload = {

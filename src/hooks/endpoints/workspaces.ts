@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -13,22 +12,23 @@ import type {
   UseQueryOptions,
   UseQueryResult,
 } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import type { z } from "zod/v4";
+import type { BodyType, ErrorType } from "@/lib/axios";
 import { customInstance } from "@/lib/axios";
-import type { ErrorType, BodyType } from "@/lib/axios";
-import {
-  type ApiResource,
-  type NotFoundApiResponse,
-  type SuccessApiResponse,
-  type SuccessNoDataApiResponse,
-  type UnauthenticatedApiResponse,
-  type UnauthorizedApiResponse,
-} from "@/types/api-responses";
-import { type Workspace } from "@/types/models";
-import { type z } from "zod/v4";
-import {
-  type createWorkspaceBody,
-  type editWorkspaceBody,
+import type {
+  createWorkspaceBody,
+  editWorkspaceBody,
 } from "@/schemas/workspaces";
+import type {
+  ApiResource,
+  NotFoundApiResponse,
+  SuccessApiResponse,
+  SuccessNoDataApiResponse,
+  UnauthenticatedApiResponse,
+  UnauthorizedApiResponse,
+} from "@/types/api-responses";
+import type { Workspace } from "@/types/models";
 
 type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 

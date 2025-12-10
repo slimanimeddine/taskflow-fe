@@ -1,12 +1,12 @@
 "use client";
 
-import { useCreateMember } from "@/hooks/endpoints/members";
-import { useInviteCode } from "@/hooks/params/use-invite-code";
-import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { useCreateMember } from "@/hooks/endpoints/members";
+import { useInviteCode } from "@/hooks/params/use-invite-code";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 
 export default function JoinWorkspace() {
   const inviteCode = useInviteCode();

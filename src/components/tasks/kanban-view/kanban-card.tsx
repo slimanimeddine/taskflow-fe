@@ -1,11 +1,11 @@
 "use client";
-import { type Task } from "@/types/models";
 import { Draggable } from "@hello-pangea/dnd";
 import {
+  Bars3BottomLeftIcon,
   CalendarIcon,
   UserCircleIcon,
-  Bars3BottomLeftIcon,
 } from "@heroicons/react/20/solid";
+import type { Task } from "@/types/models";
 import RowDropdown from "../row-dropdown";
 
 type KanbanCardProps = {

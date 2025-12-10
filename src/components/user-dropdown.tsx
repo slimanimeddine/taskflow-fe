@@ -1,12 +1,12 @@
 "use client";
-import SignOutButton from "@/components/auth/sign-out";
-import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
-import { authHeader, getFirstLetter } from "@/lib/utils";
 import { Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/20/solid";
-import LoadingUI from "@/components/loading-ui";
+import SignOutButton from "@/components/auth/sign-out";
 import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useGetAuthenticatedUser } from "@/hooks/endpoints/users";
 import { useSession } from "@/hooks/use-session";
+import { authHeader, getFirstLetter } from "@/lib/utils";
 
 function Avatar() {
   const { token } = useSession();
@@ -23,7 +23,7 @@ function Avatar() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   return (

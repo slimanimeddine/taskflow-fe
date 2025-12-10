@@ -1,8 +1,8 @@
+import type { Metadata } from "next";
+import Link from "next/link";
 import ForgotPasswordForm from "@/components/auth/forgot-password-form";
 import Logo from "@/components/logo";
 import seo from "@/lib/seo";
-import { type Metadata } from "next";
-import Link from "next/link";
 
 export const metadata: Metadata = {
   ...seo("Forgot Password", "Reset your password"),

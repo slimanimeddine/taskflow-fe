@@ -1,13 +1,13 @@
 "use client";
 
 import { Dialog, DialogBackdrop, DialogPanel } from "@headlessui/react";
-import EditTaskForm from "./form";
-import { useSession } from "@/hooks/use-session";
-import { useShowTask } from "@/hooks/endpoints/tasks";
-import { authHeader } from "@/lib/utils";
-import LoadingUI from "@/components/loading-ui";
 import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useShowTask } from "@/hooks/endpoints/tasks";
 import { useOpenModal } from "@/hooks/use-open-modal";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
+import EditTaskForm from "./form";
 
 type EditTaskModalProps = {
   taskId: string;
@@ -32,7 +32,7 @@ export default function EditTaskModal({ taskId }: EditTaskModalProps) {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   const { name, description, status, project_id, assignee_id, due_date } =

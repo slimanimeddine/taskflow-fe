@@ -1,13 +1,13 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import {
   type ResetPasswordBody,
   useResetPassword,
 } from "@/hooks/endpoints/authentication";
 import { resetPasswordBody } from "@/schemas/authentication";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 type ResetPasswordFormProps = {
   token: string;

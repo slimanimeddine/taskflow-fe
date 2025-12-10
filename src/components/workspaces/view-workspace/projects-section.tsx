@@ -1,14 +1,14 @@
 "use client";
 
+import { ChevronRightIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
+import Link from "next/link";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListWorkspaceProjects } from "@/hooks/endpoints/projects";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useSession } from "@/hooks/use-session";
 import { authHeader, fileUrl } from "@/lib/utils";
-import { ChevronRightIcon } from "@heroicons/react/24/solid";
-import Image from "next/image";
-import Link from "next/link";
 
 export default function ProjectsSection() {
   const { token } = useSession();
@@ -27,7 +27,7 @@ export default function ProjectsSection() {
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const projects = data.data;
@@ -35,10 +35,7 @@ export default function ProjectsSection() {
   return (
     <section>
       <h2 className="text-xl font-bold text-gray-900">Projects</h2>
-      <ul
-        role="list"
-        className="mt-4 divide-y divide-gray-200 border-t border-b border-gray-200"
-      >
+      <ul className="mt-4 divide-y divide-gray-200 border-t border-b border-gray-200">
         {projects.map((project) => (
           <li
             key={project.id}
@@ -48,13 +45,13 @@ export default function ProjectsSection() {
               {project.image_path ? (
                 <Image
                   alt=""
-                  src={fileUrl(project.image_path)!}
+                  src={fileUrl(project.image_path) as string}
                   className="size-10 shrink-0 rounded-lg"
                   width={40}
                   height={40}
                 />
               ) : (
-                <div className="h-10 w-10 flex-shrink-0">
+                <div className="h-10 w-10 shrink-0">
                   <div className="flex h-full w-full items-center justify-center rounded-lg bg-indigo-100 text-indigo-600">
                     {project.name.charAt(0)}
                   </div>

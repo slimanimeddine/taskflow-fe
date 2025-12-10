@@ -1,4 +1,4 @@
-import { useQueryState, parseAsInteger } from "nuqs";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 export function useTasksPage() {
   const [page, setPage] = useQueryState("page", parseAsInteger);

@@ -1,5 +1,5 @@
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { parseAsUuid } from "@/lib/uuid-parser";
-import { useQueryState, parseAsStringLiteral } from "nuqs";
 
 const modals = [
   "create-project",

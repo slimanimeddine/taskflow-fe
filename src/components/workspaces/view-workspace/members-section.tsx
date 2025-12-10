@@ -3,10 +3,10 @@
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
-import { useSession } from "@/hooks/use-session";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
 import { authHeader, getFirstLetter } from "@/lib/utils";
-import { type Member, type User } from "@/types/models";
+import type { Member, User } from "@/types/models";
 
 type MemberUser = User & {
   pivot: Member;
@@ -28,7 +28,7 @@ export default function MembersSection() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
 
   const members = data.data as MemberUser[];
@@ -36,7 +36,7 @@ export default function MembersSection() {
   return (
     <section>
       <h2 className="text-xl font-bold text-gray-900">Members</h2>
-      <ul role="list" className="mt-4 space-y-4">
+      <ul className="mt-4 space-y-4">
         {members.map((member) => (
           <li key={member.id} className="flex items-center gap-x-4">
             <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-gray-500">

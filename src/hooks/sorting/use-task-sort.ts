@@ -1,4 +1,4 @@
-import { useQueryState, parseAsStringLiteral, parseAsArrayOf } from "nuqs";
+import { parseAsArrayOf, parseAsStringLiteral, useQueryState } from "nuqs";
 
 const sortValues = [
   "name",

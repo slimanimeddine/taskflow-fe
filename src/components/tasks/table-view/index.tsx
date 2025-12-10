@@ -1,11 +1,5 @@
 "use client";
 
-import { authHeader, classNames, statusLabel } from "@/lib/utils";
-import Pagination from "./pagination";
-import RowDropdown from "../row-dropdown";
-import FieldSort from "./sorting/field-sort";
-import { type Task } from "@/types/models";
-import { type PaginatedApiResponse } from "@/types/api-responses";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListTasks } from "@/hooks/endpoints/tasks";
@@ -13,10 +7,16 @@ import { useTaskAssigneeFilter } from "@/hooks/filtering/use-task-assignee-filte
 import { useTaskDueDateFilter } from "@/hooks/filtering/use-task-due-date-filter";
 import { useTaskProjectFilter } from "@/hooks/filtering/use-task-project-filter";
 import { useTaskStatusFilter } from "@/hooks/filtering/use-task-status-filter";
+import { useTasksPage } from "@/hooks/filtering/use-tasks-page";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useTaskSort } from "@/hooks/sorting/use-task-sort";
 import { useSession } from "@/hooks/use-session";
-import { useTasksPage } from "@/hooks/filtering/use-tasks-page";
+import { authHeader, classNames, statusLabel } from "@/lib/utils";
+import type { PaginatedApiResponse } from "@/types/api-responses";
+import type { Task } from "@/types/models";
+import RowDropdown from "../row-dropdown";
+import Pagination from "./pagination";
+import FieldSort from "./sorting/field-sort";
 
 const STATUS_COLORS: Record<Task["status"], string> = {
   backlog: "bg-gray-50 text-gray-700 ring-gray-600/20",
@@ -73,7 +73,7 @@ export default function TasksTableView({
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const tasks = data.data;

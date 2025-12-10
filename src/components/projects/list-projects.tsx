@@ -1,15 +1,15 @@
 "use client";
 
-import { useListWorkspaceProjects } from "@/hooks/endpoints/projects";
-import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader, classNames, fileUrl, getFirstLetter } from "@/lib/utils";
-import LoadingUI from "../loading-ui";
-import ErrorUI from "../error-ui";
+import type { Route } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
-import type { Route } from "next";
+import { useListWorkspaceProjects } from "@/hooks/endpoints/projects";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader, classNames, fileUrl, getFirstLetter } from "@/lib/utils";
+import ErrorUI from "../error-ui";
+import LoadingUI from "../loading-ui";
 
 export default function ListProjects() {
   const { token } = useSession();
@@ -29,12 +29,12 @@ export default function ListProjects() {
   }
 
   if (!data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   return (
     <div>
-      <ul role="list" className="-mx-2 mt-2 space-y-1">
+      <ul className="-mx-2 mt-2 space-y-1">
         {data.data.map((project) => {
           const link = `/workspaces/${workspaceId}/projects/${project.id}`;
           return (
@@ -52,7 +52,7 @@ export default function ListProjects() {
                 {project.image_path ? (
                   <Image
                     alt=""
-                    src={fileUrl(project.image_path)!}
+                    src={fileUrl(project.image_path) as string}
                     className="size-6 shrink-0 rounded-lg"
                     width={24}
                     height={24}

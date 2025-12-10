@@ -1,4 +1,4 @@
-import { useQueryState, parseAsIsoDate } from "nuqs";
+import { parseAsIsoDate, useQueryState } from "nuqs";
 
 export function useTaskDueDateFilter() {
   const [dueDate, setDueDate] = useQueryState("dueDate", parseAsIsoDate);

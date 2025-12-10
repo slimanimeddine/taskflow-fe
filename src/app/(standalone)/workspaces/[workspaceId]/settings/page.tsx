@@ -1,3 +1,6 @@
+import type { Metadata } from "next";
+import { redirect } from "next/navigation";
+import z from "zod/v4";
 import InvalidParams from "@/components/invalid-params";
 import DeleteWorkspace from "@/components/workspaces/delete-workspace";
 import EditWorkspaceWrapper from "@/components/workspaces/edit-workspace/wrapper";
@@ -6,9 +9,6 @@ import { showWorkspace } from "@/hooks/endpoints/workspaces";
 import { verifyAuth, verifyMember } from "@/lib/dal";
 import seo from "@/lib/seo";
 import { parseParams } from "@/lib/utils";
-import { type Metadata } from "next";
-import { redirect } from "next/navigation";
-import z from "zod/v4";
 
 const paramsSchema = z.object({
   workspaceId: z.uuid(),

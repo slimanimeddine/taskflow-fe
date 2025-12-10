@@ -1,4 +1,4 @@
-import { type NotificationData, type NotificationType } from "./notification";
+import type { NotificationData, NotificationType } from "./notification";
 
 export type ApiResource<T> = {
   data: T;

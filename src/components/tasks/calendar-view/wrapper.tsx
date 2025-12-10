@@ -1,8 +1,5 @@
 "use client";
 
-import { authHeader } from "@/lib/utils";
-import { type Task } from "@/types/models";
-import { type ApiResource } from "@/types/api-responses";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
 import { useListTasks } from "@/hooks/endpoints/tasks";
@@ -13,6 +10,9 @@ import { useTaskStatusFilter } from "@/hooks/filtering/use-task-status-filter";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
 import { useTaskSort } from "@/hooks/sorting/use-task-sort";
 import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
+import type { ApiResource } from "@/types/api-responses";
+import type { Task } from "@/types/models";
 import CalendarView from ".";
 
 type CalendarViewWrapperProps = {
@@ -58,7 +58,7 @@ export default function CalendarViewWrapper({
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const tasks = data.data;

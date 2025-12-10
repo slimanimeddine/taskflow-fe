@@ -1,14 +1,14 @@
 "use client";
-import ErrorUI from "@/components/error-ui";
-import LoadingUI from "@/components/loading-ui";
-import { useShowWorkspace } from "@/hooks/endpoints/workspaces";
-import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader } from "@/lib/utils";
-import { DocumentDuplicateIcon, CheckIcon } from "@heroicons/react/24/outline";
+import { CheckIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import { useCopyToClipboard } from "@uidotdev/usehooks";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import ErrorUI from "@/components/error-ui";
+import LoadingUI from "@/components/loading-ui";
+import { useShowWorkspace } from "@/hooks/endpoints/workspaces";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 import ResetInviteCode from "./reset-invite-code";
 
 export default function InviteMembers() {
@@ -41,7 +41,7 @@ export default function InviteMembers() {
   }
 
   if (!data) {
-    return <></>;
+    return <div></div>;
   }
   const workspace = data.data;
   const inviteLink = `${window.location.origin}/workspaces/${workspace.id}/join/${workspace.invite_code}`;

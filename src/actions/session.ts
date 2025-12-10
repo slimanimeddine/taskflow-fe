@@ -1,10 +1,10 @@
 "use server";
 
-import { decrypt, encrypt } from "@/lib/encryption";
-import { sessionCookieSchema } from "@/schemas/authentication";
-import { type Session } from "@/types/misc";
 import { cookies } from "next/headers";
 import z from "zod/v4";
+import { decrypt, encrypt } from "@/lib/encryption";
+import { sessionCookieSchema } from "@/schemas/authentication";
+import type { Session } from "@/types/misc";
 
 export async function getSession(): Promise<Session | undefined> {
   const cookie = (await cookies()).get("session")?.value;

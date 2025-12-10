@@ -1,23 +1,22 @@
 "use client";
 
-import { type Task } from "@/types/models";
 import {
+  addMonths,
   format,
   getDay,
   parse,
   startOfWeek,
-  addMonths,
   subMonths,
 } from "date-fns";
-
 import { enUS } from "date-fns/locale";
 import { useState } from "react";
 import { Calendar, dateFnsLocalizer } from "react-big-calendar";
+import type { Task } from "@/types/models";
 
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./calendar-view.css";
-import EventCard from "./event-card";
 import CustomToolbar from "./custom-toolbar";
+import EventCard from "./event-card";
 
 const locales = {
   "en-US": enUS,

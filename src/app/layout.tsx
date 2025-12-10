@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
-import { Toaster } from "react-hot-toast";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { Toaster } from "react-hot-toast";
 import TanQueryClientProvider from "@/providers/query-client-provider";
 import { SessionProvider } from "@/providers/session-provider";
 

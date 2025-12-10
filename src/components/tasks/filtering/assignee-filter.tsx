@@ -8,13 +8,13 @@ import {
   ListboxOptions,
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
-import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
-import { useSession } from "@/hooks/use-session";
-import { authHeader } from "@/lib/utils";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { useTaskAssigneeFilter } from "@/hooks/filtering/use-task-assignee-filter";
 import ErrorUI from "@/components/error-ui";
 import LoadingUI from "@/components/loading-ui";
+import { useListWorkspaceMembers } from "@/hooks/endpoints/users";
+import { useTaskAssigneeFilter } from "@/hooks/filtering/use-task-assignee-filter";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 
 export default function AssigneeFilter() {
   const { assignee, setAssignee } = useTaskAssigneeFilter();
@@ -44,7 +44,7 @@ export default function AssigneeFilter() {
   }
 
   if (!data?.data || data.data.length === 0) {
-    return <></>;
+    return <div></div>;
   }
 
   const assignees = data.data.map((assignee) => ({
@@ -75,19 +75,19 @@ export default function AssigneeFilter() {
 
         <ListboxOptions
           transition
-          className="ring-opacity-5 absolute z-10 mt-1 max-h-60 min-w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black focus:outline-none data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in data-[closed]:data-[leave]:opacity-0 sm:text-sm"
+          className="ring-opacity-5 absolute z-10 mt-1 max-h-60 min-w-max overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black focus:outline-none data-leave:transition data-leave:duration-100 data-leave:ease-in data-closed:data-leave:opacity-0 sm:text-sm"
         >
           {extendedAssignees.map((assignee) => (
             <ListboxOption
               key={assignee.id}
               value={assignee}
-              className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-[focus]:bg-indigo-600 data-[focus]:text-white"
+              className="group relative cursor-default py-2 pr-9 pl-3 text-gray-900 select-none data-focus:bg-indigo-600 data-focus:text-white"
             >
-              <span className="block truncate font-normal group-data-[selected]:font-semibold">
+              <span className="block truncate font-normal group-data-selected:font-semibold">
                 {assignee.name}
               </span>
 
-              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-[focus]:text-white [.group:not([data-selected])_&]:hidden">
+              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-indigo-600 group-data-focus:text-white [.group:not([data-selected])_&]:hidden">
                 <CheckIcon aria-hidden="true" className="h-5 w-5" />
               </span>
             </ListboxOption>

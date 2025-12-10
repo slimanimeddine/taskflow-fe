@@ -1,4 +1,4 @@
-import { useQueryState, parseAsStringLiteral } from "nuqs";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
 
 const views = ["table", "kanban", "calendar"] as const;
 

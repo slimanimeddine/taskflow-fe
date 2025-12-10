@@ -1,20 +1,21 @@
 "use client";
 import { PhotoIcon } from "@heroicons/react/24/solid";
-import React, { useState } from "react";
-import toast from "react-hot-toast";
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQueryClient } from "@tanstack/react-query";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import type React from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import {
   type EditWorkspaceBody,
   useEditWorkspace,
 } from "@/hooks/endpoints/workspaces";
-import { editWorkspaceBody } from "@/schemas/workspaces";
-import { authHeader, fileUrl } from "@/lib/utils";
-import { useQueryClient } from "@tanstack/react-query";
-import { useSession } from "@/hooks/use-session";
-import { useRouter } from "next/navigation";
 import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader, fileUrl } from "@/lib/utils";
+import { editWorkspaceBody } from "@/schemas/workspaces";
 
 type EditWorkspaceFormProps = {
   name: string;

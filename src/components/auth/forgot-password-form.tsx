@@ -1,12 +1,12 @@
 "use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import {
   type SendPasswordResetLinkBody,
   useSendPasswordResetLink,
 } from "@/hooks/endpoints/authentication";
 import { sendPasswordResetLinkBody } from "@/schemas/authentication";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 
 export default function ForgotPasswordForm() {
   const { handleSubmit, register, formState, reset } =

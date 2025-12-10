@@ -1,10 +1,10 @@
+import type { Metadata } from "next";
+import z from "zod/v4";
 import ViewWorkspace from "@/components/workspaces/view-workspace";
 import { showWorkspace } from "@/hooks/endpoints/workspaces";
 import { verifyAuth } from "@/lib/dal";
 import seo from "@/lib/seo";
 import { parseParams } from "@/lib/utils";
-import { type Metadata } from "next";
-import z from "zod/v4";
 
 const paramsSchema = z.object({
   workspaceId: z.uuid(),

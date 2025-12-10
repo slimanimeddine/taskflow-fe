@@ -1,7 +1,7 @@
 "use client";
 
+import type { ChangeEvent } from "react";
 import { useTaskDueDateFilter } from "@/hooks/filtering/use-task-due-date-filter";
-import { type ChangeEvent } from "react";
 
 export default function DueDateFilter() {
   const { dueDate, setDueDate } = useTaskDueDateFilter();

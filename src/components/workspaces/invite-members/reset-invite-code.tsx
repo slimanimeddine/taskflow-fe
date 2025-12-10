@@ -1,11 +1,11 @@
 "use client";
 
-import { useResetWorkspaceInviteCode } from "@/hooks/endpoints/workspaces";
-import { useSession } from "@/hooks/use-session";
-import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
-import { authHeader } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useResetWorkspaceInviteCode } from "@/hooks/endpoints/workspaces";
+import { useWorkspaceId } from "@/hooks/params/use-workspace-id";
+import { useSession } from "@/hooks/use-session";
+import { authHeader } from "@/lib/utils";
 
 export default function ResetInviteCode() {
   const workspaceId = useWorkspaceId();

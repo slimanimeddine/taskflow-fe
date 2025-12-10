@@ -1,7 +1,7 @@
 import Axios, {
   type AxiosError,
-  type AxiosRequestConfig,
   type AxiosInstance,
+  type AxiosRequestConfig,
   type AxiosResponse,
   type CancelTokenSource,
 } from "axios";
